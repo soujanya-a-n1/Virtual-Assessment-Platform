@@ -1,0 +1,4 @@
+firstName,lastName,email,password,phone,studentId,classId,departmentId,enrollmentYear,currentSemester
+John,Doe,john.doe@example.com,Student@123,1234567890,STU001,1,1,2024,1
+Jane,Smith,jane.smith@example.com,Student@123,1234567891,STU002,1,1,2024,1
+Michael,Johnson,michael.j@example.com,Student@123,1234567892,STU003,2,2,2024,1

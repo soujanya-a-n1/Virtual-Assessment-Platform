@@ -1,0 +1,47 @@
+@import './theme.css';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  background: #1a1a1a;
+}
+
+.app-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-container.with-sidebar {
+  margin-left: 250px;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .app-container.with-sidebar {
+    margin-left: 0;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+}
+
