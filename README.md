@@ -60,7 +60,316 @@ virtual-assessment-platform/
 │   ├── migrations/            # Database migrations
 │   ├── seeders/               # Database seeders
 │   └── config.js              # Database configuration
-└── README.md
+└── # Virtual Assessment Platform
+
+A comprehensive full-stack online examination and assessment platform with proctoring, anti-cheating features, and advanced analytics.
+
+## 🎯 Quick Start
+
+See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed installation instructions.
+
+### Quick Setup (5 minutes)
+
+```bash
+# 1. Setup Database
+mysql -u root -p < database/schema.sql
+mysql -u root -p < database/dummy_data.sql
+
+# 2. Setup Backend
+cd backend && npm install && npm run db:sync && npm run dev
+
+# 3. Setup Frontend (in new terminal)
+cd frontend && npm install && npm start
+```
+
+### Login with Demo Credentials
+```
+Email: superadmin@platform.com
+Password: Admin@123456
+```
+
+## ✨ Key Features
+
+### 🔐 Security & Authentication
+- JWT-based authentication
+- Role-Based Access Control (RBAC)
+- Password hashing with bcryptjs
+- Protected API routes
+
+### 📝 Exam Management
+- Create and publish exams
+- Manage questions (CRUD operations)
+- CSV bulk upload for questions
+- Exam scheduling and status tracking
+- Negative marking support
+
+### 🎓 Student Exam Module
+- ⏱️ Real-time countdown timer
+- 💾 Auto-save functionality
+- 🚀 Auto-submit on time completion
+- ✓ Answer review before submission
+- 📊 Immediate result feedback
+
+### 🛡️ Proctoring & Anti-Cheating
+- 🔄 Tab switch detection and logging
+- ✂️ Copy-paste prevention
+- 🖱️ Right-click blocking
+- 🖥️ Fullscreen enforcement
+- 🔍 Developer tools prevention
+- 📋 Comprehensive violation logging
+
+### 📊 Analytics & Reporting
+- Real-time exam analytics
+- Student performance tracking
+- Pass/fail statistics
+- Detailed visualizations with Recharts
+- Role-specific dashboards
+
+### 👥 User Management
+- 5 predefined roles (Super Admin, Admin, Examiner, Proctor, Student)
+- User creation and role assignment
+- User activity tracking
+- Admin dashboard for oversight
+
+## 📚 Technology Stack
+
+### Backend
+- **Node.js & Express** - Server framework
+- **MySQL & Sequelize ORM** - Database and ORM
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
+- **Multer** - File uploads
+- **CSV Parser** - CSV handling
+
+### Frontend
+- **React 18** - UI framework
+- **React Router** - Navigation
+- **Axios** - HTTP client
+- **Recharts** - Data visualization
+- **React Icons** - Icon library
+- **CSS3** - Responsive styling
+
+## 🗂️ Project Structure
+
+```
+Virtual-Assessment-Platform/
+├── backend/                 # Express server
+│   ├── src/
+│   │   ├── config/         # Database config
+│   │   ├── models/         # Sequelize models
+│   │   ├── controllers/    # API controllers
+│   │   ├── routes/         # API routes
+│   │   ├── middleware/     # Auth & RBAC
+│   │   ├── utils/          # Utilities
+│   │   └── server.js
+│   └── package.json
+├── frontend/               # React app
+│   ├── src/
+│   │   ├── components/    # Reusable components
+│   │   ├── pages/         # Page components
+│   │   ├── services/      # API client
+│   │   ├── context/       # Auth context
+│   │   ├── styles/        # CSS files
+│   │   └── utils/         # Utilities
+│   └── package.json
+├── database/
+│   ├── schema.sql         # Database schema
+│   └── dummy_data.sql     # Sample data
+└── SETUP_GUIDE.md         # Detailed setup guide
+```
+
+## 🚀 User Roles & Permissions
+
+| Role | Features |
+|------|----------|
+| **Super Admin** | Full system access, user management, all exams |
+| **Admin** | User management, view all exams & submissions |
+| **Examiner** | Create/edit exams, question management, evaluate submissions |
+| **Proctor** | Invigilate exams, view proctoring logs, manage violations |
+| **Student** | Take exams, view personal results |
+
+## 📋 Database Models
+
+- **Users** - User credentials and information
+- **Roles** - 5 predefined roles
+- **Exams** - Exam details and settings
+- **Questions** - Question bank
+- **Submissions** - Student exam attempts
+- **StudentAnswers** - Individual question responses
+- **ProctoringLogs** - Security violation records
+- **Enrollments** - Student-exam relationships
+
+## 🔧 API Endpoints
+
+### Authentication
+```
+POST   /api/auth/login
+POST   /api/auth/register
+GET    /api/auth/profile
+PUT    /api/auth/profile
+```
+
+### Users
+```
+GET    /api/users
+GET    /api/users/:id
+PUT    /api/users/:id
+DELETE /api/users/:id
+POST   /api/users/assign-role
+POST   /api/users/remove-role
+```
+
+### Exams
+```
+POST   /api/exams
+GET    /api/exams
+GET    /api/exams/:id
+PUT    /api/exams/:id
+DELETE /api/exams/:id
+POST   /api/exams/:id/publish
+```
+
+### Questions
+```
+POST   /api/questions
+GET    /api/questions
+GET    /api/questions/:id
+PUT    /api/questions/:id
+DELETE /api/questions/:id
+POST   /api/questions/upload/csv
+POST   /api/questions/:examId/add-questions
+```
+
+### Submissions
+```
+POST   /api/submissions/exams/:examId/start
+POST   /api/submissions/auto-save
+POST   /api/submissions/:submissionId/submit
+GET    /api/submissions/:submissionId
+GET    /api/submissions
+POST   /api/submissions/:submissionId/evaluate
+```
+
+### Proctoring
+```
+POST   /api/proctoring/log
+GET    /api/proctoring/:submissionId/logs
+GET    /api/proctoring/:submissionId/report
+```
+
+### Analytics
+```
+GET    /api/analytics
+GET    /api/analytics/exams/:examId
+GET    /api/analytics/students/:studentId
+```
+
+## 🎨 UI Features
+
+- ✅ Responsive design (mobile, tablet, desktop)
+- ✅ Modern, clean interface
+- ✅ Role-based dashboards with personalized views
+- ✅ Real-time exam timer with visual warnings
+- ✅ Question navigation sidebar
+- ✅ Status indicators (answered, not answered, current)
+- ✅ Interactive charts and analytics
+- ✅ Activity logging and monitoring
+
+## 🧪 Testing
+
+All major features are implemented with dummy data:
+
+1. **Login** - Use demo credentials to access platform
+2. **Create Exam** - Examiners can create and publish exams
+3. **Take Exam** - Students can browse and attempt exams
+4. **Auto-Save** - Answers are automatically saved
+5. **Submit** - Exams auto-submit on timer expiry or manual submission
+6. **View Results** - Immediate feedback on exam completion
+7. **Analytics** - View exam and student performance data
+8. **Proctoring** - Violations are logged and tracked
+
+## 📦 Installation
+
+For detailed step-by-step installation, see [SETUP_GUIDE.md](SETUP_GUIDE.md).
+
+Quick install:
+```bash
+# Backend
+cd backend && npm install && npm run dev
+
+# Frontend  
+cd frontend && npm install && npm start
+```
+
+## 🌐 Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## 📝 Default Credentials
+
+```
+Email: superadmin@platform.com
+Password: Admin@123456
+Role: Super Admin
+```
+
+## 🔒 Security Notes
+
+1. Change JWT_SECRET in production
+2. Use HTTPS in production
+3. Implement rate limiting
+4. Add CSRF protection
+5. Validate all inputs server-side
+6. Use environment variables for sensitive data
+7. Regular database backups
+8. Monitor proctoring logs for suspicious activity
+
+## 🚀 Performance
+
+- Optimized React components
+- CSS-in-JS for styling
+- Database indexing for queries
+- Connection pooling
+- Lazy loading of components
+- Efficient state management
+
+## 🐛 Known Issues
+
+None currently. Please report any issues in the repository.
+
+## 🎓 Learning Resources
+
+- [Express.js](https://expressjs.com/)
+- [React](https://react.dev/)
+- [Sequelize](https://sequelize.org/)
+- [JWT Theory](https://jwt.io/introduction)
+- [Recharts](https://recharts.org/)
+
+## 📄 License
+
+MIT License - Feel free to use this project for learning and development.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📞 Support
+
+For questions or issues:
+1. Check [SETUP_GUIDE.md](SETUP_GUIDE.md) for troubleshooting
+2. Review API documentation above
+3. Check database schema in `database/schema.sql`
+
+---
+
+**Status**: ✅ Fully Functional  
+**Version**: 1.0.0  
+**Last Updated**: February 2024
+
+**Ready to run!** 🎉
 ```
 
 ## 👥 User Roles & Permissions

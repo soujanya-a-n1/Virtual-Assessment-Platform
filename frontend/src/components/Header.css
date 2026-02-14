@@ -1,0 +1,61 @@
+.header {
+  background: #2d2d2d;
+  border-bottom: 2px solid #ff8c00;
+  padding: 1rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ff8c00;
+  margin: 0;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #ff4500;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background: #cc3700;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem 1rem 1rem 4rem;
+  }
+
+  .header-title {
+    font-size: 1.1rem;
+  }
+
+  .logout-btn span {
+    display: none;
+  }
+
+  .logout-btn {
+    padding: 0.5rem;
+    width: 36px;
+    height: 36px;
+    justify-content: center;
+  }
+}
