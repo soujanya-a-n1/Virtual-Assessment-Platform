@@ -128,6 +128,34 @@ const removeLecturer = async (req, res) => {
   }
 };
 
+const assignLecturers = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { lecturerIds } = req.body;
+
+    const course = await Course.findByPk(id);
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+
+    // Remove all existing lecturer assignments
+    await CourseLecturer.destroy({ where: { courseId: id } });
+
+    // Add new lecturer assignments
+    if (lecturerIds && lecturerIds.length > 0) {
+      const assignments = lecturerIds.map(lecturerId => ({
+        courseId: id,
+        lecturerId,
+      }));
+      await CourseLecturer.bulkCreate(assignments);
+    }
+
+    res.json({ message: 'Lecturers assigned successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error assigning lecturers', error: error.message });
+  }
+};
+
 module.exports = {
   getAllCourses,
   getCourseById,
@@ -136,4 +164,5 @@ module.exports = {
   deleteCourse,
   assignLecturer,
   removeLecturer,
+  assignLecturers,
 };

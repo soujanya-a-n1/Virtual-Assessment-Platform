@@ -42,10 +42,8 @@
 
 .users-header h1 {
   font-size: 2.5rem;
-  background: linear-gradient(135deg, #ff8c00 0%, #ffa500 50%, #ff6600 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ff8c00;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   margin: 0 0 0.5rem 0;
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -179,10 +177,8 @@
 .filter-group label {
   font-size: 0.85rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ff8c00;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -222,10 +218,8 @@
 }
 
 .results-summary strong {
-  background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ff8c00;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   font-weight: 700;
   font-size: 1.1em;
 }
@@ -254,10 +248,8 @@
   text-align: left;
   font-size: 0.9rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ff8c00;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -481,10 +473,8 @@
 
 .no-data h3 {
   font-size: 1.5rem;
-  background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ff8c00;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   margin: 0 0 0.5rem 0;
   font-weight: 800;
 }
@@ -581,10 +571,8 @@
 
 .modal-header h2 {
   font-size: 1.75rem;
-  background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ff8c00;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   margin: 0;
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -621,10 +609,8 @@
   display: block;
   margin-bottom: 0.75rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ff8c00;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   font-size: 0.95rem;
   letter-spacing: 0.5px;
 }

@@ -11,10 +11,12 @@ const User = sequelize.define('User', {
   firstName: {
     type: DataTypes.STRING(100),
     allowNull: false,
+    field: 'firstName' // Explicitly map to database column
   },
   lastName: {
     type: DataTypes.STRING(100),
     allowNull: false,
+    field: 'lastName' // Explicitly map to database column
   },
   email: {
     type: DataTypes.STRING(100),
@@ -35,14 +37,17 @@ const User = sequelize.define('User', {
   isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
+    field: 'isActive' // Explicitly map to database column
   },
   lastLogin: {
     type: DataTypes.DATE,
     allowNull: true,
+    field: 'lastLogin' // Explicitly map to database column
   },
 }, {
   timestamps: true,
   tableName: 'users',
+  underscored: false, // Use camelCase for auto-generated fields
   hooks: {
     beforeCreate: async (user) => {
       if (user.password) {

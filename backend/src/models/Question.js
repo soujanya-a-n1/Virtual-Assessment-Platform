@@ -23,6 +23,18 @@ const Question = sequelize.define('Question', {
     type: DataTypes.ENUM('Easy', 'Medium', 'Hard'),
     defaultValue: 'Medium',
   },
+  topic: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+  },
+  courseId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'courses',
+      key: 'id',
+    },
+  },
   optionA: {
     type: DataTypes.TEXT,
     allowNull: true,

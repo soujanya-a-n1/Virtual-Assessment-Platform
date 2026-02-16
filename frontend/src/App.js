@@ -11,7 +11,9 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ExamsList from './pages/ExamsList';
 import ExamPage from './pages/ExamPage';
+import TakeExam from './pages/TakeExam';
 import SubmissionsList from './pages/SubmissionsList';
+import SubmissionReview from './pages/SubmissionReview';
 import UsersList from './pages/UsersList';
 import Analytics from './pages/Analytics';
 import Results from './pages/Results';
@@ -29,7 +31,7 @@ const AppContent = () => {
   const { isAuthenticated } = React.useContext(AuthContext);
 
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <div className="app">
         {isAuthenticated && <Sidebar />}
         <div className={`app-container ${isAuthenticated ? 'with-sidebar' : ''}`}>
@@ -72,10 +74,26 @@ const AppContent = () => {
                 }
               />
               <Route
+                path="/exams/:examId/take"
+                element={
+                  <ProtectedRoute>
+                    <TakeExam />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/submissions"
                 element={
                   <ProtectedRoute>
                     <SubmissionsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/submissions/:submissionId/review"
+                element={
+                  <ProtectedRoute>
+                    <SubmissionReview />
                   </ProtectedRoute>
                 }
               />

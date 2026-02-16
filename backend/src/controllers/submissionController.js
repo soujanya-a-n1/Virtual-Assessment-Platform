@@ -160,11 +160,31 @@ const getSubmissionDetails = async (req, res) => {
 
     const submission = await ExamSubmission.findByPk(submissionId, {
       include: [
-        { association: 'exam' },
-        {
-          association: 'studentAnswers',
-          include: [{ model: Question, as: 'question' }],
+        { 
+          model: Exam, 
+          as: 'exam',
+          attributes: ['id', 'title', 'description', 'totalMarks', 'passingMarks', 'duration']
         },
+        {
+          model: StudentAnswer,
+          as: 'studentAnswers',
+          include: [{ 
+            model: Question, 
+            as: 'question',
+            attributes: ['id', 'questionText', 'questionType', 'marks', 'optionA', 'optionB', 'optionC', 'optionD', 'correctAnswer', 'explanation']
+          }],
+        },
+        {
+          model: User,
+          as: 'student',
+          attributes: ['id', 'firstName', 'lastName', 'email']
+        },
+        {
+          model: User,
+          as: 'evaluator',
+          attributes: ['id', 'firstName', 'lastName'],
+          required: false
+        }
       ],
     });
 
@@ -174,6 +194,7 @@ const getSubmissionDetails = async (req, res) => {
 
     res.json({ submission });
   } catch (error) {
+    console.error('Error fetching submission details:', error);
     res.status(500).json({ message: 'Error fetching submission', error: error.message });
   }
 };
@@ -182,14 +203,27 @@ const getAllSubmissions = async (req, res) => {
   try {
     const submissions = await ExamSubmission.findAll({
       include: [
-        { association: 'exam', attributes: ['id', 'title'] },
-        { association: 'student', attributes: ['id', 'firstName', 'lastName', 'email'] },
+        { 
+          model: Exam, 
+          as: 'exam', 
+          attributes: ['id', 'title', 'totalMarks', 'passingMarks'] 
+        },
+        { 
+          model: User, 
+          as: 'student', 
+          attributes: ['id', 'firstName', 'lastName', 'email'],
+          include: [{
+            association: 'studentProfile',
+            attributes: ['id', 'rollNumber']
+          }]
+        },
       ],
       order: [['createdAt', 'DESC']],
     });
 
     res.json({ submissions });
   } catch (error) {
+    console.error('Error fetching submissions:', error);
     res.status(500).json({ message: 'Error fetching submissions', error: error.message });
   }
 };

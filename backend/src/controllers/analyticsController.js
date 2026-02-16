@@ -5,12 +5,21 @@ const getAnalytics = async (req, res) => {
   try {
     const submissions = await ExamSubmission.findAll({
       include: [
-        { association: 'exam', attributes: ['id', 'title', 'totalMarks', 'passingMarks'] },
+        { 
+          association: 'exam', 
+          attributes: ['id', 'title', 'totalMarks', 'passingMarks'] 
+        },
+        {
+          association: 'student',
+          attributes: ['id', 'firstName', 'lastName']
+        }
       ],
+      order: [['submitTime', 'DESC']]
     });
 
-    const totalUsers = await User.count();
+    const totalStudents = await User.count({ where: { role: 'student' } });
     const totalExams = await Exam.count();
+    const totalQuestions = await Question.count();
     const totalSubmissions = submissions.length;
     const passedCount = submissions.filter((s) => s.isPassed).length;
     const failedCount = submissions.filter((s) => s.isPassed === false).length;
@@ -23,21 +32,56 @@ const getAnalytics = async (req, res) => {
     const passPercentage =
       submissions.length > 0 ? ((passedCount / submissions.length) * 100).toFixed(2) : 0;
 
+    // Format recent submissions with time ago
+    const recentSubmissions = submissions.slice(0, 10).map(submission => {
+      const timeAgo = getTimeAgo(submission.submitTime);
+      return {
+        studentName: submission.student 
+          ? `${submission.student.firstName} ${submission.student.lastName}`
+          : 'Unknown Student',
+        examTitle: submission.exam ? submission.exam.title : 'Unknown Exam',
+        obtainedMarks: submission.obtainedMarks || 0,
+        totalMarks: submission.exam ? submission.exam.totalMarks : 0,
+        isPassed: submission.isPassed,
+        timeAgo: timeAgo
+      };
+    });
+
     res.json({
       analytics: {
-        totalUsers,
         totalExams,
         totalSubmissions,
+        totalStudents,
+        totalQuestions,
         passedCount,
         failedCount,
         passPercentage,
         averageScore: avgScore.toFixed(2),
+        recentSubmissions
       },
     });
   } catch (error) {
     console.error('Error fetching analytics:', error);
     res.status(500).json({ message: 'Error fetching analytics', error: error.message });
   }
+};
+
+// Helper function to calculate time ago
+const getTimeAgo = (date) => {
+  if (!date) return 'Recently';
+  
+  const now = new Date();
+  const submittedDate = new Date(date);
+  const diffMs = now - submittedDate;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  return submittedDate.toLocaleDateString();
 };
 
 const getExamAnalytics = async (req, res) => {
