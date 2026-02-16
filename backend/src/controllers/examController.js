@@ -11,6 +11,7 @@ const createExam = async (req, res) => {
       totalMarks,
       passingMarks,
       examType,
+      status,
       startTime,
       endTime,
       requiresProctoring,
@@ -27,7 +28,7 @@ const createExam = async (req, res) => {
       totalMarks,
       passingMarks,
       examType,
-      status: 'Draft',
+      status: status || 'Draft',
       startTime,
       endTime,
       requiresProctoring,
@@ -104,7 +105,11 @@ const updateExam = async (req, res) => {
       return res.status(404).json({ message: 'Exam not found' });
     }
 
-    if (exam.createdBy !== req.user.id) {
+    // Allow admins and exam creators to update
+    const canUpdate = ['Admin', 'Super Admin', 'Examiner'].includes(req.user.role) || 
+                      exam.createdBy === req.user.id;
+    
+    if (!canUpdate) {
       return res.status(403).json({ message: 'Unauthorized to update this exam' });
     }
 
@@ -123,7 +128,11 @@ const deleteExam = async (req, res) => {
       return res.status(404).json({ message: 'Exam not found' });
     }
 
-    if (exam.createdBy !== req.user.id) {
+    // Allow admins and exam creators to delete
+    const canDelete = ['Admin', 'Super Admin', 'Examiner'].includes(req.user.role) || 
+                      exam.createdBy === req.user.id;
+    
+    if (!canDelete) {
       return res.status(403).json({ message: 'Unauthorized to delete this exam' });
     }
 

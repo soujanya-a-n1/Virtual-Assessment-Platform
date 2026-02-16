@@ -11,5 +11,6 @@ router.put('/:id', authenticate, authorize('Super Admin', 'Admin'), courseContro
 router.delete('/:id', authenticate, authorize('Super Admin', 'Admin'), courseController.deleteCourse);
 router.post('/assign-lecturer', authenticate, authorize('Super Admin', 'Admin'), courseController.assignLecturer);
 router.post('/remove-lecturer', authenticate, authorize('Super Admin', 'Admin'), courseController.removeLecturer);
+router.post('/:id/lecturers', authenticate, authorize('Super Admin', 'Admin'), courseController.assignLecturers);
 
 module.exports = router;

@@ -93,4 +93,38 @@ export const analyticsAPI = {
   getStudentAnalytics: (studentId) => api.get(`/analytics/students/${studentId}`),
 };
 
+// Student APIs
+export const studentAPI = {
+  getAllStudents: () => api.get('/students'),
+  getStudentById: (id) => api.get(`/students/${id}`),
+  createStudent: (studentData) => api.post('/students', studentData),
+  updateStudent: (id, studentData) => api.put(`/students/${id}`, studentData),
+  deleteStudent: (id) => api.delete(`/students/${id}`),
+  importStudentsCSV: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post('/students/import/csv', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+};
+
+// Department APIs
+export const departmentAPI = {
+  getAllDepartments: () => api.get('/departments'),
+  getDepartmentById: (id) => api.get(`/departments/${id}`),
+  createDepartment: (departmentData) => api.post('/departments', departmentData),
+  updateDepartment: (id, departmentData) => api.put(`/departments/${id}`, departmentData),
+  deleteDepartment: (id) => api.delete(`/departments/${id}`),
+};
+
+// Class APIs
+export const classAPI = {
+  getAllClasses: () => api.get('/classes'),
+  getClassById: (id) => api.get(`/classes/${id}`),
+  createClass: (classData) => api.post('/classes', classData),
+  updateClass: (id, classData) => api.put(`/classes/${id}`, classData),
+  deleteClass: (id) => api.delete(`/classes/${id}`),
+};
+
 export default api;

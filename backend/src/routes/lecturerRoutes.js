@@ -9,5 +9,6 @@ router.get('/:id', authenticate, lecturerController.getLecturerById);
 router.post('/', authenticate, authorize('Super Admin', 'Admin'), lecturerController.createLecturer);
 router.put('/:id', authenticate, authorize('Super Admin', 'Admin'), lecturerController.updateLecturer);
 router.delete('/:id', authenticate, authorize('Super Admin', 'Admin'), lecturerController.deleteLecturer);
+router.post('/:id/courses', authenticate, authorize('Super Admin', 'Admin'), lecturerController.assignCourses);
 
 module.exports = router;

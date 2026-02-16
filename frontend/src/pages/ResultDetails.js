@@ -17,7 +17,7 @@ const ResultDetails = () => {
   const fetchResultDetails = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/api/results/${submissionId}/details`);
+      const response = await api.get(`/submissions/${submissionId}`);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching result details:', error);
@@ -67,10 +67,25 @@ const ResultDetails = () => {
     );
   }
 
-  const { submission, answers } = data;
+  const { submission } = data || {};
+  const answers = submission?.studentAnswers || [];
+  
+  if (!submission) {
+    return (
+      <div className="error-container">
+        <h2>Result not found</h2>
+        <button onClick={() => navigate('/results')} className="btn-back">
+          Go Back
+        </button>
+      </div>
+    );
+  }
+
   const percentage = submission.exam?.totalMarks 
     ? ((submission.obtainedMarks / submission.exam.totalMarks) * 100).toFixed(1)
     : 0;
+
+  const isPassed = submission.obtainedMarks >= (submission.exam?.passingMarks || 0);
 
   return (
     <div className="result-details-container">
@@ -84,10 +99,10 @@ const ResultDetails = () => {
             <h1>{submission.exam?.title}</h1>
             <p className="exam-description">{submission.exam?.description}</p>
           </div>
-          {submission.isPassed !== null && (
-            <div className={`result-badge-large ${submission.isPassed ? 'passed' : 'failed'}`}>
-              {submission.isPassed ? <FiAward /> : <FiXCircle />}
-              {submission.isPassed ? 'PASSED' : 'FAILED'}
+          {submission.obtainedMarks !== null && submission.obtainedMarks !== undefined && (
+            <div className={`result-badge-large ${isPassed ? 'passed' : 'failed'}`}>
+              {isPassed ? <FiAward /> : <FiXCircle />}
+              {isPassed ? 'PASSED' : 'FAILED'}
             </div>
           )}
         </div>
@@ -135,7 +150,8 @@ const ResultDetails = () => {
       <div className="answers-section">
         <h2>Question-wise Analysis</h2>
         
-        {answers.map((answer, index) => (
+        {answers && answers.length > 0 ? (
+          answers.map((answer, index) => (
           <div key={answer.id} className="answer-card">
             <div className="answer-header">
               <span className="question-number">Question {index + 1}</span>
@@ -168,7 +184,7 @@ const ResultDetails = () => {
                     const optionText = answer.question[`option${option}`];
                     if (!optionText) return null;
 
-                    const isStudentAnswer = answer.studentAnswer === option;
+                    const isStudentAnswer = answer.selectedAnswer === option;
                     const isCorrectAnswer = answer.question.correctAnswer === option;
 
                     return (
@@ -194,12 +210,12 @@ const ResultDetails = () => {
                 <div className="text-answer">
                   <div className="answer-section">
                     <h4>Your Answer:</h4>
-                    <p>{answer.studentAnswer || 'No answer provided'}</p>
+                    <p>{answer.textAnswer || answer.selectedAnswer || 'No answer provided'}</p>
                   </div>
                   {answer.question?.correctAnswer && (
                     <div className="answer-section">
                       <h4>Correct Answer:</h4>
-                      <p>{answer.question.correctAnswer}</p>
+                      <p>{answer.question.correctAnswer === 'A' && answer.question.questionType === 'True/False' ? 'True' : answer.question.correctAnswer === 'B' && answer.question.questionType === 'True/False' ? 'False' : answer.question.correctAnswer}</p>
                     </div>
                   )}
                 </div>
@@ -213,7 +229,12 @@ const ResultDetails = () => {
               )}
             </div>
           </div>
-        ))}
+        ))
+        ) : (
+          <div className="no-answers">
+            <p>No answers available</p>
+          </div>
+        )}
       </div>
     </div>
   );

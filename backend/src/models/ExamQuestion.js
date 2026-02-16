@@ -7,9 +7,26 @@ const ExamQuestion = sequelize.define('ExamQuestion', {
     primaryKey: true,
     autoIncrement: true,
   },
+  examId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'exams',
+      key: 'id',
+    },
+  },
+  questionId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'questions',
+      key: 'id',
+    },
+  },
   displayOrder: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    defaultValue: 1,
   },
 }, {
   timestamps: true,

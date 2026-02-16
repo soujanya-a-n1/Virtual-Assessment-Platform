@@ -9,6 +9,7 @@ const createQuestion = async (req, res) => {
       questionType,
       marks,
       difficulty,
+      topic,
       optionA,
       optionB,
       optionC,
@@ -22,6 +23,7 @@ const createQuestion = async (req, res) => {
       questionType,
       marks,
       difficulty,
+      topic,
       optionA,
       optionB,
       optionC,
@@ -109,6 +111,7 @@ const uploadQuestionsCSV = async (req, res) => {
           questionType: row.questionType,
           marks: parseFloat(row.marks),
           difficulty: row.difficulty || 'Medium',
+          topic: row.topic || null,
           optionA: row.optionA,
           optionB: row.optionB,
           optionC: row.optionC,
@@ -140,25 +143,87 @@ const addQuestionsToExam = async (req, res) => {
     const { examId } = req.params;
     const { questionIds } = req.body;
 
+    console.log('Add questions request:', { examId, questionIds });
+
+    if (!questionIds || !Array.isArray(questionIds) || questionIds.length === 0) {
+      console.log('Invalid questionIds:', questionIds);
+      return res.status(400).json({ message: 'Please provide an array of question IDs' });
+    }
+
     const exam = await Exam.findByPk(examId);
     if (!exam) {
+      console.log('Exam not found:', examId);
       return res.status(404).json({ message: 'Exam not found' });
     }
 
+    console.log('Exam found:', exam.title);
+
+    // Get existing questions in the exam
+    const existingQuestions = await ExamQuestion.findAll({
+      where: { examId },
+      attributes: ['questionId', 'displayOrder']
+    });
+    
+    console.log('Existing questions:', existingQuestions.length);
+    
+    const existingQuestionIds = existingQuestions.map(eq => eq.questionId);
+
+    // Get the highest display order
+    const maxOrder = existingQuestions.length > 0 
+      ? Math.max(...existingQuestions.map(eq => eq.displayOrder || 0))
+      : 0;
+
+    console.log('Max display order:', maxOrder);
+
+    let addedCount = 0;
+    let skippedCount = 0;
+
     for (let i = 0; i < questionIds.length; i++) {
-      const question = await Question.findByPk(questionIds[i]);
+      const questionId = questionIds[i];
+      
+      // Skip if question already exists in exam
+      if (existingQuestionIds.includes(questionId)) {
+        console.log(`Question ${questionId} already exists, skipping`);
+        skippedCount++;
+        continue;
+      }
+
+      const question = await Question.findByPk(questionId);
       if (question) {
+        console.log(`Adding question ${questionId} with order ${maxOrder + addedCount + 1}`);
+        
         await ExamQuestion.create({
-          examId,
-          questionId: questionIds[i],
-          displayOrder: i + 1,
+          examId: parseInt(examId),
+          questionId: parseInt(questionId),
+          displayOrder: maxOrder + addedCount + 1,
         });
+        
+        addedCount++;
+        console.log(`Question ${questionId} added successfully`);
+      } else {
+        console.log(`Question ${questionId} not found`);
       }
     }
 
-    res.status(201).json({ message: 'Questions added to exam successfully' });
+    const message = addedCount > 0 
+      ? `${addedCount} question(s) added successfully${skippedCount > 0 ? `, ${skippedCount} already existed` : ''}`
+      : 'No new questions were added';
+
+    console.log('Final result:', { addedCount, skippedCount });
+
+    res.status(201).json({ 
+      message, 
+      addedCount, 
+      skippedCount 
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error adding questions to exam', error: error.message });
+    console.error('Error adding questions to exam:', error);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      message: 'Error adding questions to exam', 
+      error: error.message,
+      details: error.stack 
+    });
   }
 };
 

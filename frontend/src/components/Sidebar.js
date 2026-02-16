@@ -15,6 +15,7 @@ import {
   FiLayers,
   FiBriefcase,
   FiUserCheck,
+  FiFileText,
 } from 'react-icons/fi';
 import './Sidebar.css';
 
@@ -40,7 +41,7 @@ const Sidebar = () => {
 
     const examinerMenu = [
       { path: '/dashboard', icon: <FiHome />, label: 'Dashboard' },
-      { path: '/exams', icon: <FiBook />, label: 'Exams' },
+      { path: '/exams', icon: <FiBook />, label: 'Exam Management' },
       { path: '/submissions', icon: <FiCheckSquare />, label: 'Submissions' },
       { path: '/results', icon: <FiAward />, label: 'Results' },
       { path: '/analytics', icon: <FiBarChart2 />, label: 'Analytics' },
@@ -48,10 +49,10 @@ const Sidebar = () => {
 
     const adminMenu = [
       { path: '/dashboard', icon: <FiHome />, label: 'Dashboard' },
-      { path: '/users', icon: <FiUsers />, label: 'Users' },
+      { path: '/users', icon: <FiUsers />, label: 'User Management' },
       { 
         label: 'Master Data',
-        icon: <FiGrid />,
+        icon: <FiLayers />,
         submenu: [
           { path: '/departments', icon: <FiLayers />, label: 'Departments' },
           { path: '/courses', icon: <FiBookOpen />, label: 'Courses' },
@@ -60,9 +61,15 @@ const Sidebar = () => {
           { path: '/students', icon: <FiUserCheck />, label: 'Students' },
         ]
       },
-      { path: '/exams', icon: <FiBook />, label: 'Exams' },
-      { path: '/submissions', icon: <FiCheckSquare />, label: 'Submissions' },
-      { path: '/results', icon: <FiAward />, label: 'Results' },
+      { path: '/exams', icon: <FiBook />, label: 'Exam Management' },
+      { 
+        label: 'Assessment',
+        icon: <FiFileText />,
+        submenu: [
+          { path: '/submissions', icon: <FiCheckSquare />, label: 'Submissions' },
+          { path: '/results', icon: <FiAward />, label: 'Results' },
+        ]
+      },
       { path: '/analytics', icon: <FiBarChart2 />, label: 'Analytics' },
     ];
 

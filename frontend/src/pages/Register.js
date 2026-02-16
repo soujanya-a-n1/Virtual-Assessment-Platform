@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './Auth.css';
 
@@ -45,6 +45,7 @@ const Register = () => {
               <input
                 type="text"
                 name="firstName"
+                placeholder="Enter first name"
                 value={formData.firstName}
                 onChange={handleChange}
                 required
@@ -55,6 +56,7 @@ const Register = () => {
               <input
                 type="text"
                 name="lastName"
+                placeholder="Enter last name"
                 value={formData.lastName}
                 onChange={handleChange}
                 required
@@ -66,6 +68,7 @@ const Register = () => {
             <input
               type="email"
               name="email"
+              placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
               required
@@ -76,9 +79,11 @@ const Register = () => {
             <input
               type="password"
               name="password"
+              placeholder="Enter password (min 6 characters)"
               value={formData.password}
               onChange={handleChange}
               required
+              minLength={6}
             />
           </div>
           <div className="form-group">
@@ -86,17 +91,20 @@ const Register = () => {
             <input
               type="tel"
               name="phone"
+              placeholder="Enter phone number (optional)"
               value={formData.phone}
               onChange={handleChange}
             />
           </div>
           <button type="submit" disabled={loading} className="submit-btn">
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? 'Registering...' : 'Create Account'}
           </button>
         </form>
-        <p>
-          Already have an account? <a href="/login">Login here</a>
-        </p>
+        <div className="login-footer">
+          <p>
+            Already have an account? <Link to="/login">Login here</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

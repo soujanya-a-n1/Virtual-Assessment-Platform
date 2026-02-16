@@ -171,10 +171,41 @@ const deleteLecturer = async (req, res) => {
   }
 };
 
+const assignCourses = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { courseIds } = req.body;
+
+    const lecturer = await Lecturer.findByPk(id);
+    if (!lecturer) {
+      return res.status(404).json({ message: 'Lecturer not found' });
+    }
+
+    const { CourseLecturer } = require('../models');
+
+    // Remove all existing course assignments
+    await CourseLecturer.destroy({ where: { lecturerId: id } });
+
+    // Add new course assignments
+    if (courseIds && courseIds.length > 0) {
+      const assignments = courseIds.map(courseId => ({
+        courseId,
+        lecturerId: id,
+      }));
+      await CourseLecturer.bulkCreate(assignments);
+    }
+
+    res.json({ message: 'Courses assigned successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error assigning courses', error: error.message });
+  }
+};
+
 module.exports = {
   getAllLecturers,
   getLecturerById,
   createLecturer,
   updateLecturer,
   deleteLecturer,
+  assignCourses,
 };

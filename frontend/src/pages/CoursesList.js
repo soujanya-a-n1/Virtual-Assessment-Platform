@@ -5,10 +5,13 @@ import '../pages/ListPages.css';
 const CoursesList = () => {
   const [courses, setCourses] = useState([]);
   const [departments, setDepartments] = useState([]);
+  const [lecturers, setLecturers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showLecturerModal, setShowLecturerModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [currentCourse, setCurrentCourse] = useState(null);
+  const [selectedLecturers, setSelectedLecturers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({
     name: '',
@@ -22,6 +25,7 @@ const CoursesList = () => {
   useEffect(() => {
     fetchCourses();
     fetchDepartments();
+    fetchLecturers();
   }, []);
 
   const fetchCourses = async () => {
@@ -41,6 +45,42 @@ const CoursesList = () => {
       setDepartments(response.data.departments);
     } catch (error) {
       console.error('Error fetching departments:', error);
+    }
+  };
+
+  const fetchLecturers = async () => {
+    try {
+      const response = await api.get('/lecturers');
+      setLecturers(response.data.lecturers);
+    } catch (error) {
+      console.error('Error fetching lecturers:', error);
+    }
+  };
+
+  const handleManageLecturers = (course) => {
+    setCurrentCourse(course);
+    setSelectedLecturers(course.lecturers?.map(l => l.id) || []);
+    setShowLecturerModal(true);
+  };
+
+  const handleLecturerToggle = (lecturerId) => {
+    setSelectedLecturers(prev =>
+      prev.includes(lecturerId)
+        ? prev.filter(id => id !== lecturerId)
+        : [...prev, lecturerId]
+    );
+  };
+
+  const handleSaveLecturers = async () => {
+    try {
+      await api.post(`/courses/${currentCourse.id}/lecturers`, {
+        lecturerIds: selectedLecturers
+      });
+      alert('Lecturers assigned successfully');
+      setShowLecturerModal(false);
+      fetchCourses();
+    } catch (error) {
+      alert(error.response?.data?.message || 'Error assigning lecturers');
     }
   };
 
@@ -148,7 +188,7 @@ const CoursesList = () => {
               <th>Name</th>
               <th>Department</th>
               <th>Credits</th>
-              <th>Lecturers</th>
+              <th>Assigned Lecturers</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -160,7 +200,25 @@ const CoursesList = () => {
                 <td>{course.name}</td>
                 <td>{course.department?.name || '-'}</td>
                 <td>{course.credits || '-'}</td>
-                <td>{course.lecturers?.length || 0}</td>
+                <td>
+                  <div className="assigned-items">
+                    {course.lecturers && course.lecturers.length > 0 ? (
+                      <>
+                        <span className="count-badge">{course.lecturers.length}</span>
+                        <div className="items-list">
+                          {course.lecturers.map((lecturer, index) => (
+                            <span key={lecturer.id} className="item-tag">
+                              {lecturer.user.firstName} {lecturer.user.lastName}
+                              {index < course.lecturers.length - 1 && ', '}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <span className="no-items">No lecturers assigned</span>
+                    )}
+                  </div>
+                </td>
                 <td>
                   <span className={`status ${course.isActive ? 'active' : 'inactive'}`}>
                     {course.isActive ? 'Active' : 'Inactive'}
@@ -169,6 +227,9 @@ const CoursesList = () => {
                 <td>
                   <button className="btn-edit" onClick={() => handleEdit(course)}>
                     Edit
+                  </button>
+                  <button className="btn-secondary" onClick={() => handleManageLecturers(course)}>
+                    Lecturers
                   </button>
                   <button className="btn-delete" onClick={() => handleDelete(course.id)}>
                     Delete
@@ -265,6 +326,59 @@ const CoursesList = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showLecturerModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h3>Assign Lecturers to {currentCourse?.name}</h3>
+              <button className="close-btn" onClick={() => setShowLecturerModal(false)}>
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <p className="modal-description">
+                Select lecturers to assign to this course. You can select multiple lecturers.
+              </p>
+              <div className="lecturer-list">
+                {lecturers.length === 0 ? (
+                  <p className="no-data">No lecturers available</p>
+                ) : (
+                  lecturers.map((lecturer) => (
+                    <div key={lecturer.id} className="lecturer-item">
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={selectedLecturers.includes(lecturer.id)}
+                          onChange={() => handleLecturerToggle(lecturer.id)}
+                        />
+                        <div className="lecturer-info">
+                          <span className="lecturer-name">
+                            {lecturer.user.firstName} {lecturer.user.lastName}
+                          </span>
+                          <span className="lecturer-details">
+                            {lecturer.employeeId && `(${lecturer.employeeId})`}
+                            {lecturer.department && ` - ${lecturer.department.name}`}
+                            {lecturer.specialization && ` - ${lecturer.specialization}`}
+                          </span>
+                        </div>
+                      </label>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="btn-secondary" onClick={() => setShowLecturerModal(false)}>
+                Cancel
+              </button>
+              <button type="button" className="btn-primary" onClick={handleSaveLecturers}>
+                Save ({selectedLecturers.length} selected)
+              </button>
+            </div>
           </div>
         </div>
       )}

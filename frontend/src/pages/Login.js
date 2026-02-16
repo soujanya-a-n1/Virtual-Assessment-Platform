@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './Auth.css';
@@ -19,7 +19,7 @@ const Login = () => {
 
   const handleDemoLogin = (demoEmail) => {
     setEmail(demoEmail);
-    setPassword('Admin@123456');
+    setPassword('Admin@123');
   };
 
   return (
@@ -73,12 +73,12 @@ const Login = () => {
             value=""
           >
             <option value="">Select a demo account</option>
-            <option value="superadmin@platform.com">Super Admin</option>
-            <option value="admin@platform.com">Admin</option>
-            <option value="examiner@platform.com">Examiner</option>
-            <option value="student1@platform.com">Student</option>
+            <option value="superadmin@gmail.com">Super Admin</option>
+            <option value="admin@gmail.com">Admin</option>
+            <option value="examiner@gmail.com">Examiner</option>
+            <option value="student1@gmail.com">Student</option>
           </select>
-          <p className="demo-password">Password: Admin@123456</p>
+          <p className="demo-password">Password: Admin@123</p>
         </div>
 
         <div className="login-footer">

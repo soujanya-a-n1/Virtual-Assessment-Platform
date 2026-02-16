@@ -7,6 +7,26 @@ const ExamSubmission = sequelize.define('ExamSubmission', {
     primaryKey: true,
     autoIncrement: true,
   },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id',
+    },
+  },
+  examId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'exams',
+      key: 'id',
+    },
+  },
+  startedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
   submitTime: {
     type: DataTypes.DATE,
     allowNull: true,
