@@ -58,12 +58,15 @@ CREATE TABLE IF NOT EXISTS exams (
   shuffleQuestions BOOLEAN DEFAULT FALSE,
   negativeMarkingEnabled BOOLEAN DEFAULT FALSE,
   negativeMarks DECIMAL(10,2),
+  courseId INT,
   createdBy INT NOT NULL,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (createdBy) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (courseId) REFERENCES courses(id) ON DELETE SET NULL,
   INDEX idx_status (status),
-  INDEX idx_createdBy (createdBy)
+  INDEX idx_createdBy (createdBy),
+  INDEX idx_courseId (courseId)
 );
 
 -- Questions Table
@@ -73,6 +76,8 @@ CREATE TABLE IF NOT EXISTS questions (
   questionType ENUM('Multiple Choice', 'True/False', 'Short Answer', 'Essay', 'Matching') NOT NULL,
   marks DECIMAL(10,2) NOT NULL,
   difficulty ENUM('Easy', 'Medium', 'Hard') DEFAULT 'Medium',
+  topic VARCHAR(100),
+  courseId INT,
   optionA TEXT,
   optionB TEXT,
   optionC TEXT,
@@ -83,8 +88,10 @@ CREATE TABLE IF NOT EXISTS questions (
   displayOrder INT,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (courseId) REFERENCES courses(id) ON DELETE SET NULL,
   INDEX idx_questionType (questionType),
-  INDEX idx_difficulty (difficulty)
+  INDEX idx_difficulty (difficulty),
+  INDEX idx_courseId (courseId)
 );
 
 -- Exam Questions Junction Table
@@ -185,3 +192,106 @@ INSERT INTO roles (name, description) VALUES
   ('Examiner', 'Can create and manage exams'),
   ('Proctor', 'Can invigilate exams and manage anti-cheating'),
   ('Student', 'Can take exams');
+
+-- Departments Table
+CREATE TABLE IF NOT EXISTS departments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  code VARCHAR(20) NOT NULL UNIQUE,
+  description TEXT,
+  isActive BOOLEAN DEFAULT TRUE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_code (code),
+  INDEX idx_isActive (isActive)
+);
+
+-- Courses Table
+CREATE TABLE IF NOT EXISTS courses (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  code VARCHAR(20) NOT NULL UNIQUE,
+  description TEXT,
+  credits INT,
+  departmentId INT,
+  isActive BOOLEAN DEFAULT TRUE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (departmentId) REFERENCES departments(id) ON DELETE SET NULL,
+  INDEX idx_code (code),
+  INDEX idx_departmentId (departmentId),
+  INDEX idx_isActive (isActive)
+);
+
+-- Classes Table
+CREATE TABLE IF NOT EXISTS classes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  code VARCHAR(20) NOT NULL UNIQUE,
+  departmentId INT,
+  academicYear VARCHAR(20),
+  semester VARCHAR(20),
+  isActive BOOLEAN DEFAULT TRUE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (departmentId) REFERENCES departments(id) ON DELETE SET NULL,
+  INDEX idx_code (code),
+  INDEX idx_departmentId (departmentId),
+  INDEX idx_isActive (isActive)
+);
+
+-- Lecturers Table
+CREATE TABLE IF NOT EXISTS lecturers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT NOT NULL UNIQUE,
+  employeeId VARCHAR(50) UNIQUE,
+  departmentId INT,
+  qualification VARCHAR(100),
+  specialization VARCHAR(100),
+  joiningDate DATE,
+  isActive BOOLEAN DEFAULT TRUE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (departmentId) REFERENCES departments(id) ON DELETE SET NULL,
+  INDEX idx_userId (userId),
+  INDEX idx_employeeId (employeeId),
+  INDEX idx_departmentId (departmentId)
+);
+
+-- Students Table
+CREATE TABLE IF NOT EXISTS students (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT NOT NULL UNIQUE,
+  studentId VARCHAR(50) UNIQUE,
+  classId INT,
+  departmentId INT,
+  enrollmentYear INT,
+  currentSemester INT,
+  isActive BOOLEAN DEFAULT TRUE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (classId) REFERENCES classes(id) ON DELETE SET NULL,
+  FOREIGN KEY (departmentId) REFERENCES departments(id) ON DELETE SET NULL,
+  INDEX idx_userId (userId),
+  INDEX idx_studentId (studentId),
+  INDEX idx_classId (classId),
+  INDEX idx_departmentId (departmentId)
+);
+
+-- Course Lecturer Assignment Table
+CREATE TABLE IF NOT EXISTS course_lecturers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  courseId INT NOT NULL,
+  lecturerId INT NOT NULL,
+  assignedDate DATE DEFAULT (CURRENT_DATE),
+  isActive BOOLEAN DEFAULT TRUE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (courseId) REFERENCES courses(id) ON DELETE CASCADE,
+  FOREIGN KEY (lecturerId) REFERENCES lecturers(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_course_lecturer (courseId, lecturerId),
+  INDEX idx_courseId (courseId),
+  INDEX idx_lecturerId (lecturerId)
+);

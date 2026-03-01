@@ -206,7 +206,7 @@ const LecturersList = () => {
               <th>Email</th>
               <th>Department</th>
               <th>Specialization</th>
-              <th>Assigned Courses</th>
+              <th>Courses</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -214,45 +214,38 @@ const LecturersList = () => {
           <tbody>
             {filteredLecturers.map((lecturer) => (
               <tr key={lecturer.id}>
-                <td>{lecturer.employeeId || '-'}</td>
-                <td>{`${lecturer.user.firstName} ${lecturer.user.lastName}`}</td>
-                <td>{lecturer.user.email}</td>
-                <td>{lecturer.department?.name || '-'}</td>
-                <td>{lecturer.specialization || '-'}</td>
                 <td>
-                  <div className="assigned-items">
-                    {lecturer.courses && lecturer.courses.length > 0 ? (
-                      <>
-                        <span className="count-badge">{lecturer.courses.length}</span>
-                        <div className="items-list">
-                          {lecturer.courses.map((course, index) => (
-                            <span key={course.id} className="item-tag">
-                              {course.code} - {course.name}
-                              {index < lecturer.courses.length - 1 && ', '}
-                            </span>
-                          ))}
-                        </div>
-                      </>
-                    ) : (
-                      <span className="no-items">No courses assigned</span>
-                    )}
-                  </div>
+                  <span className="code-badge">{lecturer.employeeId || '-'}</span>
                 </td>
                 <td>
-                  <span className={`status ${lecturer.isActive ? 'active' : 'inactive'}`}>
+                  <strong>{`${lecturer.user.firstName} ${lecturer.user.lastName}`}</strong>
+                </td>
+                <td>{lecturer.user.email}</td>
+                <td>{lecturer.department?.name || <span className="text-muted">Not assigned</span>}</td>
+                <td>
+                  {lecturer.specialization ? (
+                    <span className="specialization-badge">{lecturer.specialization}</span>
+                  ) : (
+                    <span className="text-muted">-</span>
+                  )}
+                </td>
+                <td>
+                  <span className="count-badge">{lecturer.courses?.length || 0}</span>
+                </td>
+                <td>
+                  <span className={`status-badge ${lecturer.isActive ? 'active' : 'inactive'}`}>
                     {lecturer.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
                 <td>
-                  <button className="btn-edit" onClick={() => handleEdit(lecturer)}>
-                    Edit
-                  </button>
-                  <button className="btn-secondary" onClick={() => handleManageCourses(lecturer)}>
-                    Courses
-                  </button>
-                  <button className="btn-delete" onClick={() => handleDelete(lecturer.id)}>
-                    Delete
-                  </button>
+                  <div className="action-buttons">
+                    <button className="btn-edit" onClick={() => handleEdit(lecturer)} title="Edit Lecturer">
+                      Edit
+                    </button>
+                    <button className="btn-delete" onClick={() => handleDelete(lecturer.id)} title="Delete Lecturer">
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

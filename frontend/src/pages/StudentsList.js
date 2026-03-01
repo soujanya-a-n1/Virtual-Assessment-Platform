@@ -223,24 +223,36 @@ const StudentsList = () => {
           <tbody>
             {filteredStudents.map((student) => (
               <tr key={student.id}>
-                <td>{student.studentId || '-'}</td>
-                <td>{`${student.user.firstName} ${student.user.lastName}`}</td>
-                <td>{student.user.email}</td>
-                <td>{student.class?.name || '-'}</td>
-                <td>{student.department?.name || '-'}</td>
-                <td>{student.currentSemester || '-'}</td>
                 <td>
-                  <span className={`status ${student.isActive ? 'active' : 'inactive'}`}>
+                  <span className="code-badge">{student.studentId || '-'}</span>
+                </td>
+                <td>
+                  <strong>{`${student.user.firstName} ${student.user.lastName}`}</strong>
+                </td>
+                <td>{student.user.email}</td>
+                <td>{student.class?.name || <span className="text-muted">Not assigned</span>}</td>
+                <td>{student.department?.name || <span className="text-muted">Not assigned</span>}</td>
+                <td>
+                  {student.currentSemester ? (
+                    <span className="semester-badge">Semester {student.currentSemester}</span>
+                  ) : (
+                    <span className="text-muted">-</span>
+                  )}
+                </td>
+                <td>
+                  <span className={`status-badge ${student.isActive ? 'active' : 'inactive'}`}>
                     {student.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
                 <td>
-                  <button className="btn-edit" onClick={() => handleEdit(student)}>
-                    Edit
-                  </button>
-                  <button className="btn-delete" onClick={() => handleDelete(student.id)}>
-                    Delete
-                  </button>
+                  <div className="action-buttons">
+                    <button className="btn-edit" onClick={() => handleEdit(student)} title="Edit Student">
+                      Edit
+                    </button>
+                    <button className="btn-delete" onClick={() => handleDelete(student.id)} title="Delete Student">
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

@@ -76,11 +76,13 @@ const CoursesList = () => {
       await api.post(`/courses/${currentCourse.id}/lecturers`, {
         lecturerIds: selectedLecturers
       });
-      alert('Lecturers assigned successfully');
+      
+      alert('Lecturers updated successfully');
       setShowLecturerModal(false);
       fetchCourses();
     } catch (error) {
-      alert(error.response?.data?.message || 'Error assigning lecturers');
+      console.error('Error updating lecturers:', error);
+      alert(error.response?.data?.message || 'Error updating lecturers');
     }
   };
 
@@ -94,6 +96,13 @@ const CoursesList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.name || !formData.code) {
+      alert('Course name and code are required');
+      return;
+    }
+
     try {
       if (editMode) {
         await api.put(`/courses/${currentCourse.id}`, formData);
@@ -106,7 +115,9 @@ const CoursesList = () => {
       resetForm();
       fetchCourses();
     } catch (error) {
-      alert(error.response?.data?.message || 'Error saving course');
+      console.error('Error saving course:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Error saving course';
+      alert(errorMessage);
     }
   };
 
@@ -125,13 +136,15 @@ const CoursesList = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this course?')) {
+    if (window.confirm('Are you sure you want to delete this course? This will also remove all lecturer assignments.')) {
       try {
         await api.delete(`/courses/${id}`);
         alert('Course deleted successfully');
         fetchCourses();
       } catch (error) {
-        alert(error.response?.data?.message || 'Error deleting course');
+        console.error('Error deleting course:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Error deleting course';
+        alert(errorMessage);
       }
     }
   };
@@ -188,7 +201,7 @@ const CoursesList = () => {
               <th>Name</th>
               <th>Department</th>
               <th>Credits</th>
-              <th>Assigned Lecturers</th>
+              <th>Lecturers</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -196,44 +209,60 @@ const CoursesList = () => {
           <tbody>
             {filteredCourses.map((course) => (
               <tr key={course.id}>
-                <td>{course.code}</td>
-                <td>{course.name}</td>
-                <td>{course.department?.name || '-'}</td>
-                <td>{course.credits || '-'}</td>
                 <td>
-                  <div className="assigned-items">
+                  <span className="code-badge">{course.code}</span>
+                </td>
+                <td>
+                  <strong>{course.name}</strong>
+                  {course.description && (
+                    <div className="description-text">{course.description}</div>
+                  )}
+                </td>
+                <td>{course.department?.name || <span className="text-muted">Not assigned</span>}</td>
+                <td>
+                  {course.credits ? (
+                    <span className="credits-badge">{course.credits} Credits</span>
+                  ) : (
+                    <span className="text-muted">-</span>
+                  )}
+                </td>
+                <td>
+                  <div className="lecturers-cell">
                     {course.lecturers && course.lecturers.length > 0 ? (
                       <>
                         <span className="count-badge">{course.lecturers.length}</span>
-                        <div className="items-list">
-                          {course.lecturers.map((lecturer, index) => (
-                            <span key={lecturer.id} className="item-tag">
-                              {lecturer.user.firstName} {lecturer.user.lastName}
-                              {index < course.lecturers.length - 1 && ', '}
-                            </span>
-                          ))}
-                        </div>
+                        <button 
+                          className="btn-view-lecturers" 
+                          onClick={() => handleManageLecturers(course)}
+                          title="View/Manage Lecturers"
+                        >
+                          View Lecturers
+                        </button>
                       </>
                     ) : (
-                      <span className="no-items">No lecturers assigned</span>
+                      <button 
+                        className="btn-assign-lecturers" 
+                        onClick={() => handleManageLecturers(course)}
+                      >
+                        Assign Lecturers
+                      </button>
                     )}
                   </div>
                 </td>
                 <td>
-                  <span className={`status ${course.isActive ? 'active' : 'inactive'}`}>
+                  <span className={`status-badge ${course.isActive ? 'active' : 'inactive'}`}>
                     {course.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
                 <td>
-                  <button className="btn-edit" onClick={() => handleEdit(course)}>
-                    Edit
-                  </button>
-                  <button className="btn-secondary" onClick={() => handleManageLecturers(course)}>
-                    Lecturers
-                  </button>
-                  <button className="btn-delete" onClick={() => handleDelete(course.id)}>
-                    Delete
-                  </button>
+                  <div className="action-buttons">
+                    <button className="btn-edit" onClick={() => handleEdit(course)} title="Edit Course">
+                      Edit
+                    </button>
+                    <button className="btn-delete" onClick={() => handleDelete(course.id)} title="Delete Course">
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -357,7 +386,7 @@ const CoursesList = () => {
                         />
                         <div className="lecturer-info">
                           <span className="lecturer-name">
-                            {lecturer.user.firstName} {lecturer.user.lastName}
+                            {lecturer.user ? `${lecturer.user.firstName} ${lecturer.user.lastName}` : 'Unknown Lecturer'}
                           </span>
                           <span className="lecturer-details">
                             {lecturer.employeeId && `(${lecturer.employeeId})`}

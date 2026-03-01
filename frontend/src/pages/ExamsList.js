@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { examAPI } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import ExamAssignmentModal from '../components/ExamAssignmentModal';
 import { 
   FiPlus, 
   FiEdit2, 
@@ -10,7 +11,8 @@ import {
   FiFileText, 
   FiAward,
   FiCalendar,
-  FiEye
+  FiEye,
+  FiUserPlus
 } from 'react-icons/fi';
 import './ExamsList.css';
 
@@ -18,9 +20,13 @@ const ExamsList = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [exams, setExams] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [courseFilter, setCourseFilter] = useState('all');
   const [showModal, setShowModal] = useState(false);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [selectedExamForAssignment, setSelectedExamForAssignment] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [currentExam, setCurrentExam] = useState(null);
   const [formData, setFormData] = useState({
@@ -37,11 +43,13 @@ const ExamsList = () => {
     requiresProctoring: true,
     shuffleQuestions: false,
     negativeMarkingEnabled: false,
-    negativeMarks: 0
+    negativeMarks: 0,
+    courseId: ''
   });
 
   useEffect(() => {
     fetchExams();
+    fetchCourses();
   }, []);
 
   const fetchExams = async () => {
@@ -52,6 +60,20 @@ const ExamsList = () => {
       console.error('Error fetching exams:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCourses = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/courses', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      const data = await response.json();
+      setCourses(data.courses || []);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
     }
   };
 
@@ -97,7 +119,8 @@ const ExamsList = () => {
       requiresProctoring: exam.requiresProctoring,
       shuffleQuestions: exam.shuffleQuestions,
       negativeMarkingEnabled: exam.negativeMarkingEnabled,
-      negativeMarks: exam.negativeMarks || 0
+      negativeMarks: exam.negativeMarks || 0,
+      courseId: exam.courseId || ''
     });
     setEditMode(true);
     setShowModal(true);
@@ -131,7 +154,8 @@ const ExamsList = () => {
       requiresProctoring: true,
       shuffleQuestions: false,
       negativeMarkingEnabled: false,
-      negativeMarks: 0
+      negativeMarks: 0,
+      courseId: ''
     });
     setEditMode(false);
     setCurrentExam(null);
@@ -149,8 +173,9 @@ const ExamsList = () => {
   };
 
   const filteredExams = exams.filter(exam => {
-    if (filter === 'all') return true;
-    return exam.status === filter;
+    const statusMatch = filter === 'all' || exam.status === filter;
+    const courseMatch = courseFilter === 'all' || exam.courseId === parseInt(courseFilter);
+    return statusMatch && courseMatch;
   });
 
   const formatDate = (date) => {
@@ -224,6 +249,22 @@ const ExamsList = () => {
             Active ({exams.filter(e => e.status === 'Active').length})
           </button>
         </div>
+        <div className="course-filter">
+          <label htmlFor="courseFilter">Filter by Course:</label>
+          <select 
+            id="courseFilter"
+            value={courseFilter} 
+            onChange={(e) => setCourseFilter(e.target.value)}
+            className="course-filter-select"
+          >
+            <option value="all">All Courses</option>
+            {courses.map(course => (
+              <option key={course.id} value={course.id}>
+                {course.code} - {course.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {filteredExams.length === 0 ? (
@@ -257,6 +298,13 @@ const ExamsList = () => {
                   {exam.status}
                 </span>
               </div>
+
+              {exam.course && (
+                <div className="exam-course-badge">
+                  <FiFileText className="course-icon" />
+                  <span>{exam.course.code} - {exam.course.name}</span>
+                </div>
+              )}
 
               <p className="exam-description">{exam.description || 'No description'}</p>
 
@@ -318,6 +366,16 @@ const ExamsList = () => {
                     {canManageExams && (
                       <>
                         <button
+                          className="action-btn assign-btn"
+                          onClick={() => {
+                            setSelectedExamForAssignment(exam);
+                            setShowAssignModal(true);
+                          }}
+                          title="Assign students"
+                        >
+                          <FiUserPlus /> Assign
+                        </button>
+                        <button
                           className="action-btn edit-btn"
                           onClick={() => handleEdit(exam)}
                           title="Edit exam"
@@ -370,6 +428,21 @@ const ExamsList = () => {
                   rows="3"
                   placeholder="Enter exam description"
                 />
+              </div>
+              <div className="form-group">
+                <label>Course</label>
+                <select
+                  name="courseId"
+                  value={formData.courseId}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Course (Optional)</option>
+                  {courses.map(course => (
+                    <option key={course.id} value={course.id}>
+                      {course.code} - {course.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="form-row">
                 <div className="form-group">
@@ -511,6 +584,20 @@ const ExamsList = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Assignment Modal */}
+      {showAssignModal && selectedExamForAssignment && (
+        <ExamAssignmentModal
+          exam={selectedExamForAssignment}
+          onClose={() => {
+            setShowAssignModal(false);
+            setSelectedExamForAssignment(null);
+          }}
+          onAssign={() => {
+            fetchExams();
+          }}
+        />
       )}
     </div>
   );
