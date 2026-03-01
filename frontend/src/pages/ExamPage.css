@@ -57,9 +57,10 @@
 
 .section-header h2 {
   font-size: 1.5rem;
-  color: #ffffff;
+  color: #ffffff !important;
   margin: 0;
   font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .form-group {
@@ -72,9 +73,9 @@
   gap: 0.5rem;
   margin-bottom: 0.75rem;
   font-weight: 700;
-  color: #ff8c00;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  font-size: 0.95rem;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 1rem;
   letter-spacing: 0.5px;
 }
 
@@ -133,6 +134,10 @@
 .form-group textarea {
   resize: vertical;
   min-height: 100px;
+  line-height: 1.5;
+  font-family: inherit;
+  background: #ffffff !important;
+  color: #222222 !important;
 }
 
 .form-row {
@@ -454,12 +459,14 @@
 }
 
 .question-number {
-  background: #ff8c00;
-  color: white;
+  background: #ff8c00 !important;
+  color: #ffffff !important;
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  text-shadow: none;
+  display: inline-block;
 }
 
 .question-type {
@@ -638,6 +645,29 @@
 
 .modal-content form {
   padding: 2rem;
+  color: #ffffff;
+}
+
+.modal-content form .form-group label {
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 1rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.modal-content form .form-group input,
+.modal-content form .form-group textarea,
+.modal-content form .form-group select {
+  background: #ffffff !important;
+  color: #222222 !important;
+  color: #222222 !important;
+  border: 1px solid #444444;
+}
+
+.modal-content form .form-group textarea {
+  min-height: 80px;
+  line-height: 1.5;
+  padding: 0.85rem;
 }
 
 .modal-body {
@@ -843,4 +873,72 @@
   .option {
     padding: 0.5rem 0.75rem;
   }
+}
+
+
+/* Ensure all modal text is visible */
+.modal-content * {
+  color: inherit;
+}
+
+.modal-content label,
+.modal-content .form-group label {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  color: #222222 !important;
+  background: #ffffff !important;
+}
+
+.modal-content input::placeholder,
+.modal-content textarea::placeholder {
+  color: #999999 !important;
+}
+
+.modal-footer {
+  color: #ffffff;
+}
+
+.checkbox-label span {
+  color: #ffffff !important;
+}
+
+
+/* Comprehensive text visibility fix for all form elements */
+.exam-form-section label,
+.exam-form-section .form-group label,
+form label,
+form .form-group label {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+/* Ensure section headers are visible */
+.section-header,
+.section-header h2,
+.section-header h3 {
+  color: #ffffff !important;
+}
+
+/* Make sure all text content is visible */
+.exam-page-container p,
+.exam-page-container span,
+.exam-page-container div {
+  color: inherit;
+}
+
+/* Form row labels */
+.form-row .form-group label {
+  color: #ffffff !important;
+  font-weight: 700 !important;
 }

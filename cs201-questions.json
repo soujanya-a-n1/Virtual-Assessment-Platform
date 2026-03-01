@@ -1,0 +1,218 @@
+{
+  "course": "CS201",
+  "courseName": "Data Structures",
+  "totalQuestions": 15,
+  "difficulty": "Medium to Hard",
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Stack",
+      "questionText": "What is the time complexity of pushing an element onto a stack implemented using a linked list?",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(log n)",
+        "O(n²)"
+      ],
+      "correctAnswer": "O(1)",
+      "marks": 5,
+      "explanation": "Pushing an element onto a stack using a linked list is O(1) because we only need to create a new node and update the top pointer, which are constant time operations."
+    },
+    {
+      "id": 2,
+      "topic": "Queue",
+      "questionText": "In a circular queue with size 5, if front = 2 and rear = 4, how many elements are currently in the queue?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctAnswer": "3",
+      "marks": 5,
+      "explanation": "In a circular queue, the number of elements = (rear - front + 1) = (4 - 2 + 1) = 3. The elements are at positions 2, 3, and 4."
+    },
+    {
+      "id": 3,
+      "topic": "Linked List",
+      "questionText": "What is the main advantage of a doubly linked list over a singly linked list?",
+      "options": [
+        "Uses less memory",
+        "Faster insertion at the beginning",
+        "Can traverse in both directions",
+        "Simpler implementation"
+      ],
+      "correctAnswer": "Can traverse in both directions",
+      "marks": 5,
+      "explanation": "A doubly linked list has both next and previous pointers, allowing bidirectional traversal. This makes operations like reverse traversal and deletion more efficient."
+    },
+    {
+      "id": 4,
+      "topic": "Stack",
+      "questionText": "Which of the following applications does NOT use a stack?",
+      "options": [
+        "Function call management",
+        "Expression evaluation",
+        "Undo mechanism in editors",
+        "Breadth-first search"
+      ],
+      "correctAnswer": "Breadth-first search",
+      "marks": 5,
+      "explanation": "Breadth-first search (BFS) uses a queue, not a stack. BFS explores nodes level by level, which requires FIFO behavior. Stacks are used in DFS (depth-first search)."
+    },
+    {
+      "id": 5,
+      "topic": "Binary Tree",
+      "questionText": "In a complete binary tree with 15 nodes, what is the height of the tree?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "15"
+      ],
+      "correctAnswer": "3",
+      "marks": 5,
+      "explanation": "A complete binary tree with n nodes has height = floor(log₂(n)). For 15 nodes: floor(log₂(15)) = floor(3.9) = 3. The tree has levels 0, 1, 2, and 3."
+    },
+    {
+      "id": 6,
+      "topic": "Tree Traversal",
+      "questionText": "Given a binary tree with inorder traversal [4, 2, 5, 1, 3] and preorder traversal [1, 2, 4, 5, 3], what is the postorder traversal?",
+      "options": [
+        "[4, 5, 2, 3, 1]",
+        "[4, 2, 5, 3, 1]",
+        "[1, 2, 3, 4, 5]",
+        "[5, 4, 2, 3, 1]"
+      ],
+      "correctAnswer": "[4, 5, 2, 3, 1]",
+      "marks": 5,
+      "explanation": "From preorder, root is 1. From inorder, left subtree is [4,2,5] and right is [3]. Recursively building the tree and doing postorder (left-right-root) gives [4, 5, 2, 3, 1]."
+    },
+    {
+      "id": 7,
+      "topic": "Queue",
+      "questionText": "What is the time complexity of dequeue operation in a queue implemented using two stacks?",
+      "options": [
+        "O(1) always",
+        "O(n) always",
+        "O(1) amortized",
+        "O(log n)"
+      ],
+      "correctAnswer": "O(1) amortized",
+      "marks": 5,
+      "explanation": "Using two stacks, dequeue is O(1) amortized. While a single dequeue might take O(n) when transferring elements between stacks, the amortized cost over multiple operations is O(1)."
+    },
+    {
+      "id": 8,
+      "topic": "Linked List",
+      "questionText": "To detect a cycle in a linked list using Floyd's algorithm, what is the relationship between the fast and slow pointers?",
+      "options": [
+        "Fast moves 3 steps, slow moves 1 step",
+        "Fast moves 2 steps, slow moves 1 step",
+        "Fast moves 4 steps, slow moves 2 steps",
+        "Both move 1 step but start at different positions"
+      ],
+      "correctAnswer": "Fast moves 2 steps, slow moves 1 step",
+      "marks": 5,
+      "explanation": "Floyd's cycle detection algorithm uses two pointers: slow moves 1 step and fast moves 2 steps per iteration. If there's a cycle, they will eventually meet inside the cycle."
+    },
+    {
+      "id": 9,
+      "topic": "Stack",
+      "questionText": "What is the postfix notation for the infix expression: A + B * C - D / E?",
+      "options": [
+        "ABC*+DE/-",
+        "ABC+*DE-/",
+        "ABCD+*E/-",
+        "AB+C*D-E/"
+      ],
+      "correctAnswer": "ABC*+DE/-",
+      "marks": 5,
+      "explanation": "Following operator precedence: B*C first → BC*, then A+ → ABC*+, then D/E → DE/, finally subtract → ABC*+DE/-. Multiplication and division have higher precedence than addition and subtraction."
+    },
+    {
+      "id": 10,
+      "topic": "Binary Tree",
+      "questionText": "In a binary search tree, which traversal gives nodes in sorted order?",
+      "options": [
+        "Preorder",
+        "Inorder",
+        "Postorder",
+        "Level order"
+      ],
+      "correctAnswer": "Inorder",
+      "marks": 5,
+      "explanation": "Inorder traversal (left-root-right) of a BST visits nodes in ascending sorted order because it processes the left subtree (smaller values) before the root, then the right subtree (larger values)."
+    },
+    {
+      "id": 11,
+      "topic": "Queue",
+      "questionText": "What is the main disadvantage of implementing a queue using an array?",
+      "options": [
+        "Slow enqueue operation",
+        "Slow dequeue operation",
+        "Fixed size limitation",
+        "Cannot implement circular queue"
+      ],
+      "correctAnswer": "Fixed size limitation",
+      "marks": 5,
+      "explanation": "Array-based queues have a fixed size determined at creation. Once full, no more elements can be added unless the array is resized (expensive operation). Linked list implementation doesn't have this limitation."
+    },
+    {
+      "id": 12,
+      "topic": "Linked List",
+      "questionText": "What is the time complexity to find the middle element of a singly linked list with n nodes?",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ],
+      "correctAnswer": "O(n)",
+      "marks": 5,
+      "explanation": "To find the middle element, we need to traverse the list. Using the two-pointer technique (slow and fast), we traverse approximately n/2 nodes, which is O(n) time complexity."
+    },
+    {
+      "id": 13,
+      "topic": "Tree Traversal",
+      "questionText": "Which tree traversal uses a queue data structure in its implementation?",
+      "options": [
+        "Preorder",
+        "Inorder",
+        "Postorder",
+        "Level order"
+      ],
+      "correctAnswer": "Level order",
+      "marks": 5,
+      "explanation": "Level order (breadth-first) traversal uses a queue to visit nodes level by level. Nodes are enqueued and dequeued in FIFO order. Preorder, inorder, and postorder use recursion (implicit stack) or explicit stack."
+    },
+    {
+      "id": 14,
+      "topic": "Binary Tree",
+      "questionText": "What is the maximum number of nodes in a binary tree of height h?",
+      "options": [
+        "2^h",
+        "2^h - 1",
+        "2^(h+1) - 1",
+        "2^(h-1)"
+      ],
+      "correctAnswer": "2^(h+1) - 1",
+      "marks": 5,
+      "explanation": "A complete binary tree of height h has maximum nodes = 2^(h+1) - 1. This occurs when all levels are completely filled. For example, height 2 has max 2^3 - 1 = 7 nodes."
+    },
+    {
+      "id": 15,
+      "topic": "Stack",
+      "questionText": "In the Tower of Hanoi problem with n disks, what is the minimum number of moves required?",
+      "options": [
+        "n",
+        "n²",
+        "2^n - 1",
+        "n!"
+      ],
+      "correctAnswer": "2^n - 1",
+      "marks": 5,
+      "explanation": "Tower of Hanoi requires 2^n - 1 moves. The recursive solution moves n-1 disks to auxiliary peg (2^(n-1) - 1 moves), moves largest disk (1 move), then moves n-1 disks to destination (2^(n-1) - 1 moves). Total = 2^n - 1."
+    }
+  ]
+}

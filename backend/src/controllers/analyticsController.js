@@ -1,4 +1,4 @@
-const { ExamSubmission, Exam, User, StudentAnswer, Question } = require('../models');
+const { ExamSubmission, Exam, User, StudentAnswer, Question, Student } = require('../models');
 const { Op } = require('sequelize');
 
 const getAnalytics = async (req, res) => {
@@ -17,7 +17,11 @@ const getAnalytics = async (req, res) => {
       order: [['submitTime', 'DESC']]
     });
 
-    const totalStudents = await User.count({ where: { role: 'student' } });
+    // Count all users and students (only active users)
+    const totalUsers = await User.count({
+      where: { isActive: true }
+    });
+    const totalStudents = await Student.count();
     const totalExams = await Exam.count();
     const totalQuestions = await Question.count();
     const totalSubmissions = submissions.length;
@@ -49,9 +53,10 @@ const getAnalytics = async (req, res) => {
 
     res.json({
       analytics: {
+        totalUsers,
+        totalStudents,
         totalExams,
         totalSubmissions,
-        totalStudents,
         totalQuestions,
         passedCount,
         failedCount,

@@ -44,6 +44,13 @@ const DepartmentsList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.name || !formData.code) {
+      alert('Department name and code are required');
+      return;
+    }
+
     try {
       if (editMode) {
         await api.put(`/departments/${currentDept.id}`, formData);
@@ -56,7 +63,9 @@ const DepartmentsList = () => {
       resetForm();
       fetchDepartments();
     } catch (error) {
-      alert(error.response?.data?.message || 'Error saving department');
+      console.error('Error saving department:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Error saving department';
+      alert(errorMessage);
     }
   };
 
@@ -141,22 +150,36 @@ const DepartmentsList = () => {
           <tbody>
             {filteredDepartments.map((dept) => (
               <tr key={dept.id}>
-                <td>{dept.code}</td>
-                <td>{dept.name}</td>
-                <td>{dept.description || '-'}</td>
-                <td>{dept.courses?.length || 0}</td>
                 <td>
-                  <span className={`status ${dept.isActive ? 'active' : 'inactive'}`}>
+                  <span className="code-badge">{dept.code}</span>
+                </td>
+                <td>
+                  <strong>{dept.name}</strong>
+                </td>
+                <td>
+                  {dept.description ? (
+                    <span className="description-text">{dept.description}</span>
+                  ) : (
+                    <span className="text-muted">No description</span>
+                  )}
+                </td>
+                <td>
+                  <span className="count-badge">{dept.courses?.length || 0}</span>
+                </td>
+                <td>
+                  <span className={`status-badge ${dept.isActive ? 'active' : 'inactive'}`}>
                     {dept.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
                 <td>
-                  <button className="btn-edit" onClick={() => handleEdit(dept)}>
-                    Edit
-                  </button>
-                  <button className="btn-delete" onClick={() => handleDelete(dept.id)}>
-                    Delete
-                  </button>
+                  <div className="action-buttons">
+                    <button className="btn-edit" onClick={() => handleEdit(dept)} title="Edit Department">
+                      Edit
+                    </button>
+                    <button className="btn-delete" onClick={() => handleDelete(dept.id)} title="Delete Department">
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

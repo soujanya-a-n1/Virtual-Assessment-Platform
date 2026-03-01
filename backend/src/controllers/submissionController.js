@@ -206,16 +206,17 @@ const getAllSubmissions = async (req, res) => {
         { 
           model: Exam, 
           as: 'exam', 
-          attributes: ['id', 'title', 'totalMarks', 'passingMarks'] 
-        },
-        { 
-          model: User, 
-          as: 'student', 
-          attributes: ['id', 'firstName', 'lastName', 'email'],
+          attributes: ['id', 'title', 'totalMarks', 'passingMarks'],
           include: [{
-            association: 'studentProfile',
-            attributes: ['id', 'rollNumber']
+            association: 'course',
+            attributes: ['id', 'code', 'name'],
+            required: false
           }]
+        },
+        {
+          model: User,
+          as: 'student',
+          attributes: ['id', 'firstName', 'lastName', 'email']
         },
       ],
       order: [['createdAt', 'DESC']],

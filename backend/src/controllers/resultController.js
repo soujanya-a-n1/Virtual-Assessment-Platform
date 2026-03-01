@@ -47,7 +47,7 @@ exports.getResultDetails = async (req, res) => {
         },
         {
           model: User,
-          as: 'user',
+          as: 'student',
           attributes: ['id', 'firstName', 'lastName', 'email'],
         },
         {
@@ -115,7 +115,7 @@ exports.getAllResults = async (req, res) => {
         },
         {
           model: User,
-          as: 'user',
+          as: 'student',
           attributes: ['id', 'firstName', 'lastName', 'email'],
         },
       ],

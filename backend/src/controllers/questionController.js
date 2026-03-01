@@ -1,4 +1,4 @@
-const { Question, Exam, ExamQuestion } = require('../models');
+const { Question, Exam, ExamQuestion, Course } = require('../models');
 const csv = require('csv-parser');
 const fs = require('fs');
 
@@ -10,6 +10,7 @@ const createQuestion = async (req, res) => {
       marks,
       difficulty,
       topic,
+      courseId,
       optionA,
       optionB,
       optionC,
@@ -18,12 +19,21 @@ const createQuestion = async (req, res) => {
       explanation,
     } = req.body;
 
+    console.log('Creating question with data:', {
+      questionText: questionText?.substring(0, 50),
+      questionType,
+      marks,
+      difficulty,
+      courseId
+    });
+
     const question = await Question.create({
       questionText,
       questionType,
       marks,
       difficulty,
       topic,
+      courseId,
       optionA,
       optionB,
       optionC,
@@ -32,20 +42,33 @@ const createQuestion = async (req, res) => {
       explanation,
     });
 
+    console.log('Question created successfully:', question.id);
     res.status(201).json({ message: 'Question created successfully', question });
   } catch (error) {
+    console.error('Error creating question:', error);
+    console.error('Error details:', error.message);
     res.status(500).json({ message: 'Error creating question', error: error.message });
   }
 };
 
 const getAllQuestions = async (req, res) => {
   try {
+    const { courseId } = req.query;
+    
+    const whereClause = {};
+    if (courseId) {
+      whereClause.courseId = courseId;
+    }
+
     const questions = await Question.findAll({
+      where: whereClause,
       order: [['createdAt', 'DESC']],
     });
 
     res.json({ questions });
   } catch (error) {
+    console.error('Error fetching questions:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({ message: 'Error fetching questions', error: error.message });
   }
 };
@@ -100,6 +123,7 @@ const uploadQuestionsCSV = async (req, res) => {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
+    const { courseId } = req.body;
     const questions = [];
     const filePath = req.file.path;
 
@@ -112,6 +136,7 @@ const uploadQuestionsCSV = async (req, res) => {
           marks: parseFloat(row.marks),
           difficulty: row.difficulty || 'Medium',
           topic: row.topic || null,
+          courseId: courseId || row.courseId || null,
           optionA: row.optionA,
           optionB: row.optionB,
           optionC: row.optionC,

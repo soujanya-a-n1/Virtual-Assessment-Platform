@@ -1,0 +1,446 @@
+/* Text Visibility Fixes for Exam Management */
+
+/* Ensure all text is visible with proper colors */
+.exams-container,
+.exam-page-container {
+  color: #e0e0e0;
+}
+
+/* Headers and titles */
+.exams-header h1,
+.exam-page-header h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.5rem 0;
+  font-weight: 800;
+}
+
+.subtitle {
+  color: #cccccc !important;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* Form labels */
+.form-group label,
+.question-form label {
+  color: #ffffff !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Input fields */
+.form-group input,
+.form-group select,
+.form-group textarea,
+.question-form input,
+.question-form select,
+.question-form textarea {
+  color: #ffffff !important;
+  background: #1a1a1a !important;
+  border: 1px solid #444444 !important;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.question-form input::placeholder,
+.question-form textarea::placeholder {
+  color: #888888 !important;
+  opacity: 1;
+}
+
+/* Select dropdown options */
+select option {
+  color: #ffffff !important;
+  background: #1a1a1a !important;
+}
+
+/* Checkbox labels */
+.checkbox-label,
+.checkbox-label span {
+  color: #ffffff !important;
+  font-size: 0.95rem;
+}
+
+/* Section headers */
+.section-header h2 {
+  color: #ffffff !important;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Error messages */
+.error-message {
+  color: #ff6b6b !important;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Buttons */
+.btn,
+.action-btn,
+.filter-btn {
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+.btn-secondary {
+  color: #e0e0e0 !important;
+}
+
+/* Exam cards */
+.exam-card h3 {
+  color: #ffffff !important;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.exam-description {
+  color: #cccccc !important;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Detail items */
+.detail-item {
+  color: #cccccc !important;
+}
+
+.detail-item span {
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+/* Status badges */
+.status-badge {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Schedule info */
+.schedule-label {
+  color: #aaaaaa !important;
+  font-size: 0.85rem;
+}
+
+.schedule-time {
+  color: #ffffff !important;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Filter buttons */
+.filter-btn {
+  color: #cccccc !important;
+}
+
+.filter-btn.active {
+  color: #ffffff !important;
+}
+
+/* No exams/questions message */
+.no-exams h3,
+.no-questions p {
+  color: #ffffff !important;
+}
+
+.no-exams p {
+  color: #cccccc !important;
+}
+
+/* Loading spinner */
+.loading-spinner p {
+  color: #cccccc !important;
+}
+
+/* Questions section */
+.questions-section {
+  background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%) !important;
+  border: 1px solid rgba(255, 140, 0, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.questions-section .section-header {
+  border-bottom: 2px solid #444444 !important;
+}
+
+.questions-section .section-header h2 {
+  color: #ffffff !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.no-questions {
+  color: #cccccc !important;
+}
+
+.no-questions p {
+  color: #cccccc !important;
+  font-size: 1rem !important;
+}
+
+.no-questions-icon {
+  color: #666666 !important;
+}
+
+.questions-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+}
+
+.question-item {
+  background: #1a1a1a !important;
+  border: 1px solid #444444 !important;
+  color: #ffffff !important;
+}
+
+.question-item:hover {
+  border-color: #ff8c00 !important;
+  box-shadow: 0 2px 12px rgba(255, 140, 0, 0.2) !important;
+}
+
+.question-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.question-text {
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  margin: 0.5rem 0 !important;
+}
+
+.question-number {
+  background: #4CAF50 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.question-type {
+  background: #2196F3 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.question-marks {
+  background: #FF9800 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.question-actions {
+  margin-left: auto !important;
+}
+
+.btn-icon {
+  color: #cccccc !important;
+  background: transparent !important;
+}
+
+.btn-icon:hover {
+  background: #2d2d2d !important;
+  color: #ff8c00 !important;
+}
+
+.btn-icon.delete:hover {
+  background: #4a2020 !important;
+  color: #ff6b6b !important;
+}
+
+/* Question options */
+.question-options {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0.75rem !important;
+  margin-top: 1rem !important;
+}
+
+.option {
+  color: #ffffff !important;
+  background: #2d2d2d !important;
+  border: 1px solid #444444 !important;
+  padding: 0.75rem !important;
+  border-radius: 6px !important;
+  font-size: 0.9rem !important;
+}
+
+.option.correct {
+  background: #2d4a2d !important;
+  border-color: #4CAF50 !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* Modal */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%) !important;
+  border: 1px solid rgba(255, 140, 0, 0.3) !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid #444444 !important;
+}
+
+.modal-header h3 {
+  color: #ffffff !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.btn-close {
+  color: #cccccc !important;
+}
+
+.btn-close:hover {
+  background: #1a1a1a !important;
+  color: #ff8c00 !important;
+}
+
+.modal-actions {
+  border-top: 1px solid #444444 !important;
+}
+
+/* Icon colors */
+.section-icon,
+.label-icon,
+.detail-icon,
+.schedule-icon {
+  color: #ff8c00 !important;
+}
+
+/* Ensure all text inherits proper color */
+.exam-form *,
+.question-form *,
+.exam-card *,
+.questions-section * {
+  color: inherit;
+}
+
+/* Override any conflicting styles */
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+select,
+textarea {
+  color: #ffffff !important;
+  background: #1a1a1a !important;
+}
+
+
+/* Additional question visibility fixes */
+.question-item * {
+  color: inherit !important;
+}
+
+.question-item p,
+.question-item span,
+.question-item div {
+  color: #ffffff !important;
+}
+
+/* Ensure question form in modal is visible */
+.question-form {
+  background: transparent !important;
+}
+
+.question-form .form-group {
+  margin-bottom: 1.5rem !important;
+}
+
+.question-form .form-group label {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+.question-form input,
+.question-form select,
+.question-form textarea {
+  width: 100% !important;
+  padding: 0.75rem !important;
+  background: #1a1a1a !important;
+  border: 1px solid #444444 !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+}
+
+.question-form input:focus,
+.question-form select:focus,
+.question-form textarea:focus {
+  border-color: #ff8c00 !important;
+  outline: none !important;
+}
+
+.question-form input::placeholder,
+.question-form textarea::placeholder {
+  color: #888888 !important;
+}
+
+/* Form row in question modal */
+.question-form .form-row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+  gap: 1rem !important;
+}
+
+/* Make sure all text in questions section is visible */
+.questions-section * {
+  color: #ffffff;
+}
+
+.questions-section p,
+.questions-section span,
+.questions-section div,
+.questions-section label {
+  color: #ffffff !important;
+}
+
+/* Button visibility in questions section */
+.questions-section .btn,
+.questions-section button {
+  color: #ffffff !important;
+}
+
+.questions-section .btn-primary {
+  background: #ff8c00 !important;
+  border: none !important;
+}
+
+.questions-section .btn-primary:hover {
+  background: #ffa500 !important;
+}
+
+/* Specific fix for question display */
+.question-item .question-text {
+  display: block !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  margin: 0.5rem 0 !important;
+  padding: 0.5rem 0 !important;
+}
+
+/* Option text visibility */
+.question-options .option {
+  display: block !important;
+  color: #ffffff !important;
+}
+
+.question-options .option * {
+  color: #ffffff !important;
+}

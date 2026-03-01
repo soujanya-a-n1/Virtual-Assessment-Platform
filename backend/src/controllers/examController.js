@@ -1,4 +1,4 @@
-const { Exam, Question, ExamQuestion, User } = require('../models');
+const { Exam, Question, ExamQuestion, User, Course } = require('../models');
 const { Op } = require('sequelize');
 
 const createExam = async (req, res) => {
@@ -18,6 +18,7 @@ const createExam = async (req, res) => {
       shuffleQuestions,
       negativeMarkingEnabled,
       negativeMarks,
+      courseId,
     } = req.body;
 
     const exam = await Exam.create({
@@ -35,6 +36,7 @@ const createExam = async (req, res) => {
       shuffleQuestions,
       negativeMarkingEnabled,
       negativeMarks,
+      courseId,
       createdBy: req.user.id,
     });
 
@@ -46,12 +48,24 @@ const createExam = async (req, res) => {
 
 const getAllExams = async (req, res) => {
   try {
+    const { courseId } = req.query;
+    
+    const whereClause = {};
+    if (courseId) {
+      whereClause.courseId = courseId;
+    }
+
     const exams = await Exam.findAll({
+      where: whereClause,
       include: [
         {
           model: User,
           as: 'creator',
           attributes: ['id', 'firstName', 'lastName', 'email'],
+        },
+        {
+          association: 'course',
+          attributes: ['id', 'code', 'name'],
         },
         {
           model: Question,
@@ -77,6 +91,10 @@ const getExamById = async (req, res) => {
           model: User,
           as: 'creator',
           attributes: ['id', 'firstName', 'lastName', 'email'],
+        },
+        {
+          association: 'course',
+          attributes: ['id', 'code', 'name'],
         },
         {
           model: Question,

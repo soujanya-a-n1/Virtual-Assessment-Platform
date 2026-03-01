@@ -12,7 +12,6 @@ import {
   FiSettings,
   FiPlus,
   FiTrash2,
-  FiEdit2,
   FiList,
   FiCheckCircle
 } from 'react-icons/fi';
@@ -21,16 +20,15 @@ import './ExamPage.css';
 const ExamPage = () => {
   const { examId } = useParams();
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
   const [exam, setExam] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [allQuestions, setAllQuestions] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [showAddQuestionModal, setShowAddQuestionModal] = useState(false);
-  const [editingQuestion, setEditingQuestion] = useState(null);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -46,6 +44,7 @@ const ExamPage = () => {
     shuffleQuestions: false,
     negativeMarkingEnabled: false,
     negativeMarks: 0,
+    courseId: '',
   });
 
   const [questionForm, setQuestionForm] = useState({
@@ -54,23 +53,33 @@ const ExamPage = () => {
     marks: 1,
     difficulty: 'Medium',
     topic: '',
+    courseId: '',
     optionA: '',
     optionB: '',
     optionC: '',
     optionD: '',
     correctAnswer: '',
-    explanation: '',
   });
 
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
+    fetchCourses();
     if (examId && examId !== 'create') {
       fetchExam();
       fetchExamQuestions();
     }
     fetchAllQuestions();
   }, [examId]);
+
+  const fetchCourses = async () => {
+    try {
+      const response = await api.get('/courses');
+      setCourses(response.data.courses || []);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
 
   const fetchExam = async () => {
     try {
@@ -93,7 +102,13 @@ const ExamPage = () => {
         shuffleQuestions: examData.shuffleQuestions ?? false,
         negativeMarkingEnabled: examData.negativeMarkingEnabled ?? false,
         negativeMarks: examData.negativeMarks || 0,
+        courseId: examData.courseId || '',
       });
+      
+      // Fetch questions for the selected course
+      if (examData.courseId) {
+        fetchAllQuestions(examData.courseId);
+      }
     } catch (error) {
       console.error('Error fetching exam:', error);
       alert('Failed to load exam details');
@@ -111,9 +126,10 @@ const ExamPage = () => {
     }
   };
 
-  const fetchAllQuestions = async () => {
+  const fetchAllQuestions = async (courseId = null) => {
     try {
-      const response = await api.get('/questions');
+      const url = courseId ? `/questions?courseId=${courseId}` : '/questions';
+      const response = await api.get(url);
       setAllQuestions(response.data.questions || []);
     } catch (error) {
       console.error('Error fetching questions:', error);
@@ -169,6 +185,13 @@ const ExamPage = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    
+    // When course changes, fetch questions for that course
+    if (name === 'courseId') {
+      fetchAllQuestions(value || null);
+      setQuestionForm(prev => ({ ...prev, courseId: value }));
+    }
+    
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -228,14 +251,13 @@ const ExamPage = () => {
       marks: 1,
       difficulty: 'Medium',
       topic: '',
+      courseId: formData.courseId || '',
       optionA: '',
       optionB: '',
       optionC: '',
       optionD: '',
       correctAnswer: '',
-      explanation: '',
     });
-    setEditingQuestion(null);
   };
 
   const calculateTotalMarks = () => {
@@ -339,6 +361,22 @@ const ExamPage = () => {
             </div>
 
             <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="courseId">Course</label>
+                <select 
+                  id="courseId" 
+                  name="courseId" 
+                  value={formData.courseId} 
+                  onChange={handleChange}
+                >
+                  <option value="">Select Course (Optional)</option>
+                  {courses.map(course => (
+                    <option key={course.id} value={course.id}>
+                      {course.code} - {course.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="form-group">
                 <label htmlFor="examType">Exam Type</label>
                 <select id="examType" name="examType" value={formData.examType} onChange={handleChange}>
@@ -635,6 +673,21 @@ const ExamPage = () => {
 
               <div className="form-row">
                 <div className="form-group">
+                  <label>Course</label>
+                  <select
+                    name="courseId"
+                    value={questionForm.courseId}
+                    onChange={handleQuestionChange}
+                  >
+                    <option value="">Select Course (Optional)</option>
+                    {courses.map(course => (
+                      <option key={course.id} value={course.id}>
+                        {course.code} - {course.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
                   <label>Question Type *</label>
                   <select
                     name="questionType"
@@ -724,8 +777,8 @@ const ExamPage = () => {
                       <option value="">Select correct answer</option>
                       <option value="A">A</option>
                       <option value="B">B</option>
-                      {questionForm.optionC && <option value="C">C</option>}
-                      {questionForm.optionD && <option value="D">D</option>}
+                      <option value="C">C</option>
+                      <option value="D">D</option>
                     </select>
                   </div>
                 </>
@@ -761,17 +814,6 @@ const ExamPage = () => {
                 </div>
               )}
 
-              <div className="form-group">
-                <label>Explanation (Optional)</label>
-                <textarea
-                  name="explanation"
-                  value={questionForm.explanation}
-                  onChange={handleQuestionChange}
-                  rows="2"
-                  placeholder="Explain the correct answer"
-                />
-              </div>
-
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowQuestionModal(false)}>
                   Cancel
@@ -801,10 +843,15 @@ const ExamPage = () => {
 const AddQuestionsModal = ({ questions, onAdd, onClose }) => {
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterDifficulty, setFilterDifficulty] = useState('');
+  const [filterType, setFilterType] = useState('');
 
-  const filteredQuestions = questions.filter(q =>
-    q.questionText.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredQuestions = questions.filter(q => {
+    const matchesSearch = q.questionText.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesDifficulty = !filterDifficulty || q.difficulty === filterDifficulty;
+    const matchesType = !filterType || q.questionType === filterType;
+    return matchesSearch && matchesDifficulty && matchesType;
+  });
 
   const handleToggle = (id) => {
     setSelectedQuestions(prev =>
@@ -828,13 +875,36 @@ const AddQuestionsModal = ({ questions, onAdd, onClose }) => {
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
         <div className="modal-body">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search questions..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div className="filters-row" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search questions..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ flex: 2 }}
+            />
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              style={{ flex: 1 }}
+            >
+              <option value="">All Types</option>
+              <option value="Multiple Choice">Multiple Choice</option>
+              <option value="True/False">True/False</option>
+              <option value="Short Answer">Short Answer</option>
+            </select>
+            <select
+              value={filterDifficulty}
+              onChange={(e) => setFilterDifficulty(e.target.value)}
+              style={{ flex: 1 }}
+            >
+              <option value="">All Difficulties</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
           <div className="questions-select-list">
             {filteredQuestions.length === 0 ? (
               <p className="no-data">No questions available</p>

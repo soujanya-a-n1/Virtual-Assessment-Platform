@@ -99,62 +99,94 @@ const Dashboard = () => {
       </div>
 
       {user?.role !== 'Student' && analytics && (
-        <div className="stats-section">
-          <h2 className="section-title">Platform Statistics</h2>
-          <div className="stats-grid">
-            <div className="stat-card orange">
-              <div className="stat-card-inner">
-                <div className="stat-icon-wrapper">
-                  <FiUsers className="stat-icon" />
+        <>
+          <div className="stats-section">
+            <h2 className="section-title">Platform Statistics</h2>
+            <div className="stats-grid">
+              <div className="stat-card orange">
+                <div className="stat-card-inner">
+                  <div className="stat-icon-wrapper">
+                    <FiUsers className="stat-icon" />
+                  </div>
+                  <div className="stat-content">
+                    <p className="stat-value">{analytics.totalUsers || 0}</p>
+                    <p className="stat-label">Total Users</p>
+                  </div>
+                  <div className="stat-decoration"></div>
                 </div>
-                <div className="stat-content">
-                  <p className="stat-value">{analytics.totalUsers || 0}</p>
-                  <p className="stat-label">Total Users</p>
-                </div>
-                <div className="stat-decoration"></div>
               </div>
-            </div>
 
-            <div className="stat-card green">
-              <div className="stat-card-inner">
-                <div className="stat-icon-wrapper">
-                  <FiBook className="stat-icon" />
+              <div className="stat-card green">
+                <div className="stat-card-inner">
+                  <div className="stat-icon-wrapper">
+                    <FiBook className="stat-icon" />
+                  </div>
+                  <div className="stat-content">
+                    <p className="stat-value">{analytics.totalExams || 0}</p>
+                    <p className="stat-label">Total Exams</p>
+                  </div>
+                  <div className="stat-decoration"></div>
                 </div>
-                <div className="stat-content">
-                  <p className="stat-value">{analytics.totalExams || 0}</p>
-                  <p className="stat-label">Total Exams</p>
-                </div>
-                <div className="stat-decoration"></div>
               </div>
-            </div>
 
-            <div className="stat-card blue">
-              <div className="stat-card-inner">
-                <div className="stat-icon-wrapper">
-                  <FiCheckSquare className="stat-icon" />
+              <div className="stat-card blue">
+                <div className="stat-card-inner">
+                  <div className="stat-icon-wrapper">
+                    <FiCheckSquare className="stat-icon" />
+                  </div>
+                  <div className="stat-content">
+                    <p className="stat-value">{analytics.totalSubmissions || 0}</p>
+                    <p className="stat-label">Submissions</p>
+                  </div>
+                  <div className="stat-decoration"></div>
                 </div>
-                <div className="stat-content">
-                  <p className="stat-value">{analytics.totalSubmissions || 0}</p>
-                  <p className="stat-label">Submissions</p>
-                </div>
-                <div className="stat-decoration"></div>
               </div>
-            </div>
 
-            <div className="stat-card purple">
-              <div className="stat-card-inner">
-                <div className="stat-icon-wrapper">
-                  <FiTrendingUp className="stat-icon" />
+              <div className="stat-card purple">
+                <div className="stat-card-inner">
+                  <div className="stat-icon-wrapper">
+                    <FiTrendingUp className="stat-icon" />
+                  </div>
+                  <div className="stat-content">
+                    <p className="stat-value">{analytics.passPercentage || 0}%</p>
+                    <p className="stat-label">Pass Rate</p>
+                  </div>
+                  <div className="stat-decoration"></div>
                 </div>
-                <div className="stat-content">
-                  <p className="stat-value">{analytics.passPercentage || 0}%</p>
-                  <p className="stat-label">Pass Rate</p>
-                </div>
-                <div className="stat-decoration"></div>
               </div>
             </div>
           </div>
-        </div>
+
+          {analytics.recentSubmissions && analytics.recentSubmissions.length > 0 && (
+            <div className="recent-submissions-section">
+              <h2 className="section-title">Recent Submissions</h2>
+              <div className="submissions-list">
+                {analytics.recentSubmissions.map((submission, index) => (
+                  <div key={index} className="submission-item">
+                    <div className="submission-avatar">
+                      <FiAward className={submission.isPassed ? 'pass-icon' : 'fail-icon'} />
+                    </div>
+                    <div className="submission-details">
+                      <div className="submission-header">
+                        <span className="student-name">{submission.studentName}</span>
+                        <span className="submission-time">{submission.timeAgo}</span>
+                      </div>
+                      <div className="submission-info">
+                        <span className="exam-title">{submission.examTitle}</span>
+                        <span className="submission-score">
+                          {submission.obtainedMarks}/{submission.totalMarks} marks
+                        </span>
+                      </div>
+                    </div>
+                    <div className={`submission-status ${submission.isPassed ? 'passed' : 'failed'}`}>
+                      {submission.isPassed ? 'Passed' : 'Failed'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       <div className="quick-access-section">
