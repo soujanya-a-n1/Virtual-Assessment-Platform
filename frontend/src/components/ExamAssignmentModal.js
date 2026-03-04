@@ -29,7 +29,7 @@ const ExamAssignmentModal = ({ exam, onClose, onAssign }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:5000/api/exams/${exam.id}/available-students`,
+        `${process.env.REACT_APP_API_URL}/exams/${exam.id}/available-students`,
         {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -49,7 +49,7 @@ const ExamAssignmentModal = ({ exam, onClose, onAssign }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:5000/api/classes-for-assignment`,
+        `${process.env.REACT_APP_API_URL}/classes-for-assignment`,
         {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -69,7 +69,7 @@ const ExamAssignmentModal = ({ exam, onClose, onAssign }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:5000/api/exams/${exam.id}/enrollments`,
+        `${process.env.REACT_APP_API_URL}/exams/${exam.id}/enrollments`,
         {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -99,7 +99,7 @@ const ExamAssignmentModal = ({ exam, onClose, onAssign }) => {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/exams/${exam.id}/assign`,
+        `${process.env.REACT_APP_API_URL}/exams/${exam.id}/assign`,
         {
           method: 'POST',
           headers: {
@@ -135,7 +135,7 @@ const ExamAssignmentModal = ({ exam, onClose, onAssign }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/exams/${exam.id}/enrollments/${userId}`,
+        `${process.env.REACT_APP_API_URL}/exams/${exam.id}/enrollments/${userId}`,
         {
           method: 'DELETE',
           headers: {
