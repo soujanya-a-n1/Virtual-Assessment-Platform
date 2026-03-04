@@ -65,7 +65,7 @@ const ExamsList = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/courses', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/courses`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -436,7 +436,7 @@ const ExamsList = () => {
                   value={formData.courseId}
                   onChange={handleInputChange}
                 >
-                  <option value="">Select Course (Optional)</option>
+                  <option value="">Select Course</option>
                   {courses.map(course => (
                     <option key={course.id} value={course.id}>
                       {course.code} - {course.name}

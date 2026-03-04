@@ -13,7 +13,8 @@ import {
   FiPlus,
   FiTrash2,
   FiList,
-  FiCheckCircle
+  FiCheckCircle,
+  FiEdit2
 } from 'react-icons/fi';
 import './ExamPage.css';
 
@@ -29,6 +30,8 @@ const ExamPage = () => {
   const [courses, setCourses] = useState([]);
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   const [showAddQuestionModal, setShowAddQuestionModal] = useState(false);
+  const [editingQuestion, setEditingQuestion] = useState(null);
+  const [expandedQuestions, setExpandedQuestions] = useState([]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -204,21 +207,36 @@ const ExamPage = () => {
 
   const handleCreateQuestion = async (e) => {
     e.preventDefault();
+    
+    // Validate course selection
+    if (!questionForm.courseId) {
+      alert('Please select a course for the question');
+      return;
+    }
+    
     try {
-      const response = await api.post('/questions', questionForm);
-      const newQuestion = response.data.question;
-      
-      if (examId && examId !== 'create') {
-        await api.post(`/questions/${examId}/add-questions`, { questionIds: [newQuestion.id] });
-        fetchExamQuestions();
+      if (editingQuestion) {
+        // Update existing question
+        await api.put(`/questions/${editingQuestion.id}`, questionForm);
+        alert('Question updated successfully!');
+      } else {
+        // Create new question
+        const response = await api.post('/questions', questionForm);
+        const newQuestion = response.data.question;
+        
+        if (examId && examId !== 'create') {
+          await api.post(`/questions/${examId}/add-questions`, { questionIds: [newQuestion.id] });
+        }
+        alert('Question created successfully!');
       }
       
-      alert('Question created successfully!');
       setShowQuestionModal(false);
+      setEditingQuestion(null);
       resetQuestionForm();
+      fetchExamQuestions();
       fetchAllQuestions();
     } catch (error) {
-      alert(error.response?.data?.message || 'Failed to create question');
+      alert(error.response?.data?.message || 'Failed to save question');
     }
   };
 
@@ -244,6 +262,32 @@ const ExamPage = () => {
     }
   };
 
+  const handleEditQuestion = (question) => {
+    setEditingQuestion(question);
+    setQuestionForm({
+      questionText: question.questionText || '',
+      questionType: question.questionType || 'Multiple Choice',
+      marks: question.marks || 1,
+      difficulty: question.difficulty || 'Medium',
+      topic: question.topic || '',
+      courseId: question.courseId || formData.courseId || '',
+      optionA: question.optionA || '',
+      optionB: question.optionB || '',
+      optionC: question.optionC || '',
+      optionD: question.optionD || '',
+      correctAnswer: question.correctAnswer || '',
+    });
+    setShowQuestionModal(true);
+  };
+
+  const toggleQuestionExpand = (questionId) => {
+    setExpandedQuestions(prev => 
+      prev.includes(questionId) 
+        ? prev.filter(id => id !== questionId)
+        : [...prev, questionId]
+    );
+  };
+
   const resetQuestionForm = () => {
     setQuestionForm({
       questionText: '',
@@ -258,10 +302,14 @@ const ExamPage = () => {
       optionD: '',
       correctAnswer: '',
     });
+    setEditingQuestion(null);
   };
 
   const calculateTotalMarks = () => {
-    return questions.reduce((sum, q) => sum + parseFloat(q.marks || 0), 0);
+    return questions.reduce((sum, q) => {
+      const marks = parseFloat(q.marks);
+      return sum + (isNaN(marks) ? 0 : marks);
+    }, 0);
   };
 
   if (loading) {
@@ -369,7 +417,7 @@ const ExamPage = () => {
                   value={formData.courseId} 
                   onChange={handleChange}
                 >
-                  <option value="">Select Course (Optional)</option>
+                  <option value="">Select Course</option>
                   {courses.map(course => (
                     <option key={course.id} value={course.id}>
                       {course.code} - {course.name}
@@ -579,7 +627,7 @@ const ExamPage = () => {
               <div className="stat-card">
                 <FiAward className="stat-icon" />
                 <div>
-                  <h3>{calculateTotalMarks()}</h3>
+                  <h3>{calculateTotalMarks().toFixed(2)}</h3>
                   <p>Total Marks</p>
                 </div>
               </div>
@@ -608,43 +656,89 @@ const ExamPage = () => {
             </div>
           ) : (
             <div className="questions-list">
-              {questions.map((question, index) => (
-                <div key={question.id} className="question-card">
-                  <div className="question-card-header">
-                    <span className="question-number">Q{index + 1}</span>
-                    <span className="question-type">{question.questionType}</span>
-                    <span className="question-marks">{question.marks} marks</span>
-                    <button
-                      className="btn-icon delete"
-                      onClick={() => handleRemoveQuestion(question.id)}
-                      title="Remove question"
-                    >
-                      <FiTrash2 />
-                    </button>
-                  </div>
-                  <div className="question-text">{question.questionText}</div>
-                  {question.questionType === 'Multiple Choice' && (
-                    <div className="question-options">
-                      {['A', 'B', 'C', 'D'].map(opt => {
-                        const optionText = question[`option${opt}`];
-                        if (!optionText) return null;
-                        return (
-                          <div key={opt} className={`option ${question.correctAnswer === opt ? 'correct' : ''}`}>
-                            <span className="option-letter">{opt}</span>
-                            <span>{optionText}</span>
-                            {question.correctAnswer === opt && <FiCheckCircle className="correct-icon" />}
+              {questions.map((question, index) => {
+                const isExpanded = expandedQuestions.includes(question.id);
+                return (
+                  <div key={question.id} className="question-card">
+                    <div className="question-card-header">
+                      <div className="question-header-left">
+                        <span 
+                          className="question-number clickable" 
+                          onClick={() => toggleQuestionExpand(question.id)}
+                          title="Click to expand/collapse"
+                        >
+                          Q{index + 1}
+                        </span>
+                        <span className="question-type">{question.questionType}</span>
+                        <span className="question-marks">
+                          {parseFloat(question.marks).toFixed(2)} marks
+                        </span>
+                        {question.difficulty && (
+                          <span className={`question-difficulty ${question.difficulty.toLowerCase()}`}>
+                            {question.difficulty}
+                          </span>
+                        )}
+                      </div>
+                      <div className="question-actions">
+                        <button
+                          className="btn-icon edit"
+                          onClick={() => handleEditQuestion(question)}
+                          title="Edit question"
+                        >
+                          <FiEdit2 />
+                        </button>
+                        <button
+                          className="btn-icon delete"
+                          onClick={() => handleRemoveQuestion(question.id)}
+                          title="Remove question"
+                        >
+                          <FiTrash2 />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="question-text">{question.questionText}</div>
+                    {isExpanded && (
+                      <>
+                        {question.questionType === 'Multiple Choice' && (
+                          <div className="question-options">
+                            {['A', 'B', 'C', 'D'].map(opt => {
+                              const optionText = question[`option${opt}`];
+                              if (!optionText) return null;
+                              return (
+                                <div key={opt} className={`option ${question.correctAnswer === opt ? 'correct' : ''}`}>
+                                  <span className="option-letter">{opt}</span>
+                                  <span className="option-text">{optionText}</span>
+                                  {question.correctAnswer === opt && <FiCheckCircle className="correct-icon" />}
+                                </div>
+                              );
+                            })}
                           </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  {question.questionType === 'True/False' && (
-                    <div className="question-answer">
-                      <strong>Correct Answer:</strong> {question.correctAnswer === 'A' ? 'True' : 'False'}
-                    </div>
-                  )}
-                </div>
-              ))}
+                        )}
+                        {question.questionType === 'True/False' && (
+                          <div className="question-options">
+                            <div className={`option ${question.correctAnswer === 'A' ? 'correct' : ''}`}>
+                              <span className="option-letter">A</span>
+                              <span className="option-text">True</span>
+                              {question.correctAnswer === 'A' && <FiCheckCircle className="correct-icon" />}
+                            </div>
+                            <div className={`option ${question.correctAnswer === 'B' ? 'correct' : ''}`}>
+                              <span className="option-letter">B</span>
+                              <span className="option-text">False</span>
+                              {question.correctAnswer === 'B' && <FiCheckCircle className="correct-icon" />}
+                            </div>
+                          </div>
+                        )}
+                        {question.questionType === 'Short Answer' && (
+                          <div className="question-answer">
+                            <strong>Model Answer:</strong>
+                            <p>{question.correctAnswer}</p>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -652,11 +746,11 @@ const ExamPage = () => {
 
       {/* Create Question Modal */}
       {showQuestionModal && (
-        <div className="modal-overlay" onClick={() => setShowQuestionModal(false)}>
+        <div className="modal-overlay" onClick={() => { setShowQuestionModal(false); setEditingQuestion(null); resetQuestionForm(); }}>
           <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Create New Question</h2>
-              <button className="close-btn" onClick={() => setShowQuestionModal(false)}>×</button>
+              <h2>{editingQuestion ? 'Edit Question' : 'Create New Question'}</h2>
+              <button className="close-btn" onClick={() => { setShowQuestionModal(false); setEditingQuestion(null); resetQuestionForm(); }}>×</button>
             </div>
             <form onSubmit={handleCreateQuestion}>
               <div className="form-group">
@@ -673,19 +767,26 @@ const ExamPage = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Course</label>
+                  <label>Course *</label>
                   <select
                     name="courseId"
                     value={questionForm.courseId}
                     onChange={handleQuestionChange}
+                    required
+                    className={!questionForm.courseId ? 'error' : ''}
                   >
-                    <option value="">Select Course (Optional)</option>
+                    <option value="">Select Course</option>
                     {courses.map(course => (
                       <option key={course.id} value={course.id}>
                         {course.code} - {course.name}
                       </option>
                     ))}
                   </select>
+                  {!questionForm.courseId && (
+                    <span className="error-message" style={{ fontSize: '0.85rem', color: '#ff4444' }}>
+                      Course selection is required
+                    </span>
+                  )}
                 </div>
                 <div className="form-group">
                   <label>Question Type *</label>
@@ -815,11 +916,11 @@ const ExamPage = () => {
               )}
 
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowQuestionModal(false)}>
+                <button type="button" className="btn btn-secondary" onClick={() => { setShowQuestionModal(false); setEditingQuestion(null); resetQuestionForm(); }}>
                   Cancel
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  Create Question
+                  {editingQuestion ? 'Update Question' : 'Create Question'}
                 </button>
               </div>
             </form>
