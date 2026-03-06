@@ -4,6 +4,10 @@ const { Op } = require('sequelize');
 const getAnalytics = async (req, res) => {
   try {
     const submissions = await ExamSubmission.findAll({
+      where: {
+        status: { [Op.in]: ['Submitted', 'Evaluated'] },
+        submitTime: { [Op.ne]: null }
+      },
       include: [
         { 
           association: 'exam', 
@@ -17,6 +21,9 @@ const getAnalytics = async (req, res) => {
       order: [['submitTime', 'DESC']]
     });
 
+    console.log('=== ANALYTICS DEBUG ===');
+    console.log(`Total submissions found: ${submissions.length}`);
+
     // Count all users and students (only active users)
     const totalUsers = await User.count({
       where: { isActive: true }
@@ -25,12 +32,14 @@ const getAnalytics = async (req, res) => {
     const totalExams = await Exam.count();
     const totalQuestions = await Question.count();
     const totalSubmissions = submissions.length;
-    const passedCount = submissions.filter((s) => s.isPassed).length;
+    const passedCount = submissions.filter((s) => s.isPassed === true).length;
     const failedCount = submissions.filter((s) => s.isPassed === false).length;
+
+    console.log(`Passed: ${passedCount}, Failed: ${failedCount}`);
 
     const avgScore =
       submissions.length > 0
-        ? submissions.reduce((sum, s) => sum + (s.obtainedMarks || 0), 0) / submissions.length
+        ? submissions.reduce((sum, s) => sum + (parseFloat(s.obtainedMarks) || 0), 0) / submissions.length
         : 0;
 
     const passPercentage =
@@ -39,17 +48,22 @@ const getAnalytics = async (req, res) => {
     // Format recent submissions with time ago
     const recentSubmissions = submissions.slice(0, 10).map(submission => {
       const timeAgo = getTimeAgo(submission.submitTime);
+      const obtainedMarks = parseFloat(submission.obtainedMarks) || 0;
+      const totalMarks = submission.exam ? parseFloat(submission.exam.totalMarks) : 0;
+      
       return {
         studentName: submission.student 
           ? `${submission.student.firstName} ${submission.student.lastName}`
           : 'Unknown Student',
         examTitle: submission.exam ? submission.exam.title : 'Unknown Exam',
-        obtainedMarks: submission.obtainedMarks || 0,
-        totalMarks: submission.exam ? submission.exam.totalMarks : 0,
+        obtainedMarks: obtainedMarks,
+        totalMarks: totalMarks,
         isPassed: submission.isPassed,
         timeAgo: timeAgo
       };
     });
+
+    console.log('Recent submissions:', recentSubmissions.length);
 
     res.json({
       analytics: {
