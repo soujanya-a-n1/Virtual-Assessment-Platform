@@ -9,8 +9,7 @@ import {
   FiUser, 
   FiFileText,
   FiAward,
-  FiFilter,
-  FiTrash2
+  FiFilter
 } from 'react-icons/fi';
 import './SubmissionsList.css';
 
@@ -39,21 +38,6 @@ const SubmissionsList = () => {
 
   const handleReview = (submissionId) => {
     navigate(`/submissions/${submissionId}/review`);
-  };
-
-  const handleDelete = async (submissionId, examTitle) => {
-    if (!window.confirm(`Are you sure you want to delete this submission for "${examTitle}"? This action cannot be undone.`)) {
-      return;
-    }
-
-    try {
-      await api.delete(`/submissions/${submissionId}`);
-      alert('Submission deleted successfully');
-      fetchSubmissions(); // Refresh the list
-    } catch (error) {
-      console.error('Error deleting submission:', error);
-      alert(error.response?.data?.message || 'Failed to delete submission');
-    }
   };
 
   const getStatusColor = (status) => {
@@ -208,13 +192,6 @@ const SubmissionsList = () => {
                   onClick={() => handleReview(submission.id)}
                 >
                   <FiEye /> Review Submission
-                </button>
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDelete(submission.id, submission.exam?.title)}
-                  title="Delete submission"
-                >
-                  <FiTrash2 /> Delete
                 </button>
               </div>
             </div>

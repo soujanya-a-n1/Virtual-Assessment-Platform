@@ -263,16 +263,8 @@ const ExamPage = () => {
   };
 
   const handleEditQuestion = (question) => {
-    console.log('=== EDIT QUESTION DEBUG ===');
-    console.log('Question object received:', question);
-    console.log('Option A:', question.optionA);
-    console.log('Option B:', question.optionB);
-    console.log('Option C:', question.optionC);
-    console.log('Option D:', question.optionD);
-    
     setEditingQuestion(question);
-    
-    const formValues = {
+    setQuestionForm({
       questionText: question.questionText || '',
       questionType: question.questionType || 'Multiple Choice',
       marks: question.marks || 1,
@@ -284,16 +276,8 @@ const ExamPage = () => {
       optionC: question.optionC || '',
       optionD: question.optionD || '',
       correctAnswer: question.correctAnswer || '',
-    };
-    
-    console.log('Form values being set:', formValues);
-    setQuestionForm(formValues);
+    });
     setShowQuestionModal(true);
-    
-    // Verify after state update (will show in next render)
-    setTimeout(() => {
-      console.log('Form state after update:', questionForm);
-    }, 100);
   };
 
   const toggleQuestionExpand = (questionId) => {
@@ -778,7 +762,6 @@ const ExamPage = () => {
                   required
                   rows="3"
                   placeholder="Enter the question"
-                  style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
                 />
               </div>
 
@@ -854,7 +837,6 @@ const ExamPage = () => {
                       value={questionForm.optionA}
                       onChange={handleQuestionChange}
                       required
-                      style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
                     />
                   </div>
                   <div className="form-group">
@@ -865,7 +847,6 @@ const ExamPage = () => {
                       value={questionForm.optionB}
                       onChange={handleQuestionChange}
                       required
-                      style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
                     />
                   </div>
                   <div className="form-group">
@@ -875,7 +856,6 @@ const ExamPage = () => {
                       name="optionC"
                       value={questionForm.optionC}
                       onChange={handleQuestionChange}
-                      style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
                     />
                   </div>
                   <div className="form-group">
@@ -885,7 +865,6 @@ const ExamPage = () => {
                       name="optionD"
                       value={questionForm.optionD}
                       onChange={handleQuestionChange}
-                      style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
                     />
                   </div>
                   <div className="form-group">

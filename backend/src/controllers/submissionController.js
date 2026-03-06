@@ -88,17 +88,8 @@ const submitExam = async (req, res) => {
   try {
     const { submissionId } = req.params;
 
-    console.log('=== SUBMIT EXAM DEBUG ===');
-    console.log('Submission ID:', submissionId);
-
     const submission = await ExamSubmission.findByPk(submissionId, {
-      include: { 
-        association: 'studentAnswers', 
-        include: {
-          association: 'question',
-          attributes: ['id', 'questionText', 'questionType', 'marks', 'correctAnswer']
-        }
-      },
+      include: { association: 'studentAnswers', include: 'question' },
     });
 
     if (!submission) {
@@ -111,55 +102,28 @@ const submitExam = async (req, res) => {
 
     let totalMarks = 0;
     const answers = submission.studentAnswers || [];
-    
-    console.log(`Total answers to evaluate: ${answers.length}`);
 
     for (const answer of answers) {
-      const question = answer.question;
-      
-      if (!question) {
-        console.log(`Question not found for answer ID: ${answer.id}`);
-        continue;
+      const question = await Question.findByPk(answer.questionId);
+      if (question) {
+        const isCorrect = answer.studentAnswer === question.correctAnswer;
+        answer.isCorrect = isCorrect;
+        answer.marksObtained = isCorrect ? question.marks : 0;
+        totalMarks += answer.marksObtained;
+        await answer.save();
       }
-
-      // Normalize both answers for comparison (trim whitespace, convert to uppercase)
-      const studentAnswer = (answer.studentAnswer || '').toString().trim().toUpperCase();
-      const correctAnswer = (question.correctAnswer || '').toString().trim().toUpperCase();
-      
-      console.log(`Question ${question.id}:`);
-      console.log(`  Student Answer: "${studentAnswer}"`);
-      console.log(`  Correct Answer: "${correctAnswer}"`);
-      
-      const isCorrect = studentAnswer === correctAnswer;
-      const marksObtained = isCorrect ? parseFloat(question.marks) : 0;
-      
-      console.log(`  Is Correct: ${isCorrect}`);
-      console.log(`  Marks Obtained: ${marksObtained}`);
-      
-      answer.isCorrect = isCorrect;
-      answer.marksObtained = marksObtained;
-      totalMarks += marksObtained;
-      
-      await answer.save();
     }
-
-    console.log(`Total Marks Obtained: ${totalMarks}`);
 
     const exam = await Exam.findByPk(submission.examId);
     const isPassed = totalMarks >= exam.passingMarks;
-    
-    console.log(`Passing Marks: ${exam.passingMarks}`);
-    console.log(`Is Passed: ${isPassed}`);
 
     await submission.update({
-      status: 'Evaluated',
+      status: 'Submitted',
       submitTime: new Date(),
       totalTimeSpent: Math.floor((new Date() - submission.startedAt) / 1000),
       obtainedMarks: totalMarks,
       isPassed,
     });
-
-    console.log('=== SUBMIT EXAM COMPLETE ===');
 
     res.json({
       message: 'Exam submitted successfully',
@@ -171,7 +135,6 @@ const submitExam = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Error submitting exam:', error);
     res.status(500).json({ message: 'Error submitting exam', error: error.message });
   }
 };
@@ -297,45 +260,4 @@ module.exports = {
   getSubmissionDetails,
   getAllSubmissions,
   evaluateSubmission,
-};
-
-
-const deleteSubmission = async (req, res) => {
-  try {
-    const { submissionId } = req.params;
-
-    const submission = await ExamSubmission.findByPk(submissionId);
-    if (!submission) {
-      return res.status(404).json({ message: 'Submission not found' });
-    }
-
-    // Delete associated student answers first
-    await StudentAnswer.destroy({
-      where: { submissionId }
-    });
-
-    // Delete proctoring logs if any
-    await ProctoringLog.destroy({
-      where: { submissionId }
-    });
-
-    // Delete the submission
-    await submission.destroy();
-
-    res.json({ message: 'Submission deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting submission:', error);
-    res.status(500).json({ message: 'Error deleting submission', error: error.message });
-  }
-};
-
-module.exports = {
-  startExam,
-  autoSaveAnswer,
-  submitExam,
-  autoSubmitExam,
-  getSubmissionDetails,
-  getAllSubmissions,
-  evaluateSubmission,
-  deleteSubmission,
 };
