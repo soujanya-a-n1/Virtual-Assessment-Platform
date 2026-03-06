@@ -98,8 +98,8 @@ const getExamById = async (req, res) => {
         },
         {
           model: Question,
-          through: { attributes: [] },
-          attributes: ['id', 'questionText', 'questionType', 'marks'],
+          through: { attributes: ['displayOrder'] },
+          // Include ALL question fields for editing
         },
       ],
     });

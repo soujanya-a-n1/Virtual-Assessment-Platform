@@ -14,6 +14,8 @@ const Class = require('./Class');
 const Lecturer = require('./Lecturer');
 const Student = require('./Student');
 const CourseLecturer = require('./CourseLecturer');
+const CodingQuestion = require('./CodingQuestion');
+const CodingSubmission = require('./CodingSubmission');
 
 // User - Role relationship (many-to-many)
 User.belongsToMany(Role, { through: UserRole, foreignKey: 'userId' });
@@ -103,6 +105,22 @@ Exam.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
 Course.hasMany(Question, { foreignKey: 'courseId', as: 'questions' });
 Question.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
 
+// Exam - CodingQuestion relationship (one-to-many)
+Exam.hasMany(CodingQuestion, { foreignKey: 'examId', as: 'codingQuestions' });
+CodingQuestion.belongsTo(Exam, { foreignKey: 'examId', as: 'exam' });
+
+// User - CodingSubmission relationship (one-to-many)
+User.hasMany(CodingSubmission, { foreignKey: 'studentId', as: 'codingSubmissions' });
+CodingSubmission.belongsTo(User, { foreignKey: 'studentId', as: 'student' });
+
+// CodingQuestion - CodingSubmission relationship (one-to-many)
+CodingQuestion.hasMany(CodingSubmission, { foreignKey: 'codingQuestionId', as: 'submissions' });
+CodingSubmission.belongsTo(CodingQuestion, { foreignKey: 'codingQuestionId', as: 'codingQuestion' });
+
+// ExamSubmission - CodingSubmission relationship (one-to-many)
+ExamSubmission.hasMany(CodingSubmission, { foreignKey: 'submissionId', as: 'codingSubmissions' });
+CodingSubmission.belongsTo(ExamSubmission, { foreignKey: 'submissionId', as: 'examSubmission' });
+
 module.exports = {
   User,
   Role,
@@ -120,4 +138,6 @@ module.exports = {
   Lecturer,
   Student,
   CourseLecturer,
+  CodingQuestion,
+  CodingSubmission,
 };
