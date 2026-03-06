@@ -10,6 +10,5 @@ router.post('/:submissionId/submit', authenticate, authorize('Student'), submiss
 router.get('/:submissionId', authenticate, submissionController.getSubmissionDetails);
 router.get('/', authenticate, authorize('Admin', 'Super Admin', 'Examiner'), submissionController.getAllSubmissions);
 router.post('/:submissionId/evaluate', authenticate, authorize('Examiner', 'Admin', 'Super Admin'), submissionController.evaluateSubmission);
-router.delete('/:submissionId', authenticate, authorize('Admin', 'Super Admin', 'Examiner'), submissionController.deleteSubmission);
 
 module.exports = router;
