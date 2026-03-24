@@ -739,8 +739,15 @@
 .modal-content form .form-group select {
   background: #ffffff !important;
   color: #222222 !important;
+  border: 1px solid #444444 !important;
+  font-weight: 500 !important;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  background: #ffffff !important;
   color: #222222 !important;
-  border: 1px solid #444444;
 }
 
 .modal-content form .form-group textarea {
@@ -1020,4 +1027,83 @@ form .form-group label {
 .form-row .form-group label {
   color: #ffffff !important;
   font-weight: 700 !important;
+}
+
+
+/* CRITICAL FIX: Ensure all input/textarea/select VALUES are visible */
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+textarea,
+select {
+  color: #222222 !important;
+  background: #ffffff !important;
+}
+
+/* Ensure modal inputs show their values */
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content textarea,
+.modal-content select {
+  color: #222222 !important;
+  background: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* Ensure form group inputs show their values */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="datetime-local"],
+.form-group textarea,
+.form-group select {
+  color: #222222 !important;
+  background: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+
+/* ULTIMATE FIX: Force all input values to be visible with highest specificity */
+.modal-content.large form input,
+.modal-content.large form textarea,
+.modal-content.large form select,
+.modal-overlay .modal-content input,
+.modal-overlay .modal-content textarea,
+.modal-overlay .modal-content select {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+/* ABSOLUTE FINAL FIX: Override ALL possible text color rules for modal inputs */
+.modal-overlay .modal-content.large form .form-group input[type="text"],
+.modal-overlay .modal-content.large form .form-group input[type="number"],
+.modal-overlay .modal-content.large form .form-group textarea,
+.modal-overlay .modal-content.large form .form-group select,
+.modal-overlay .modal-content.large form input[name="optionA"],
+.modal-overlay .modal-content.large form input[name="optionB"],
+.modal-overlay .modal-content.large form input[name="optionC"],
+.modal-overlay .modal-content.large form input[name="optionD"],
+.modal-overlay .modal-content.large form input[name="questionText"],
+.modal-overlay .modal-content.large form textarea[name="questionText"] {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  -webkit-text-fill-color: #000000 !important;
+  font-weight: 600 !important;
+  border: 2px solid #4CAF50 !important;
+}
+
+/* Force input values to be black text */
+.modal-content input:not([type="checkbox"]):not([type="radio"]) {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+.modal-content textarea {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+.modal-content select {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
 }
