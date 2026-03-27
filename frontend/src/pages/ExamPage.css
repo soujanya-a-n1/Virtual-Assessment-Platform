@@ -739,8 +739,15 @@
 .modal-content form .form-group select {
   background: #ffffff !important;
   color: #222222 !important;
+  border: 1px solid #444444 !important;
+  font-weight: 500 !important;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  background: #ffffff !important;
   color: #222222 !important;
-  border: 1px solid #444444;
 }
 
 .modal-content form .form-group textarea {
@@ -1020,4 +1027,185 @@ form .form-group label {
 .form-row .form-group label {
   color: #ffffff !important;
   font-weight: 700 !important;
+}
+
+
+/* CRITICAL FIX: Ensure all input/textarea/select VALUES are visible */
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+textarea,
+select {
+  color: #222222 !important;
+  background: #ffffff !important;
+}
+
+/* Ensure modal inputs show their values */
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content textarea,
+.modal-content select {
+  color: #222222 !important;
+  background: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* Ensure form group inputs show their values */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="datetime-local"],
+.form-group textarea,
+.form-group select {
+  color: #222222 !important;
+  background: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+
+/* ABSOLUTE FINAL FIX - Force all input values to be dark and visible */
+* input,
+* textarea,
+* select {
+  -webkit-text-fill-color: #222222 !important;
+}
+
+.modal-content * input,
+.modal-content * textarea,
+.modal-content * select {
+  -webkit-text-fill-color: #222222 !important;
+  color: #222222 !important;
+}
+
+
+/* Coding Question Styles */
+.test-cases-section {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 140, 0, 0.2);
+}
+
+.test-cases-section h4 {
+  color: #ff8c00;
+  margin: 0 0 1rem 0;
+}
+
+.test-cases-section h5 {
+  color: #cccccc;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.test-cases-list {
+  margin-bottom: 1.5rem;
+}
+
+.test-case-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 140, 0, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.test-case-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 140, 0, 0.2);
+}
+
+.test-case-header span:first-child {
+  font-weight: 600;
+  color: #ffffff;
+  flex: 1;
+}
+
+.badge-visible,
+.badge-hidden {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-visible {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+.badge-hidden {
+  background: rgba(158, 158, 158, 0.2);
+  color: #9e9e9e;
+  border: 1px solid #9e9e9e;
+}
+
+.btn-remove-small {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid #f44336;
+  color: #f44336;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.btn-remove-small:hover {
+  background: rgba(244, 67, 54, 0.2);
+}
+
+.test-case-content {
+  color: #cccccc;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.test-case-content div {
+  margin-bottom: 0.5rem;
+}
+
+.test-case-content strong {
+  color: #ff8c00;
+}
+
+.add-test-case {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 140, 0, 0.2);
+}
+
+.coding-details {
+  background: rgba(255, 140, 0, 0.05);
+  border-left: 3px solid #ff8c00;
+  padding: 1rem;
+}
+
+.coding-meta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.coding-meta span {
+  color: #cccccc;
+}
+
+.coding-meta strong {
+  color: #ff8c00;
+  margin-right: 0.5rem;
+}
+
+.test-info {
+  margin-top: 0.75rem;
+  color: #cccccc;
+}
+
+.test-info strong {
+  color: #ff8c00;
+  margin-right: 0.5rem;
 }

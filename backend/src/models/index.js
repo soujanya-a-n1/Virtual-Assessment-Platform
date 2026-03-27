@@ -14,6 +14,10 @@ const Class = require('./Class');
 const Lecturer = require('./Lecturer');
 const Student = require('./Student');
 const CourseLecturer = require('./CourseLecturer');
+const CodingQuestion = require('./CodingQuestion');
+const CodingSubmission = require('./CodingSubmission');
+const TestCase = require('./TestCase');
+const TestResult = require('./TestResult');
 
 // User - Role relationship (many-to-many)
 User.belongsToMany(Role, { through: UserRole, foreignKey: 'userId' });
@@ -103,6 +107,48 @@ Exam.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
 Course.hasMany(Question, { foreignKey: 'courseId', as: 'questions' });
 Question.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
 
+// Question - CodingQuestion relationship (one-to-one)
+Question.belongsTo(CodingQuestion, { 
+  foreignKey: 'codingQuestionId',
+  as: 'codingDetails'
+});
+CodingQuestion.hasOne(Question, { 
+  foreignKey: 'codingQuestionId',
+  as: 'questionEntry'
+});
+
+// Course - CodingQuestion relationship (one-to-many)
+Course.hasMany(CodingQuestion, { foreignKey: 'courseId', as: 'codingQuestions' });
+CodingQuestion.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
+
+// Exam - CodingQuestion relationship (one-to-many)
+Exam.hasMany(CodingQuestion, { foreignKey: 'examId', as: 'codingQuestions' });
+CodingQuestion.belongsTo(Exam, { foreignKey: 'examId', as: 'exam' });
+
+// User - CodingSubmission relationship (one-to-many)
+User.hasMany(CodingSubmission, { foreignKey: 'studentId', as: 'codingSubmissions' });
+CodingSubmission.belongsTo(User, { foreignKey: 'studentId', as: 'student' });
+
+// CodingQuestion - CodingSubmission relationship (one-to-many)
+CodingQuestion.hasMany(CodingSubmission, { foreignKey: 'codingQuestionId', as: 'submissions' });
+CodingSubmission.belongsTo(CodingQuestion, { foreignKey: 'codingQuestionId', as: 'codingQuestion' });
+
+// ExamSubmission - CodingSubmission relationship (one-to-many)
+ExamSubmission.hasMany(CodingSubmission, { foreignKey: 'submissionId', as: 'codingSubmissions' });
+CodingSubmission.belongsTo(ExamSubmission, { foreignKey: 'submissionId', as: 'examSubmission' });
+
+// CodingQuestion - TestCase relationship (one-to-many)
+CodingQuestion.hasMany(TestCase, { foreignKey: 'codingQuestionId', as: 'testCases' });
+TestCase.belongsTo(CodingQuestion, { foreignKey: 'codingQuestionId', as: 'codingQuestion' });
+
+// CodingSubmission - TestResult relationship (one-to-many)
+CodingSubmission.hasMany(TestResult, { foreignKey: 'submissionId', as: 'testResults' });
+TestResult.belongsTo(CodingSubmission, { foreignKey: 'submissionId', as: 'submission' });
+
+// TestCase - TestResult relationship (one-to-many)
+TestCase.hasMany(TestResult, { foreignKey: 'testCaseId', as: 'results' });
+TestResult.belongsTo(TestCase, { foreignKey: 'testCaseId', as: 'testCase' });
+
 module.exports = {
   User,
   Role,
@@ -120,4 +166,8 @@ module.exports = {
   Lecturer,
   Student,
   CourseLecturer,
+  CodingQuestion,
+  CodingSubmission,
+  TestCase,
+  TestResult,
 };

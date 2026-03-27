@@ -12,7 +12,7 @@ const Question = sequelize.define('Question', {
     allowNull: false,
   },
   questionType: {
-    type: DataTypes.ENUM('Multiple Choice', 'True/False', 'Short Answer', 'Essay', 'Matching'),
+    type: DataTypes.ENUM('Multiple Choice', 'True/False', 'Short Answer', 'Essay', 'Matching', 'Coding'),
     allowNull: false,
   },
   marks: {
@@ -32,6 +32,14 @@ const Question = sequelize.define('Question', {
     allowNull: true,
     references: {
       model: 'courses',
+      key: 'id',
+    },
+  },
+  codingQuestionId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'coding_questions',
       key: 'id',
     },
   },

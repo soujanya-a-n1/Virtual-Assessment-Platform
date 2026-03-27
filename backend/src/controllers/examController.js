@@ -1,4 +1,4 @@
-const { Exam, Question, ExamQuestion, User, Course } = require('../models');
+const { Exam, Question, ExamQuestion, User, Course, CodingQuestion, TestCase } = require('../models');
 const { Op } = require('sequelize');
 
 const createExam = async (req, res) => {
@@ -98,8 +98,21 @@ const getExamById = async (req, res) => {
         },
         {
           model: Question,
-          through: { attributes: [] },
-          attributes: ['id', 'questionText', 'questionType', 'marks'],
+          through: { attributes: ['displayOrder'] },
+          include: [
+            {
+              model: CodingQuestion,
+              as: 'codingDetails',
+              required: false,
+              include: [
+                {
+                  model: TestCase,
+                  as: 'testCases',
+                  required: false,
+                }
+              ]
+            }
+          ]
         },
       ],
     });
@@ -110,8 +123,36 @@ const getExamById = async (req, res) => {
 
     res.json({ exam });
   } catch (error) {
-    console.error('Error fetching exam:', error);
-    res.status(500).json({ message: 'Error fetching exam', error: error.message });
+    console.error('Error fetching exam (with coding details):', error.message);
+    // Fallback: fetch without coding details if join fails
+    try {
+      const exam = await Exam.findByPk(req.params.id, {
+        include: [
+          {
+            model: User,
+            as: 'creator',
+            attributes: ['id', 'firstName', 'lastName', 'email'],
+          },
+          {
+            association: 'course',
+            attributes: ['id', 'code', 'name'],
+          },
+          {
+            model: Question,
+            through: { attributes: ['displayOrder'] },
+          },
+        ],
+      });
+
+      if (!exam) {
+        return res.status(404).json({ message: 'Exam not found' });
+      }
+
+      res.json({ exam });
+    } catch (fallbackError) {
+      console.error('Error fetching exam (fallback):', fallbackError);
+      res.status(500).json({ message: 'Error fetching exam', error: fallbackError.message });
+    }
   }
 };
 

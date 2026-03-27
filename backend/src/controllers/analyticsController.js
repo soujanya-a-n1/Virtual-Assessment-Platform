@@ -3,7 +3,12 @@ const { Op } = require('sequelize');
 
 const getAnalytics = async (req, res) => {
   try {
+    // Get all evaluated submissions (don't filter by submitTime as it might be null for old data)
     const submissions = await ExamSubmission.findAll({
+      where: {
+        status: 'Evaluated',
+        obtainedMarks: { [Op.ne]: null }
+      },
       include: [
         { 
           association: 'exam', 
@@ -14,8 +19,11 @@ const getAnalytics = async (req, res) => {
           attributes: ['id', 'firstName', 'lastName']
         }
       ],
-      order: [['submitTime', 'DESC']]
+      order: [['createdAt', 'DESC']]
     });
+
+    console.log('=== ANALYTICS DEBUG ===');
+    console.log(`Total evaluated submissions found: ${submissions.length}`);
 
     // Count all users and students (only active users)
     const totalUsers = await User.count({
@@ -25,12 +33,15 @@ const getAnalytics = async (req, res) => {
     const totalExams = await Exam.count();
     const totalQuestions = await Question.count();
     const totalSubmissions = submissions.length;
-    const passedCount = submissions.filter((s) => s.isPassed).length;
+    const passedCount = submissions.filter((s) => s.isPassed === true).length;
     const failedCount = submissions.filter((s) => s.isPassed === false).length;
+
+    console.log(`Total Submissions: ${totalSubmissions}`);
+    console.log(`Passed: ${passedCount}, Failed: ${failedCount}`);
 
     const avgScore =
       submissions.length > 0
-        ? submissions.reduce((sum, s) => sum + (s.obtainedMarks || 0), 0) / submissions.length
+        ? submissions.reduce((sum, s) => sum + (parseFloat(s.obtainedMarks) || 0), 0) / submissions.length
         : 0;
 
     const passPercentage =
@@ -38,17 +49,32 @@ const getAnalytics = async (req, res) => {
 
     // Format recent submissions with time ago
     const recentSubmissions = submissions.slice(0, 10).map(submission => {
-      const timeAgo = getTimeAgo(submission.submitTime);
+      const timeAgo = getTimeAgo(submission.submitTime || submission.createdAt);
+      const obtainedMarks = parseFloat(submission.obtainedMarks) || 0;
+      const totalMarks = submission.exam ? parseFloat(submission.exam.totalMarks) : 0;
+      
       return {
         studentName: submission.student 
           ? `${submission.student.firstName} ${submission.student.lastName}`
           : 'Unknown Student',
         examTitle: submission.exam ? submission.exam.title : 'Unknown Exam',
-        obtainedMarks: submission.obtainedMarks || 0,
-        totalMarks: submission.exam ? submission.exam.totalMarks : 0,
+        obtainedMarks: obtainedMarks,
+        totalMarks: totalMarks,
         isPassed: submission.isPassed,
         timeAgo: timeAgo
       };
+    });
+
+    console.log('Recent submissions:', recentSubmissions.length);
+    console.log('Analytics:', {
+      totalUsers,
+      totalStudents,
+      totalExams,
+      totalSubmissions,
+      passedCount,
+      failedCount,
+      passPercentage,
+      avgScore: avgScore.toFixed(2)
     });
 
     res.json({
@@ -67,6 +93,7 @@ const getAnalytics = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching analytics:', error);
+    console.error('Stack:', error.stack);
     res.status(500).json({ message: 'Error fetching analytics', error: error.message });
   }
 };
@@ -157,23 +184,32 @@ const getStudentAnalytics = async (req, res) => {
   try {
     const { studentId } = req.params;
 
+    // Security: Students can only view their own analytics
+    if (req.user.role === 'Student' && req.user.id !== parseInt(studentId)) {
+      return res.status(403).json({ message: 'Unauthorized to view this student\'s analytics' });
+    }
+
     const student = await User.findByPk(studentId);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
 
     const submissions = await ExamSubmission.findAll({
-      where: { userId: studentId },
+      where: { 
+        userId: studentId,
+        status: 'Evaluated'
+      },
       include: { association: 'exam', attributes: ['id', 'title', 'totalMarks', 'passingMarks'] },
+      order: [['submitTime', 'DESC']]
     });
 
     const totalExamsTaken = submissions.length;
-    const passedCount = submissions.filter((s) => s.isPassed).length;
+    const passedCount = submissions.filter((s) => s.isPassed === true).length;
     const failedCount = submissions.filter((s) => s.isPassed === false).length;
 
     const avgScore =
       totalExamsTaken > 0
-        ? submissions.reduce((sum, s) => sum + (s.obtainedMarks || 0), 0) / totalExamsTaken
+        ? submissions.reduce((sum, s) => sum + (parseFloat(s.obtainedMarks) || 0), 0) / totalExamsTaken
         : 0;
 
     const passPercentage =
@@ -190,15 +226,16 @@ const getStudentAnalytics = async (req, res) => {
         averageScore: avgScore.toFixed(2),
         submissions: submissions.map((s) => ({
           examId: s.examId,
-          examTitle: s.exam.title,
-          obtainedMarks: s.obtainedMarks,
-          totalMarks: s.exam.totalMarks,
+          examTitle: s.exam ? s.exam.title : 'Unknown Exam',
+          obtainedMarks: parseFloat(s.obtainedMarks) || 0,
+          totalMarks: s.exam ? parseFloat(s.exam.totalMarks) : 0,
           isPassed: s.isPassed,
-          submittedAt: s.submitTime,
+          submittedAt: s.submitTime || s.createdAt,
         })),
       },
     });
   } catch (error) {
+    console.error('Error fetching student analytics:', error);
     res.status(500).json({ message: 'Error fetching student analytics', error: error.message });
   }
 };

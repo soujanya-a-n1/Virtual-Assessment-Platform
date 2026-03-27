@@ -17,6 +17,7 @@ const createQuestion = async (req, res) => {
       optionD,
       correctAnswer,
       explanation,
+      codingQuestionId,
     } = req.body;
 
     console.log('Creating question with data:', {
@@ -24,7 +25,8 @@ const createQuestion = async (req, res) => {
       questionType,
       marks,
       difficulty,
-      courseId
+      courseId,
+      codingQuestionId
     });
 
     const question = await Question.create({
@@ -40,6 +42,7 @@ const createQuestion = async (req, res) => {
       optionD,
       correctAnswer,
       explanation,
+      codingQuestionId: codingQuestionId || null,
     });
 
     console.log('Question created successfully:', question.id);

@@ -1,20 +1,43 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { examAPI, submissionAPI } from '../services/api';
-import { AuthContext } from '../context/AuthContext';
+import { submissionAPI } from '../services/api';
+import Editor from '@monaco-editor/react';
 import { 
   FiClock, 
   FiSave, 
   FiSend, 
   FiAlertCircle,
-  FiCheckCircle
+  FiCheckCircle,
+  FiPlay,
+  FiCode
 } from 'react-icons/fi';
 import './TakeExam.css';
+
+// Judge0 language IDs removed — using Piston API directly (free, no key needed)
+
+const LANGUAGE_LABELS = {
+  python: 'Python 3',
+  javascript: 'JavaScript',
+  nodejs: 'Node.js',
+  java: 'Java',
+  cpp: 'C++',
+  c: 'C',
+  csharp: 'C#',
+};
+
+const STARTER_CODE = {
+  python: '# Write your solution here\n\n',
+  javascript: '// Write your solution here\n\n',
+  nodejs: '// Write your solution here\n\n',
+  java: 'public class Solution {\n    public static void main(String[] args) {\n        // Write your solution here\n    }\n}\n',
+  cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    return 0;\n}\n',
+  c: '#include <stdio.h>\n\nint main() {\n    // Write your solution here\n    return 0;\n}\n',
+  csharp: 'using System;\n\nclass Solution {\n    static void Main() {\n        // Write your solution here\n    }\n}\n',
+};
 
 const TakeExam = () => {
   const { examId } = useParams();
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
   
   const [exam, setExam] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -25,6 +48,11 @@ const TakeExam = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [autoSaving, setAutoSaving] = useState(false);
+  // Coding question state
+  const [codeMap, setCodeMap] = useState({});         // { questionId: code }
+  const [langMap, setLangMap] = useState({});          // { questionId: language }
+  const [runOutput, setRunOutput] = useState({});      // { questionId: output }
+  const [running, setRunning] = useState({});          // { questionId: bool }
 
   useEffect(() => {
     startExam();
@@ -61,10 +89,19 @@ const TakeExam = () => {
       
       // Initialize answers object
       const initialAnswers = {};
+      const initialCode = {};
+      const initialLang = {};
       (data.questions || []).forEach(q => {
         initialAnswers[q.id] = '';
+        if (q.questionType === 'Coding') {
+          const lang = q.codingDetails?.language || 'python';
+          initialLang[q.id] = lang;
+          initialCode[q.id] = q.codingDetails?.starterCode || STARTER_CODE[lang] || '';
+        }
       });
       setAnswers(initialAnswers);
+      setCodeMap(initialCode);
+      setLangMap(initialLang);
     } catch (error) {
       console.error('Error starting exam:', error);
       alert(error.response?.data?.message || 'Failed to start exam');
@@ -88,6 +125,91 @@ const TakeExam = () => {
       console.error('Error auto-saving answer:', error);
     } finally {
       setAutoSaving(false);
+    }
+  };
+
+  const handleCodeChange = (questionId, code) => {
+    setCodeMap(prev => ({ ...prev, [questionId]: code }));
+    handleAnswerChange(questionId, code);
+  };
+
+  const handleLanguageChange = (questionId, lang) => {
+    setLangMap(prev => ({ ...prev, [questionId]: lang }));
+    const current = codeMap[questionId];
+    if (!current || Object.values(STARTER_CODE).includes(current)) {
+      setCodeMap(prev => ({ ...prev, [questionId]: STARTER_CODE[lang] || '' }));
+    }
+  };
+
+  const runCode = async (questionId) => {
+    const code = codeMap[questionId] || '';
+    const lang = langMap[questionId] || 'python';
+
+    if (!code.trim()) {
+      setRunOutput(prev => ({ ...prev, [questionId]: 'Please write some code first.' }));
+      return;
+    }
+
+    setRunning(prev => ({ ...prev, [questionId]: true }));
+    setRunOutput(prev => ({ ...prev, [questionId]: '⏳ Running...' }));
+
+    // Piston language name + wildcard version (*) — Piston picks latest automatically
+    const PISTON_LANG = {
+      python: 'python',
+      javascript: 'javascript',
+      nodejs: 'javascript',
+      java: 'java',
+      cpp: 'c++',
+      c: 'c',
+      csharp: 'csharp',
+    };
+
+    try {
+      const res = await fetch('https://emkc.org/api/v2/piston/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          language: PISTON_LANG[lang] || 'python',
+          version: '*',
+          files: [{ name: 'main', content: code }],
+          stdin: '',
+          args: [],
+          compile_timeout: 10000,
+          run_timeout: 5000,
+        }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        setRunOutput(prev => ({ ...prev, [questionId]: `Error ${res.status}: ${errText}` }));
+        return;
+      }
+
+      const data = await res.json();
+
+      // Piston returns { compile, run } — compile may be absent for interpreted langs
+      const compileErr = data.compile?.stderr || data.compile?.output || '';
+      const runStdout = data.run?.stdout || '';
+      const runStderr = data.run?.stderr || '';
+      const runOutput = data.run?.output || '';
+
+      if (compileErr) {
+        setRunOutput(prev => ({ ...prev, [questionId]: `Compile Error:\n${compileErr}` }));
+      } else if (runStdout || runStderr || runOutput) {
+        setRunOutput(prev => ({
+          ...prev,
+          [questionId]: runStdout || runOutput || `stderr:\n${runStderr}`,
+        }));
+      } else {
+        setRunOutput(prev => ({ ...prev, [questionId]: '(no output)' }));
+      }
+    } catch (err) {
+      setRunOutput(prev => ({
+        ...prev,
+        [questionId]: `Network error: ${err.message}\nCheck your internet connection.`,
+      }));
+    } finally {
+      setRunning(prev => ({ ...prev, [questionId]: false }));
     }
   };
 
@@ -277,7 +399,78 @@ const TakeExam = () => {
               onChange={(e) => handleAnswerChange(question.id, e.target.value)}
               placeholder="Type your answer here..."
               rows="4"
+              style={{
+                color: '#ffffff',
+                backgroundColor: '#2a2a3e',
+                fontWeight: '500',
+                WebkitTextFillColor: '#ffffff'
+              }}
             />
+          )}
+
+          {question.questionType === 'Coding' && (
+            <div className="coding-editor-section">
+              {/* Language Selector */}
+              <div className="coding-toolbar">
+                <div className="lang-selector">
+                  <FiCode />
+                  <label>Language:</label>
+                  <select
+                    value={langMap[question.id] || 'python'}
+                    onChange={(e) => handleLanguageChange(question.id, e.target.value)}
+                  >
+                    {Object.entries(LANGUAGE_LABELS).map(([val, label]) => (
+                      <option key={val} value={val}>{label}</option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  className="run-btn"
+                  onClick={() => runCode(question.id)}
+                  disabled={running[question.id]}
+                >
+                  <FiPlay />
+                  {running[question.id] ? 'Running...' : 'Run Code'}
+                </button>
+              </div>
+
+              {/* Monaco Code Editor */}
+              <div className="editor-wrapper">
+                <Editor
+                  height="380px"
+                  language={langMap[question.id] === 'cpp' ? 'cpp' : langMap[question.id] === 'csharp' ? 'csharp' : langMap[question.id] || 'python'}
+                  value={codeMap[question.id] || STARTER_CODE[langMap[question.id] || 'python']}
+                  theme="vs-dark"
+                  onChange={(val) => handleCodeChange(question.id, val || '', langMap[question.id] || 'python')}
+                  options={{
+                    fontSize: 14,
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                    tabSize: 4,
+                    wordWrap: 'on',
+                    lineNumbers: 'on',
+                    folding: true,
+                    suggestOnTriggerCharacters: true,
+                  }}
+                />
+              </div>
+
+              {/* Output Panel */}
+              <div className="output-panel">
+                <div className="output-header">
+                  <span>Output</span>
+                  {runOutput[question.id] && (
+                    <button className="clear-btn" onClick={() => setRunOutput(prev => ({ ...prev, [question.id]: '' }))}>
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <pre className="output-content">
+                  {runOutput[question.id] || 'Click "Run Code" to see output here...'}
+                </pre>
+              </div>
+            </div>
           )}
         </div>
 

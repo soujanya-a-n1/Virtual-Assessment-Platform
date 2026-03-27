@@ -191,6 +191,25 @@ const ExamsList = () => {
 
   const canManageExams = ['Admin', 'Super Admin', 'Examiner'].includes(user?.role);
 
+  const getExamAvailability = (exam) => {
+    const now = new Date();
+    const isPublishedOrActive = exam.status === 'Published' || exam.status === 'Active';
+
+    if (!isPublishedOrActive) {
+      return { state: 'unavailable', label: 'Not Available' };
+    }
+
+    if (exam.endTime && new Date(exam.endTime) < now) {
+      return { state: 'expired', label: 'Exam Ended', date: exam.endTime };
+    }
+
+    if (exam.startTime && new Date(exam.startTime) > now) {
+      return { state: 'upcoming', label: 'Coming Soon', date: exam.startTime };
+    }
+
+    return { state: 'available', label: 'Take Exam' };
+  };
+
   if (loading) {
     return (
       <div className="exams-container">
@@ -335,25 +354,49 @@ const ExamsList = () => {
 
               <div className="exam-card-footer">
                 {user?.role === 'Student' ? (
-                  <>
-                    {exam.status === 'Published' || exam.status === 'Active' ? (
-                      <button
-                        className="action-btn take-exam-btn"
-                        onClick={() => navigate(`/exams/${exam.id}/take`)}
-                        title="Take exam"
-                      >
-                        <FiEye /> Take Exam
-                      </button>
-                    ) : (
-                      <button
-                        className="action-btn view-btn"
-                        disabled
-                        title="Exam not available"
-                      >
-                        <FiEye /> Not Available
-                      </button>
-                    )}
-                  </>
+                  <div style={{ gridColumn: '1 / -1' }}>
+                    {(() => {
+                      const avail = getExamAvailability(exam);
+                      if (avail.state === 'available') {
+                        return (
+                          <button
+                            className="action-btn take-exam-btn"
+                            style={{ width: '100%' }}
+                            onClick={() => navigate(`/exams/${exam.id}/take`)}
+                          >
+                            <FiEye /> Take Exam
+                          </button>
+                        );
+                      }
+                      if (avail.state === 'upcoming') {
+                        return (
+                          <div className="exam-status-info exam-upcoming">
+                            <FiCalendar />
+                            <div>
+                              <span className="exam-status-label">Coming Soon</span>
+                              <span className="exam-status-date">{formatDate(avail.date)}</span>
+                            </div>
+                          </div>
+                        );
+                      }
+                      if (avail.state === 'expired') {
+                        return (
+                          <div className="exam-status-info exam-expired">
+                            <FiClock />
+                            <div>
+                              <span className="exam-status-label">Exam Ended</span>
+                              <span className="exam-status-date">{formatDate(avail.date)}</span>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return (
+                        <button className="action-btn view-btn" style={{ width: '100%' }} disabled>
+                          <FiEye /> Not Available
+                        </button>
+                      );
+                    })()}
+                  </div>
                 ) : (
                   <>
                     <button

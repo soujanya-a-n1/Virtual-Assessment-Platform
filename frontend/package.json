@@ -4,13 +4,14 @@
   "description": "Frontend for Virtual Assessment Platform",
   "private": true,
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "axios": "^1.6.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.17.0",
-    "axios": "^1.6.7",
-    "recharts": "^2.10.0",
     "react-icons": "^4.12.0",
-    "react-scripts": "5.0.1"
+    "react-router-dom": "^6.17.0",
+    "react-scripts": "5.0.1",
+    "recharts": "^2.10.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,6 +35,17 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "fast-check": "^4.6.0"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(fast-check)/)"
     ]
   }
 }
