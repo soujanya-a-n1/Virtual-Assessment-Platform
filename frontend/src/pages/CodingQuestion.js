@@ -1,8 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import Editor from '@monaco-editor/react';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { FiClock, FiCode, FiSend, FiAlertCircle } from 'react-icons/fi';
+import TestResults from '../components/TestResults';
 import './CodingQuestion.css';
 
 const CodingQuestion = () => {
@@ -17,10 +19,50 @@ const CodingQuestion = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [autoSubmitted, setAutoSubmitted] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] = useState('saved'); // 'saved', 'saving', 'unsaved'
+  
+  // Submission results state
+  const [submissionResult, setSubmissionResult] = useState(null);
+  const [compilationError, setCompilationError] = useState(null);
+  const [executionStatus, setExecutionStatus] = useState(null); // 'Running', 'Compiling', 'Queued'
+  const [queuePosition, setQueuePosition] = useState(null);
+
+  // Map language names to Monaco Editor language identifiers
+  const getMonacoLanguage = (lang) => {
+    const languageMap = {
+      'C': 'c',
+      'C++': 'cpp',
+      'Java': 'java',
+      'C#': 'csharp',
+      'Node.js': 'javascript',
+      'Python': 'python',
+      'JavaScript': 'javascript'
+    };
+    return languageMap[lang] || 'plaintext';
+  };
 
   useEffect(() => {
     fetchQuestion();
   }, [questionId]);
+
+  // Auto-save effect - saves code to localStorage every 10 seconds
+  useEffect(() => {
+    if (!question) return;
+
+    const autoSaveInterval = setInterval(() => {
+      if (code !== localStorage.getItem(`coding_${questionId}`)) {
+        setAutoSaveStatus('saving');
+        localStorage.setItem(`coding_${questionId}`, code);
+        
+        // Show "saved" status briefly
+        setTimeout(() => {
+          setAutoSaveStatus('saved');
+        }, 500);
+      }
+    }, 10000); // Save every 10 seconds
+
+    return () => clearInterval(autoSaveInterval);
+  }, [code, questionId, question]);
 
   useEffect(() => {
     if (timeRemaining <= 0 && question && !autoSubmitted) {
@@ -61,11 +103,11 @@ const CodingQuestion = () => {
     }
   };
 
-  const handleCodeChange = (e) => {
-    const newCode = e.target.value;
+  const handleCodeChange = (value) => {
+    const newCode = value || '';
     setCode(newCode);
-    // Auto-save to localStorage
-    localStorage.setItem(`coding_${questionId}`, newCode);
+    // Mark as unsaved when code changes
+    setAutoSaveStatus('unsaved');
   };
 
   const handleSubmit = async () => {
@@ -80,24 +122,82 @@ const CodingQuestion = () => {
 
     try {
       setSubmitting(true);
+      setExecutionStatus('Running');
+      setCompilationError(null);
+      setSubmissionResult(null);
+      setQueuePosition(null);
       
-      await api.post('/coding-questions/submit', {
-        codingQuestionId: parseInt(questionId),
+      const response = await api.post(`/coding-questions/${questionId}/submit`, {
         language,
         code,
       });
 
+      const result = response.data;
+      
+      // Handle compilation errors
+      if (result.status === 'Compilation_Error') {
+        setCompilationError(result.compilationError);
+        setExecutionStatus(null);
+        return;
+      }
+      
+      // Handle queue position
+      if (result.queuePosition !== undefined) {
+        setQueuePosition(result.queuePosition);
+        setExecutionStatus('Queued');
+        
+        // Poll for results
+        pollSubmissionResults(result.submissionId);
+        return;
+      }
+      
+      // Handle immediate results
+      if (result.testResults) {
+        setSubmissionResult(result);
+        setExecutionStatus(null);
+      }
+
       // Clear localStorage
       localStorage.removeItem(`coding_${questionId}`);
-      
-      alert('Code submitted successfully!');
-      navigate('/results');
     } catch (error) {
       console.error('Error submitting code:', error);
       alert(error.response?.data?.message || 'Failed to submit code');
+      setExecutionStatus(null);
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const pollSubmissionResults = async (submissionId) => {
+    const maxAttempts = 60; // Poll for up to 60 seconds
+    let attempts = 0;
+    
+    const poll = setInterval(async () => {
+      attempts++;
+      
+      if (attempts > maxAttempts) {
+        clearInterval(poll);
+        setExecutionStatus(null);
+        alert('Execution is taking longer than expected. Please check results later.');
+        return;
+      }
+      
+      try {
+        const response = await api.get(`/coding-submissions/${submissionId}/results`);
+        const result = response.data;
+        
+        if (result.status === 'Graded') {
+          clearInterval(poll);
+          setSubmissionResult(result);
+          setExecutionStatus(null);
+          setQueuePosition(null);
+        } else if (result.queuePosition !== undefined) {
+          setQueuePosition(result.queuePosition);
+        }
+      } catch (error) {
+        console.error('Error polling results:', error);
+      }
+    }, 1000);
   };
 
   const handleAutoSubmit = async () => {
@@ -230,19 +330,39 @@ const CodingQuestion = () => {
                 <option value="C">C</option>
                 <option value="C++">C++</option>
                 <option value="Java">Java</option>
+                <option value="C#">C#</option>
+                <option value="Node.js">Node.js</option>
                 <option value="Python">Python</option>
+                <option value="JavaScript">JavaScript</option>
               </select>
             </div>
           </div>
 
-          <textarea
-            className="code-editor"
-            value={code}
-            onChange={handleCodeChange}
-            placeholder={`// Write your ${language} code here...\n\n`}
-            disabled={submitting || timeRemaining === 0}
-            spellCheck="false"
-          />
+          <div className="monaco-editor-container">
+            <Editor
+              height="500px"
+              language={getMonacoLanguage(language)}
+              value={code}
+              onChange={handleCodeChange}
+              theme="vs-dark"
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                lineNumbers: 'on',
+                scrollBeyondLastLine: false,
+                automaticLayout: true,
+                tabSize: 4,
+                insertSpaces: true,
+                autoClosingBrackets: 'always',
+                autoClosingQuotes: 'always',
+                formatOnPaste: true,
+                formatOnType: true,
+                readOnly: submitting || timeRemaining === 0,
+                wordWrap: 'on',
+                wrappingIndent: 'indent',
+              }}
+            />
+          </div>
 
           <div className="editor-footer">
             <div className="editor-info">
@@ -259,6 +379,35 @@ const CodingQuestion = () => {
           </div>
         </div>
       </div>
+
+      {/* Execution Status */}
+      {executionStatus && (
+        <div className="execution-status">
+          <div className="status-spinner"></div>
+          <span>{executionStatus}...</span>
+          {queuePosition !== null && queuePosition !== undefined && (
+            <span className="queue-position">Queue position: {queuePosition + 1}</span>
+          )}
+        </div>
+      )}
+
+      {/* Compilation Errors */}
+      {compilationError && (
+        <div className="compilation-error">
+          <h3>Compilation Error</h3>
+          <pre>{compilationError}</pre>
+        </div>
+      )}
+
+      {/* Test Results */}
+      {submissionResult && submissionResult.testResults && (
+        <TestResults
+          results={submissionResult.testResults}
+          marks={submissionResult.marksObtained}
+          totalMarks={question.marks}
+          status={submissionResult.status}
+        />
+      )}
     </div>
   );
 };

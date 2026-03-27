@@ -29,12 +29,58 @@ const SubmissionsList = () => {
   const fetchSubmissions = async () => {
     try {
       const response = await api.get('/submissions');
-      setSubmissions(response.data.submissions || []);
+      const allSubmissions = response.data.submissions || [];
+      
+      // Filter out duplicate submissions - keep only the most relevant one per exam per student
+      const filteredSubmissions = filterDuplicateSubmissions(allSubmissions);
+      
+      setSubmissions(filteredSubmissions);
     } catch (error) {
       console.error('Error fetching submissions:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterDuplicateSubmissions = (submissions) => {
+    // Group submissions by examId and userId
+    const grouped = {};
+    
+    submissions.forEach(submission => {
+      const userId = submission.userId || submission.student?.userId || submission.student?.user?.id;
+      const key = `${submission.examId}_${userId}`;
+      
+      if (!grouped[key]) {
+        grouped[key] = [];
+      }
+      grouped[key].push(submission);
+    });
+    
+    // For each group, keep only the most relevant submission
+    const filtered = [];
+    
+    Object.values(grouped).forEach(group => {
+      // Priority: Evaluated > Submitted > In Progress
+      const statusPriority = {
+        'Evaluated': 3,
+        'Submitted': 2,
+        'In Progress': 1
+      };
+      
+      // Sort by priority (highest first), then by date (most recent first)
+      group.sort((a, b) => {
+        const priorityDiff = (statusPriority[b.status] || 0) - (statusPriority[a.status] || 0);
+        if (priorityDiff !== 0) return priorityDiff;
+        
+        // If same priority, use most recent
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      
+      // Keep only the first (highest priority/most recent)
+      filtered.push(group[0]);
+    });
+    
+    return filtered;
   };
 
   const handleReview = (submissionId) => {

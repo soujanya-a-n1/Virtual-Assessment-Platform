@@ -32,7 +32,7 @@ const CodingSubmission = sequelize.define('CodingSubmission', {
     },
   },
   language: {
-    type: DataTypes.ENUM('C', 'C++', 'Java', 'Python'),
+    type: DataTypes.ENUM('C', 'C++', 'Java', 'C#', 'Node.js', 'Python', 'JavaScript'),
     allowNull: false,
   },
   code: {
@@ -59,13 +59,28 @@ const CodingSubmission = sequelize.define('CodingSubmission', {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  compilationError: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   marksObtained: {
     type: DataTypes.DECIMAL(5, 2),
+    defaultValue: 0,
+  },
+  totalTestCases: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  passedTestCases: {
+    type: DataTypes.INTEGER,
     defaultValue: 0,
   },
 }, {
   tableName: 'coding_submissions',
   timestamps: true,
 });
+
+// Associations will be set up in backend/src/models/index.js
+// CodingSubmission.hasMany(TestResult, { foreignKey: 'submissionId', as: 'testResults' })
 
 module.exports = CodingSubmission;

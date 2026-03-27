@@ -611,3 +611,13 @@
     font-size: 1.2rem;
   }
 }
+
+/* Student View Specific Styles */
+.activity-percentage {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background: #444444;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: center;
+}

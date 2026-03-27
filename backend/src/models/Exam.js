@@ -74,10 +74,8 @@ const Exam = sequelize.define('Exam', {
   createdBy: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    references: {
-      model: 'users',
-      key: 'id',
-    },
+    // Foreign key constraint removed to avoid MySQL issues
+    // Will be enforced at application level
   },
 }, {
   timestamps: true,

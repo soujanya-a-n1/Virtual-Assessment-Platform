@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
-import { FiCheckCircle, FiXCircle, FiClock, FiAward, FiEye } from 'react-icons/fi';
+import { FiCheckCircle, FiXCircle, FiClock, FiAward, FiEye, FiTrash2 } from 'react-icons/fi';
 import './Results.css';
 
 const Results = () => {
@@ -32,13 +32,57 @@ const Results = () => {
       const params = filter !== 'all' ? { status: filter } : {};
       
       const response = await api.get(endpoint, { params });
-      setResults(response.data);
-      calculateStats(response.data);
+      
+      // Filter out duplicate submissions - keep only the most relevant one per exam per student
+      const filteredResults = filterDuplicateSubmissions(response.data);
+      
+      setResults(filteredResults);
+      calculateStats(filteredResults);
     } catch (error) {
       console.error('Error fetching results:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterDuplicateSubmissions = (submissions) => {
+    // Group submissions by examId and userId
+    const grouped = {};
+    
+    submissions.forEach(submission => {
+      const key = `${submission.examId}_${submission.userId}`;
+      
+      if (!grouped[key]) {
+        grouped[key] = [];
+      }
+      grouped[key].push(submission);
+    });
+    
+    // For each group, keep only the most relevant submission
+    const filtered = [];
+    
+    Object.values(grouped).forEach(group => {
+      // Priority: Evaluated > Submitted > In Progress
+      const statusPriority = {
+        'Evaluated': 3,
+        'Submitted': 2,
+        'In Progress': 1
+      };
+      
+      // Sort by priority (highest first), then by date (most recent first)
+      group.sort((a, b) => {
+        const priorityDiff = (statusPriority[b.status] || 0) - (statusPriority[a.status] || 0);
+        if (priorityDiff !== 0) return priorityDiff;
+        
+        // If same priority, use most recent
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      
+      // Keep only the first (highest priority/most recent)
+      filtered.push(group[0]);
+    });
+    
+    return filtered;
   };
 
   const calculateStats = (data) => {
@@ -112,6 +156,21 @@ const Results = () => {
 
   const viewDetails = (submissionId) => {
     navigate(`/results/${submissionId}`);
+  };
+
+  const handleDelete = async (submissionId, examTitle) => {
+    if (!window.confirm(`Are you sure you want to delete this submission for "${examTitle}"?\n\nThis will permanently delete:\n- The submission record\n- All student answers\n- Proctoring logs\n\nThis action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await api.delete(`/submissions/${submissionId}`);
+      alert('Submission deleted successfully!');
+      fetchResults(); // Refresh the list
+    } catch (error) {
+      console.error('Error deleting submission:', error);
+      alert(error.response?.data?.message || 'Failed to delete submission');
+    }
   };
 
   if (loading) {
@@ -274,6 +333,15 @@ const Results = () => {
                 >
                   <FiEye /> View Details
                 </button>
+                {(user.role === 'Admin' || user.role === 'Super Admin' || user.role === 'Examiner') && (
+                  <button
+                    className="btn-delete-submission"
+                    onClick={() => handleDelete(result.id, result.exam?.title)}
+                    title="Delete submission"
+                  >
+                    <FiTrash2 /> Delete
+                  </button>
+                )}
               </div>
             </div>
           ))}

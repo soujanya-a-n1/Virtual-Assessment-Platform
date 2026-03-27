@@ -240,6 +240,23 @@
   tab-size: 4;
 }
 
+/* Monaco Editor container styling */
+.monaco-editor-container {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.monaco-editor-container .monaco-editor {
+  padding: 0;
+}
+
+.monaco-editor-container .monaco-editor .margin,
+.monaco-editor-container .monaco-editor .monaco-editor-background {
+  background-color: #1e1e1e;
+}
+
 .code-editor:focus {
   outline: none;
   border-color: #4CAF50;
@@ -359,4 +376,65 @@
     width: 100%;
     justify-content: center;
   }
+}
+
+/* Execution Status */
+.execution-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(33, 150, 243, 0.1);
+  border: 2px solid #2196F3;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+  color: #2196F3;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.status-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(33, 150, 243, 0.3);
+  border-top-color: #2196F3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.queue-position {
+  margin-left: auto;
+  background: rgba(33, 150, 243, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* Compilation Error */
+.compilation-error {
+  background: rgba(244, 67, 54, 0.1);
+  border: 2px solid #F44336;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+}
+
+.compilation-error h3 {
+  color: #F44336;
+  font-size: 1.2rem;
+  margin: 0 0 1rem 0;
+}
+
+.compilation-error pre {
+  background: rgba(0, 0, 0, 0.3);
+  color: #ffcdd2;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }

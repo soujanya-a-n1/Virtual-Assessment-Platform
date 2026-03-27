@@ -1062,48 +1062,150 @@ select {
 }
 
 
-/* ULTIMATE FIX: Force all input values to be visible with highest specificity */
-.modal-content.large form input,
-.modal-content.large form textarea,
-.modal-content.large form select,
-.modal-overlay .modal-content input,
-.modal-overlay .modal-content textarea,
-.modal-overlay .modal-content select {
-  color: #000000 !important;
-  background-color: #ffffff !important;
-  -webkit-text-fill-color: #000000 !important;
+/* ABSOLUTE FINAL FIX - Force all input values to be dark and visible */
+* input,
+* textarea,
+* select {
+  -webkit-text-fill-color: #222222 !important;
 }
 
-/* ABSOLUTE FINAL FIX: Override ALL possible text color rules for modal inputs */
-.modal-overlay .modal-content.large form .form-group input[type="text"],
-.modal-overlay .modal-content.large form .form-group input[type="number"],
-.modal-overlay .modal-content.large form .form-group textarea,
-.modal-overlay .modal-content.large form .form-group select,
-.modal-overlay .modal-content.large form input[name="optionA"],
-.modal-overlay .modal-content.large form input[name="optionB"],
-.modal-overlay .modal-content.large form input[name="optionC"],
-.modal-overlay .modal-content.large form input[name="optionD"],
-.modal-overlay .modal-content.large form input[name="questionText"],
-.modal-overlay .modal-content.large form textarea[name="questionText"] {
-  color: #000000 !important;
-  background-color: #ffffff !important;
-  -webkit-text-fill-color: #000000 !important;
-  font-weight: 600 !important;
-  border: 2px solid #4CAF50 !important;
+.modal-content * input,
+.modal-content * textarea,
+.modal-content * select {
+  -webkit-text-fill-color: #222222 !important;
+  color: #222222 !important;
 }
 
-/* Force input values to be black text */
-.modal-content input:not([type="checkbox"]):not([type="radio"]) {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+
+/* Coding Question Styles */
+.test-cases-section {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 140, 0, 0.2);
 }
 
-.modal-content textarea {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+.test-cases-section h4 {
+  color: #ff8c00;
+  margin: 0 0 1rem 0;
 }
 
-.modal-content select {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+.test-cases-section h5 {
+  color: #cccccc;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.test-cases-list {
+  margin-bottom: 1.5rem;
+}
+
+.test-case-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 140, 0, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.test-case-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 140, 0, 0.2);
+}
+
+.test-case-header span:first-child {
+  font-weight: 600;
+  color: #ffffff;
+  flex: 1;
+}
+
+.badge-visible,
+.badge-hidden {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-visible {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+.badge-hidden {
+  background: rgba(158, 158, 158, 0.2);
+  color: #9e9e9e;
+  border: 1px solid #9e9e9e;
+}
+
+.btn-remove-small {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid #f44336;
+  color: #f44336;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.btn-remove-small:hover {
+  background: rgba(244, 67, 54, 0.2);
+}
+
+.test-case-content {
+  color: #cccccc;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.test-case-content div {
+  margin-bottom: 0.5rem;
+}
+
+.test-case-content strong {
+  color: #ff8c00;
+}
+
+.add-test-case {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 140, 0, 0.2);
+}
+
+.coding-details {
+  background: rgba(255, 140, 0, 0.05);
+  border-left: 3px solid #ff8c00;
+  padding: 1rem;
+}
+
+.coding-meta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.coding-meta span {
+  color: #cccccc;
+}
+
+.coding-meta strong {
+  color: #ff8c00;
+  margin-right: 0.5rem;
+}
+
+.test-info {
+  margin-top: 0.75rem;
+  color: #cccccc;
+}
+
+.test-info strong {
+  color: #ff8c00;
+  margin-right: 0.5rem;
 }

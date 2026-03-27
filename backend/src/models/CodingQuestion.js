@@ -15,6 +15,14 @@ const CodingQuestion = sequelize.define('CodingQuestion', {
       key: 'id',
     },
   },
+  courseId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: 'courses',
+      key: 'id',
+    },
+  },
   title: {
     type: DataTypes.STRING(255),
     allowNull: false,
@@ -22,6 +30,10 @@ const CodingQuestion = sequelize.define('CodingQuestion', {
   description: {
     type: DataTypes.TEXT,
     allowNull: false,
+  },
+  language: {
+    type: DataTypes.ENUM('python', 'javascript', 'java', 'cpp', 'c', 'csharp', 'nodejs'),
+    defaultValue: 'python',
   },
   inputFormat: {
     type: DataTypes.TEXT,
@@ -39,6 +51,10 @@ const CodingQuestion = sequelize.define('CodingQuestion', {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  starterCode: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   difficulty: {
     type: DataTypes.ENUM('Easy', 'Medium', 'Hard'),
     defaultValue: 'Medium',
@@ -49,7 +65,11 @@ const CodingQuestion = sequelize.define('CodingQuestion', {
   },
   timeLimit: {
     type: DataTypes.INTEGER,
-    defaultValue: 30, // minutes
+    defaultValue: 5, // seconds
+  },
+  memoryLimit: {
+    type: DataTypes.INTEGER,
+    defaultValue: 256, // MB
   },
 }, {
   tableName: 'coding_questions',

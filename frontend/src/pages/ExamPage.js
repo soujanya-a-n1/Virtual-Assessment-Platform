@@ -62,6 +62,17 @@ const ExamPage = () => {
     optionC: '',
     optionD: '',
     correctAnswer: '',
+    language: 'python',
+    timeLimit: 5,
+    memoryLimit: 256,
+    starterCode: '',
+    testCases: [],
+  });
+
+  const [newTestCase, setNewTestCase] = useState({
+    input: '',
+    expectedOutput: '',
+    isVisible: true,
   });
 
   const [errors, setErrors] = useState({});
@@ -74,6 +85,15 @@ const ExamPage = () => {
     }
     fetchAllQuestions();
   }, [examId]);
+
+  // Debug: Log questionForm changes
+  useEffect(() => {
+    if (showQuestionModal && editingQuestion) {
+      console.log('=== MODAL OPENED WITH QUESTION FORM ===');
+      console.log('questionForm state:', questionForm);
+      console.log('editingQuestion:', editingQuestion);
+    }
+  }, [showQuestionModal, questionForm, editingQuestion]);
 
   const fetchCourses = async () => {
     try {
@@ -205,29 +225,107 @@ const ExamPage = () => {
     setQuestionForm(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleAddTestCase = () => {
+    if (!newTestCase.input.trim() || !newTestCase.expectedOutput.trim()) {
+      alert('Please fill in both input and expected output');
+      return;
+    }
+    setQuestionForm(prev => ({
+      ...prev,
+      testCases: [...prev.testCases, { ...newTestCase, orderIndex: prev.testCases.length }]
+    }));
+    setNewTestCase({ input: '', expectedOutput: '', isVisible: true });
+  };
+
+  const handleRemoveTestCase = (index) => {
+    setQuestionForm(prev => ({
+      ...prev,
+      testCases: prev.testCases.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleTestCaseChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setNewTestCase(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
   const handleCreateQuestion = async (e) => {
     e.preventDefault();
     
-    // Validate course selection
     if (!questionForm.courseId) {
       alert('Please select a course for the question');
       return;
     }
+
+    if (questionForm.questionType === 'Coding' && questionForm.testCases.length === 0) {
+      alert('Please add at least one test case for coding questions');
+      return;
+    }
     
     try {
-      if (editingQuestion) {
-        // Update existing question
-        await api.put(`/questions/${editingQuestion.id}`, questionForm);
-        alert('Question updated successfully!');
-      } else {
-        // Create new question
-        const response = await api.post('/questions', questionForm);
-        const newQuestion = response.data.question;
-        
-        if (examId && examId !== 'create') {
-          await api.post(`/questions/${examId}/add-questions`, { questionIds: [newQuestion.id] });
+      if (questionForm.questionType === 'Coding') {
+        const codingQuestionData = {
+          title: questionForm.questionText,
+          description: questionForm.questionText,
+          difficulty: questionForm.difficulty,
+          marks: questionForm.marks,
+          language: questionForm.language,
+          timeLimit: questionForm.timeLimit,
+          memoryLimit: questionForm.memoryLimit,
+          starterCode: questionForm.starterCode,
+          courseId: questionForm.courseId,
+          testCases: questionForm.testCases,
+          examId: examId && examId !== 'create' ? examId : null,
+        };
+
+        if (editingQuestion) {
+          await api.put(`/coding-questions/${editingQuestion.codingQuestionId}`, codingQuestionData);
+          await api.put(`/questions/${editingQuestion.id}`, {
+            questionText: questionForm.questionText,
+            marks: questionForm.marks,
+            difficulty: questionForm.difficulty,
+            courseId: questionForm.courseId,
+          });
+          alert('Coding question updated successfully!');
+        } else {
+          const response = await api.post('/coding-questions', codingQuestionData);
+          const newCodingQuestion = response.data.codingQuestion;
+          
+          const questionData = {
+            questionText: questionForm.questionText,
+            questionType: 'Coding',
+            marks: questionForm.marks,
+            difficulty: questionForm.difficulty,
+            courseId: questionForm.courseId,
+            codingQuestionId: newCodingQuestion.id,
+            correctAnswer: '',
+          };
+          const questionResponse = await api.post('/questions', questionData);
+          
+          if (examId && examId !== 'create') {
+            await api.post(`/questions/${examId}/add-questions`, { 
+              questionIds: [questionResponse.data.question.id] 
+            });
+          }
+          
+          alert('Coding question created successfully!');
         }
-        alert('Question created successfully!');
+      } else {
+        if (editingQuestion) {
+          await api.put(`/questions/${editingQuestion.id}`, questionForm);
+          alert('Question updated successfully!');
+        } else {
+          const response = await api.post('/questions', questionForm);
+          const newQuestion = response.data.question;
+          
+          if (examId && examId !== 'create') {
+            await api.post(`/questions/${examId}/add-questions`, { questionIds: [newQuestion.id] });
+          }
+          alert('Question created successfully!');
+        }
       }
       
       setShowQuestionModal(false);
@@ -236,6 +334,7 @@ const ExamPage = () => {
       fetchExamQuestions();
       fetchAllQuestions();
     } catch (error) {
+      console.error('Error saving question:', error);
       alert(error.response?.data?.message || 'Failed to save question');
     }
   };
@@ -262,38 +361,48 @@ const ExamPage = () => {
     }
   };
 
-  const handleEditQuestion = (question) => {
-    console.log('=== EDIT QUESTION DEBUG ===');
-    console.log('Question object received:', question);
-    console.log('Option A:', question.optionA);
-    console.log('Option B:', question.optionB);
-    console.log('Option C:', question.optionC);
-    console.log('Option D:', question.optionD);
-    
-    setEditingQuestion(question);
-    
-    const formValues = {
-      questionText: question.questionText || '',
-      questionType: question.questionType || 'Multiple Choice',
-      marks: question.marks || 1,
-      difficulty: question.difficulty || 'Medium',
-      topic: question.topic || '',
-      courseId: question.courseId || formData.courseId || '',
-      optionA: question.optionA || '',
-      optionB: question.optionB || '',
-      optionC: question.optionC || '',
-      optionD: question.optionD || '',
-      correctAnswer: question.correctAnswer || '',
-    };
-    
-    console.log('Form values being set:', formValues);
-    setQuestionForm(formValues);
-    setShowQuestionModal(true);
-    
-    // Verify after state update (will show in next render)
-    setTimeout(() => {
-      console.log('Form state after update:', questionForm);
-    }, 100);
+  const handleEditQuestion = async (question) => {
+    try {
+      console.log('=== FETCHING FULL QUESTION DATA ===');
+      console.log('Question ID:', question.id);
+      
+      // Fetch complete question data from API
+      const response = await api.get(`/questions/${question.id}`);
+      const fullQuestion = response.data.question;
+      
+      console.log('Full question data received:', fullQuestion);
+      console.log('Option A:', fullQuestion.optionA);
+      console.log('Option B:', fullQuestion.optionB);
+      console.log('Option C:', fullQuestion.optionC);
+      console.log('Option D:', fullQuestion.optionD);
+      
+      // Set editing question
+      setEditingQuestion(fullQuestion);
+      
+      // Create form values object with full data
+      const formValues = {
+        questionText: fullQuestion.questionText || '',
+        questionType: fullQuestion.questionType || 'Multiple Choice',
+        marks: fullQuestion.marks || 1,
+        difficulty: fullQuestion.difficulty || 'Medium',
+        topic: fullQuestion.topic || '',
+        courseId: fullQuestion.courseId || formData.courseId || '',
+        optionA: fullQuestion.optionA || '',
+        optionB: fullQuestion.optionB || '',
+        optionC: fullQuestion.optionC || '',
+        optionD: fullQuestion.optionD || '',
+        correctAnswer: fullQuestion.correctAnswer || '',
+      };
+      
+      console.log('Form values being set:', formValues);
+      
+      // Set form values and open modal
+      setQuestionForm(formValues);
+      setShowQuestionModal(true);
+    } catch (error) {
+      console.error('Error fetching question:', error);
+      alert('Failed to load question details. Please try again.');
+    }
   };
 
   const toggleQuestionExpand = (questionId) => {
@@ -317,6 +426,16 @@ const ExamPage = () => {
       optionC: '',
       optionD: '',
       correctAnswer: '',
+      language: 'python',
+      timeLimit: 5,
+      memoryLimit: 256,
+      starterCode: '',
+      testCases: [],
+    });
+    setNewTestCase({
+      input: '',
+      expectedOutput: '',
+      isVisible: true,
     });
     setEditingQuestion(null);
   };
@@ -750,6 +869,26 @@ const ExamPage = () => {
                             <p>{question.correctAnswer}</p>
                           </div>
                         )}
+                        {question.questionType === 'Coding' && question.codingDetails && (
+                          <div className="question-answer coding-details">
+                            <div className="coding-meta">
+                              <span><strong>Language:</strong> {question.codingDetails.language}</span>
+                              <span><strong>Time:</strong> {question.codingDetails.timeLimit}s</span>
+                              <span><strong>Memory:</strong> {question.codingDetails.memoryLimit}MB</span>
+                            </div>
+                            {question.codingDetails.testCases && (
+                              <div className="test-info">
+                                <strong>Test Cases:</strong> {question.codingDetails.testCases.length} total
+                                ({question.codingDetails.testCases.filter(tc => tc.isVisible).length} visible)
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {question.questionType === 'Coding' && !question.codingDetails && (
+                          <div className="question-answer">
+                            <p style={{color: '#f44336'}}>⚠️ Coding details not loaded</p>
+                          </div>
+                        )}
                       </>
                     )}
                   </div>
@@ -778,7 +917,12 @@ const ExamPage = () => {
                   required
                   rows="3"
                   placeholder="Enter the question"
-                  style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
+                  style={{ 
+                    color: '#000000', 
+                    backgroundColor: '#ffffff', 
+                    fontWeight: '600',
+                    WebkitTextFillColor: '#000000'
+                  }}
                 />
               </div>
 
@@ -791,6 +935,12 @@ const ExamPage = () => {
                     onChange={handleQuestionChange}
                     required
                     className={!questionForm.courseId ? 'error' : ''}
+                    style={{ 
+                      color: '#000000', 
+                      backgroundColor: '#ffffff', 
+                      fontWeight: '600',
+                      WebkitTextFillColor: '#000000'
+                    }}
                   >
                     <option value="">Select Course</option>
                     {courses.map(course => (
@@ -812,10 +962,17 @@ const ExamPage = () => {
                     value={questionForm.questionType}
                     onChange={handleQuestionChange}
                     required
+                    style={{ 
+                      color: '#000000', 
+                      backgroundColor: '#ffffff', 
+                      fontWeight: '600',
+                      WebkitTextFillColor: '#000000'
+                    }}
                   >
                     <option value="Multiple Choice">Multiple Choice</option>
                     <option value="True/False">True/False</option>
                     <option value="Short Answer">Short Answer</option>
+                    <option value="Coding">Coding</option>
                   </select>
                 </div>
                 <div className="form-group">
@@ -828,6 +985,12 @@ const ExamPage = () => {
                     required
                     min="0.25"
                     step="0.25"
+                    style={{ 
+                      color: '#000000', 
+                      backgroundColor: '#ffffff', 
+                      fontWeight: '600',
+                      WebkitTextFillColor: '#000000'
+                    }}
                   />
                 </div>
                 <div className="form-group">
@@ -836,6 +999,12 @@ const ExamPage = () => {
                     name="difficulty"
                     value={questionForm.difficulty}
                     onChange={handleQuestionChange}
+                    style={{ 
+                      color: '#000000', 
+                      backgroundColor: '#ffffff', 
+                      fontWeight: '600',
+                      WebkitTextFillColor: '#000000'
+                    }}
                   >
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
@@ -854,7 +1023,13 @@ const ExamPage = () => {
                       value={questionForm.optionA}
                       onChange={handleQuestionChange}
                       required
-                      style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
+                      placeholder="Enter option A"
+                      style={{ 
+                        color: '#000000', 
+                        backgroundColor: '#ffffff', 
+                        fontWeight: '600',
+                        WebkitTextFillColor: '#000000'
+                      }}
                     />
                   </div>
                   <div className="form-group">
@@ -865,27 +1040,47 @@ const ExamPage = () => {
                       value={questionForm.optionB}
                       onChange={handleQuestionChange}
                       required
-                      style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
+                      placeholder="Enter option B"
+                      style={{ 
+                        color: '#000000', 
+                        backgroundColor: '#ffffff', 
+                        fontWeight: '600',
+                        WebkitTextFillColor: '#000000'
+                      }}
                     />
                   </div>
                   <div className="form-group">
-                    <label>Option C</label>
+                    <label>Option C *</label>
                     <input
                       type="text"
                       name="optionC"
                       value={questionForm.optionC}
                       onChange={handleQuestionChange}
-                      style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
+                      required
+                      placeholder="Enter option C"
+                      style={{ 
+                        color: '#000000', 
+                        backgroundColor: '#ffffff', 
+                        fontWeight: '600',
+                        WebkitTextFillColor: '#000000'
+                      }}
                     />
                   </div>
                   <div className="form-group">
-                    <label>Option D</label>
+                    <label>Option D *</label>
                     <input
                       type="text"
                       name="optionD"
                       value={questionForm.optionD}
                       onChange={handleQuestionChange}
-                      style={{ color: '#000000', backgroundColor: '#ffffff', fontWeight: '600' }}
+                      required
+                      placeholder="Enter option D"
+                      style={{ 
+                        color: '#000000', 
+                        backgroundColor: '#ffffff', 
+                        fontWeight: '600',
+                        WebkitTextFillColor: '#000000'
+                      }}
                     />
                   </div>
                   <div className="form-group">
@@ -895,6 +1090,12 @@ const ExamPage = () => {
                       value={questionForm.correctAnswer}
                       onChange={handleQuestionChange}
                       required
+                      style={{ 
+                        color: '#000000', 
+                        backgroundColor: '#ffffff', 
+                        fontWeight: '600',
+                        WebkitTextFillColor: '#000000'
+                      }}
                     >
                       <option value="">Select correct answer</option>
                       <option value="A">A</option>
@@ -914,6 +1115,12 @@ const ExamPage = () => {
                     value={questionForm.correctAnswer}
                     onChange={handleQuestionChange}
                     required
+                    style={{ 
+                      color: '#000000', 
+                      backgroundColor: '#ffffff', 
+                      fontWeight: '600',
+                      WebkitTextFillColor: '#000000'
+                    }}
                   >
                     <option value="">Select correct answer</option>
                     <option value="A">True</option>
@@ -932,8 +1139,185 @@ const ExamPage = () => {
                     required
                     rows="2"
                     placeholder="Enter the model answer"
+                    style={{ 
+                      color: '#000000', 
+                      backgroundColor: '#ffffff', 
+                      fontWeight: '600',
+                      WebkitTextFillColor: '#000000'
+                    }}
                   />
                 </div>
+              )}
+
+              {questionForm.questionType === 'Coding' && (
+                <>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Programming Language *</label>
+                      <select
+                        name="language"
+                        value={questionForm.language}
+                        onChange={handleQuestionChange}
+                        required
+                        style={{ 
+                          color: '#000000', 
+                          backgroundColor: '#ffffff', 
+                          fontWeight: '600',
+                          WebkitTextFillColor: '#000000'
+                        }}
+                      >
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="c">C</option>
+                        <option value="csharp">C#</option>
+                        <option value="nodejs">Node.js</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Time Limit (seconds) *</label>
+                      <input
+                        type="number"
+                        name="timeLimit"
+                        value={questionForm.timeLimit}
+                        onChange={handleQuestionChange}
+                        required
+                        min="1"
+                        max="30"
+                        style={{ 
+                          color: '#000000', 
+                          backgroundColor: '#ffffff', 
+                          fontWeight: '600',
+                          WebkitTextFillColor: '#000000'
+                        }}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Memory Limit (MB) *</label>
+                      <input
+                        type="number"
+                        name="memoryLimit"
+                        value={questionForm.memoryLimit}
+                        onChange={handleQuestionChange}
+                        required
+                        min="64"
+                        max="512"
+                        step="64"
+                        style={{ 
+                          color: '#000000', 
+                          backgroundColor: '#ffffff', 
+                          fontWeight: '600',
+                          WebkitTextFillColor: '#000000'
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Starter Code (Optional)</label>
+                    <textarea
+                      name="starterCode"
+                      value={questionForm.starterCode}
+                      onChange={handleQuestionChange}
+                      rows="4"
+                      placeholder="Enter starter code template..."
+                      style={{ 
+                        color: '#000000', 
+                        backgroundColor: '#ffffff', 
+                        fontWeight: '600',
+                        WebkitTextFillColor: '#000000',
+                        fontFamily: 'monospace'
+                      }}
+                    />
+                  </div>
+
+                  <div className="test-cases-section">
+                    <h4>Test Cases</h4>
+                    
+                    {questionForm.testCases.length > 0 && (
+                      <div className="test-cases-list">
+                        {questionForm.testCases.map((tc, index) => (
+                          <div key={index} className="test-case-item">
+                            <div className="test-case-header">
+                              <span>Test Case {index + 1}</span>
+                              <span className={tc.isVisible ? 'badge-visible' : 'badge-hidden'}>
+                                {tc.isVisible ? 'Visible' : 'Hidden'}
+                              </span>
+                              <button 
+                                type="button" 
+                                className="btn-remove-small"
+                                onClick={() => handleRemoveTestCase(index)}
+                              >
+                                <FiTrash2 />
+                              </button>
+                            </div>
+                            <div className="test-case-content">
+                              <div><strong>Input:</strong> {tc.input}</div>
+                              <div><strong>Output:</strong> {tc.expectedOutput}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="add-test-case">
+                      <h5>Add Test Case</h5>
+                      <div className="form-group">
+                        <label>Input *</label>
+                        <textarea
+                          name="input"
+                          value={newTestCase.input}
+                          onChange={handleTestCaseChange}
+                          rows="2"
+                          placeholder="Enter test input..."
+                          style={{ 
+                            color: '#000000', 
+                            backgroundColor: '#ffffff', 
+                            fontWeight: '600',
+                            WebkitTextFillColor: '#000000',
+                            fontFamily: 'monospace'
+                          }}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Expected Output *</label>
+                        <textarea
+                          name="expectedOutput"
+                          value={newTestCase.expectedOutput}
+                          onChange={handleTestCaseChange}
+                          rows="2"
+                          placeholder="Enter expected output..."
+                          style={{ 
+                            color: '#000000', 
+                            backgroundColor: '#ffffff', 
+                            fontWeight: '600',
+                            WebkitTextFillColor: '#000000',
+                            fontFamily: 'monospace'
+                          }}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>
+                          <input
+                            type="checkbox"
+                            name="isVisible"
+                            checked={newTestCase.isVisible}
+                            onChange={handleTestCaseChange}
+                          />
+                          {' '}Visible to students
+                        </label>
+                      </div>
+                      <button 
+                        type="button" 
+                        className="btn btn-secondary"
+                        onClick={handleAddTestCase}
+                      >
+                        <FiPlus /> Add Test Case
+                      </button>
+                    </div>
+                  </div>
+                </>
               )}
 
               <div className="modal-footer">

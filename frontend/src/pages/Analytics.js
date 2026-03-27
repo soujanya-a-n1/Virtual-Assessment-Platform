@@ -19,13 +19,22 @@ const Analytics = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAnalytics();
-  }, []);
+    if (user) {
+      fetchAnalytics();
+    }
+  }, [user]);
 
   const fetchAnalytics = async () => {
     try {
-      const response = await api.get('/analytics');
-      setAnalytics(response.data.analytics || response.data);
+      // If student, fetch their personal analytics
+      if (user?.role === 'Student') {
+        const response = await api.get(`/analytics/students/${user.id}`);
+        setAnalytics(response.data.studentAnalytics || response.data);
+      } else {
+        // Admin/Examiner: fetch platform analytics
+        const response = await api.get('/analytics');
+        setAnalytics(response.data.analytics || response.data);
+      }
     } catch (error) {
       console.error('Error fetching analytics:', error);
       // Set default data if API fails
@@ -38,7 +47,8 @@ const Analytics = () => {
         failedCount: 0,
         averageScore: 0,
         passPercentage: 0,
-        recentSubmissions: []
+        recentSubmissions: [],
+        submissions: []
       });
     } finally {
       setLoading(false);
@@ -55,6 +65,177 @@ const Analytics = () => {
       </div>
     );
   }
+
+  // Student View - Show personal analytics
+  if (user?.role === 'Student') {
+    const totalExamsTaken = analytics.totalExamsTaken || 0;
+    const passedCount = analytics.passedCount || 0;
+    const failedCount = analytics.failedCount || 0;
+    const passPercentage = totalExamsTaken > 0
+      ? ((passedCount / totalExamsTaken) * 100).toFixed(1)
+      : 0;
+    const failPercentage = totalExamsTaken > 0
+      ? ((failedCount / totalExamsTaken) * 100).toFixed(1)
+      : 0;
+
+    return (
+      <div className="analytics-container">
+        <div className="analytics-header">
+          <div>
+            <h1>My Performance</h1>
+            <p className="subtitle">Your exam history and statistics</p>
+          </div>
+        </div>
+
+        {/* Student Stats Grid */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon blue">
+              <FiBook />
+            </div>
+            <div className="stat-content">
+              <h3>{totalExamsTaken}</h3>
+              <p>Exams Taken</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon green">
+              <FiCheckCircle />
+            </div>
+            <div className="stat-content">
+              <h3>{passedCount}</h3>
+              <p>Passed</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon red">
+              <FiXCircle />
+            </div>
+            <div className="stat-content">
+              <h3>{failedCount}</h3>
+              <p>Failed</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon purple">
+              <FiTrendingUp />
+            </div>
+            <div className="stat-content">
+              <h3>{analytics.averageScore || 0}%</h3>
+              <p>Average Score</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Performance Overview */}
+        <div className="performance-section">
+          <h2>Performance Overview</h2>
+          
+          <div className="performance-grid">
+            <div className="performance-card">
+              <div className="performance-header">
+                <FiTrendingUp className="performance-icon" />
+                <h3>Average Score</h3>
+              </div>
+              <div className="performance-value">
+                {analytics.averageScore || 0}%
+              </div>
+              <div className="performance-bar">
+                <div 
+                  className="performance-fill"
+                  style={{ width: `${analytics.averageScore || 0}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="performance-card">
+              <div className="performance-header">
+                <FiCheckCircle className="performance-icon green" />
+                <h3>Pass Rate</h3>
+              </div>
+              <div className="performance-value green">
+                {passPercentage}%
+              </div>
+              <div className="performance-bar">
+                <div 
+                  className="performance-fill green"
+                  style={{ width: `${passPercentage}%` }}
+                />
+              </div>
+              <p className="performance-detail">
+                {passedCount} exams passed
+              </p>
+            </div>
+
+            <div className="performance-card">
+              <div className="performance-header">
+                <FiXCircle className="performance-icon red" />
+                <h3>Fail Rate</h3>
+              </div>
+              <div className="performance-value red">
+                {failPercentage}%
+              </div>
+              <div className="performance-bar">
+                <div 
+                  className="performance-fill red"
+                  style={{ width: `${failPercentage}%` }}
+                />
+              </div>
+              <p className="performance-detail">
+                {failedCount} exams failed
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Exam History */}
+        {analytics.submissions && analytics.submissions.length > 0 ? (
+          <div className="recent-activity-section">
+            <h2>Exam History</h2>
+            
+            <div className="activity-list">
+              {analytics.submissions.map((submission, index) => (
+                <div key={index} className="activity-item">
+                  <div className="activity-icon">
+                    {submission.isPassed ? (
+                      <FiCheckCircle className="icon-green" />
+                    ) : (
+                      <FiXCircle className="icon-red" />
+                    )}
+                  </div>
+                  <div className="activity-content">
+                    <h4>{submission.examTitle}</h4>
+                    <p>{new Date(submission.submittedAt).toLocaleDateString()}</p>
+                  </div>
+                  <div className="activity-score">
+                    <span className={submission.isPassed ? 'score-green' : 'score-red'}>
+                      {submission.obtainedMarks || 0} / {submission.totalMarks || 0}
+                    </span>
+                  </div>
+                  <div className="activity-percentage">
+                    <span className={submission.isPassed ? 'score-green' : 'score-red'}>
+                      {((submission.obtainedMarks / submission.totalMarks) * 100).toFixed(1)}%
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="no-data-message">
+            <FiFileText className="no-data-icon" />
+            <h3>No Exam History</h3>
+            <p>Your exam results will appear here once you complete exams</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Admin/Examiner View - Show platform analytics
 
   const passPercentage = analytics.totalSubmissions > 0
     ? ((analytics.passedCount / analytics.totalSubmissions) * 100).toFixed(1)
