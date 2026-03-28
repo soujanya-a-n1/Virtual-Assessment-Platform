@@ -392,6 +392,11 @@ const ExamPage = () => {
         optionC: fullQuestion.optionC || '',
         optionD: fullQuestion.optionD || '',
         correctAnswer: fullQuestion.correctAnswer || '',
+        language: fullQuestion.language || 'python',
+        timeLimit: fullQuestion.timeLimit || 5,
+        memoryLimit: fullQuestion.memoryLimit || 256,
+        starterCode: fullQuestion.starterCode || '',
+        testCases: fullQuestion.testCases || [],
       };
       
       console.log('Form values being set:', formValues);

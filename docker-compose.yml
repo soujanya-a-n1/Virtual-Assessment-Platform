@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  piston:
+    image: ghcr.io/engineer-man/piston
+    container_name: piston
+    privileged: true
+    ports:
+      - "2000:2000"
+    volumes:
+      - piston-packages:/piston/packages
+    tmpfs:
+      - /piston/jobs:exec
+      - /tmp:exec
+    environment:
+      - PISTON_LOG_LEVEL=INFO
+      - PISTON_RUN_TIMEOUT=10000
+      - PISTON_COMPILE_TIMEOUT=10000
+    restart: unless-stopped
+
+volumes:
+  piston-packages:

@@ -40,6 +40,10 @@ const Dashboard = () => {
       setAnalytics(response.data.analytics);
     } catch (error) {
       console.error('Error fetching analytics:', error);
+      // Silently fail if user doesn't have permission
+      if (error.response?.status === 403) {
+        console.log('User does not have permission to view analytics');
+      }
     } finally {
       setLoading(false);
     }

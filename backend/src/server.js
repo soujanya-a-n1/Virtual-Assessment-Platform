@@ -21,6 +21,7 @@ const lecturerRoutes = require('./routes/lecturerRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const examAssignmentRoutes = require('./routes/examAssignmentRoutes');
 const codingQuestionRoutes = require('./routes/codingQuestionRoutes');
+const codeExecutionRoutes = require('./routes/codeExecutionRoutes');
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use('/api/lecturers', lecturerRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api', examAssignmentRoutes);
 app.use('/api/coding-questions', codingQuestionRoutes);
+app.use('/api/code', codeExecutionRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
