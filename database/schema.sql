@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2026 at 03:25 PM
+-- Generation Time: Mar 27, 2026 at 03:08 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -79,8 +79,22 @@ CREATE TABLE `coding_questions` (
   `marks` decimal(5,2) DEFAULT 10.00,
   `timeLimit` int(11) DEFAULT 30,
   `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL
+  `updatedAt` datetime NOT NULL,
+  `courseId` int(11) DEFAULT NULL,
+  `language` enum('python','javascript','java','cpp','c','csharp','nodejs') DEFAULT 'python',
+  `starterCode` text DEFAULT NULL,
+  `memoryLimit` int(11) DEFAULT 256
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coding_questions`
+--
+
+INSERT INTO `coding_questions` (`id`, `examId`, `title`, `description`, `inputFormat`, `outputFormat`, `sampleInput`, `sampleOutput`, `difficulty`, `marks`, `timeLimit`, `createdAt`, `updatedAt`, `courseId`, `language`, `starterCode`, `memoryLimit`) VALUES
+(1, NULL, 'Write a Tower of hanoi', 'Write a Tower of hanoi', NULL, NULL, NULL, NULL, 'Hard', 5.00, 5, '2026-03-24 06:53:56', '2026-03-24 06:53:56', 2, 'c', '', 256),
+(2, 12, 'write a program', 'write a program', NULL, NULL, NULL, NULL, 'Medium', 1.00, 5, '2026-03-24 07:22:08', '2026-03-24 07:22:08', 4, 'python', '', 256),
+(3, NULL, 'write a program', 'write a program', NULL, NULL, NULL, NULL, 'Medium', 1.00, 5, '2026-03-24 07:42:31', '2026-03-24 07:42:31', 4, 'python', '', 256),
+(4, 9, 'write hello world prgm', 'write hello world prgm', NULL, NULL, NULL, NULL, 'Medium', 12.00, 5, '2026-03-27 10:05:45', '2026-03-27 10:05:45', 4, 'c', '', 256);
 
 -- --------------------------------------------------------
 
@@ -241,10 +255,9 @@ CREATE TABLE `exams` (
 INSERT INTO `exams` (`id`, `title`, `description`, `duration`, `totalQuestions`, `totalMarks`, `passingMarks`, `examType`, `status`, `startTime`, `endTime`, `requiresProctoring`, `shuffleQuestions`, `negativeMarkingEnabled`, `negativeMarks`, `createdBy`, `courseId`, `createdAt`, `updatedAt`) VALUES
 (7, 'C Programming Mid Exam', 'Mid-semester exam covering C basics, loops, arrays, and functions.', 50, 25, 60.00, 20.00, 'Online', 'Published', '2026-05-09 16:30:00', '2026-05-09 17:30:00', 1, 0, 0, 0.00, 1, 2, '2026-02-19 10:10:29', '2026-03-06 09:03:17'),
 (8, 'OOP Internal Assessment', 'Exam covering OOP concepts and Java fundamentals.', 50, 25, 60.00, 20.00, 'Online', 'Published', '2026-05-11 16:30:00', '2026-05-11 17:30:00', 1, 0, 0, 0.00, 1, 3, '2026-02-19 10:10:29', '2026-03-06 09:03:54'),
-(9, 'Data Structures Mid Exam', 'Exam on stacks, queues, linked lists, and trees.', 50, 25, 60.00, 20.00, 'Online', 'Published', '2026-05-14 11:00:00', '2026-05-14 11:30:00', 1, 0, 0, 0.00, 1, 4, '2026-02-19 10:10:29', '2026-03-06 09:04:18'),
+(9, 'Data Structures Mid Exam', 'Exam on stacks, queues, linked lists, and trees.', 50, 24, 60.00, 20.00, 'Online', 'Published', '2026-03-26 22:10:00', '2026-05-14 06:00:00', 1, 0, 0, 0.00, 1, 4, '2026-02-19 10:10:29', '2026-03-27 10:04:52'),
 (10, 'DBMS Internal Test', 'SQL queries, normalization, and ER diagrams.', 50, 25, 60.00, 20.00, 'Online', 'Published', '2026-05-17 05:30:00', '2026-05-17 06:00:00', 1, 0, 0, 0.00, 1, 5, '2026-02-19 10:10:29', '2026-03-06 09:03:38'),
-(11, 'Operating Systems Test', 'Process scheduling and memory management concepts.', 50, 24, 60.00, 20.00, 'Online', 'Published', '2026-03-19 00:00:00', '2026-03-19 01:00:00', 1, 1, 0, 0.00, 1, 6, '2026-02-19 10:10:30', '2026-03-06 10:25:02'),
-(12, 'Digital Electronics Exam', 'Logic gates, flip-flops, and number systems.', 50, 25, 60.00, 20.00, 'Online', 'Published', '2026-03-21 06:00:00', '2026-03-21 06:30:00', 1, 0, 0, 0.00, 1, 7, '2026-02-19 10:10:30', '2026-03-06 09:05:57'),
+(12, 'Digital Electronics Exam', 'Logic gates, flip-flops, and number systems.', 50, 25, 60.00, 20.00, 'Online', 'Published', '2026-03-26 22:04:00', '2026-03-26 23:00:00', 1, 0, 0, 0.00, 1, 7, '2026-02-19 10:10:30', '2026-03-27 10:03:01'),
 (13, 'Microprocessors Test', 'Microprocessor architecture and programming.', 50, 25, 60.00, 20.00, 'Online', 'Published', '2026-03-23 23:30:00', '2026-03-24 00:00:00', 1, 0, 0, 0.00, 1, 8, '2026-02-19 10:10:30', '2026-03-06 09:06:08'),
 (14, 'Engineering Mechanics Exam', 'Force systems and equilibrium problems.', 50, 25, 60.00, 20.00, 'Online', 'Published', '2026-03-26 12:00:00', '2026-03-26 12:30:00', 1, 0, 0, 0.00, 1, 9, '2026-02-19 10:10:30', '2026-03-06 09:05:23'),
 (15, 'Structural Analysis Test', 'Beam analysis and structural calculations.', 50, 25, 60.00, 20.00, 'Online', 'Published', '2026-03-28 16:30:00', '2026-03-28 17:30:00', 1, 0, 0, 0.00, 1, 10, '2026-02-19 10:10:30', '2026-03-06 09:05:08'),
@@ -375,26 +388,6 @@ INSERT INTO `exam_questions` (`id`, `examId`, `questionId`, `displayOrder`, `cre
 (124, 8, 144, 18, '2026-03-04 08:05:37', '2026-03-04 08:05:37'),
 (125, 8, 145, 19, '2026-03-04 08:06:24', '2026-03-04 08:06:24'),
 (126, 8, 146, 20, '2026-03-04 08:07:31', '2026-03-04 08:07:31'),
-(127, 11, 147, 1, '2026-03-04 08:39:44', '2026-03-04 08:39:44'),
-(128, 11, 148, 2, '2026-03-04 08:40:37', '2026-03-04 08:40:37'),
-(129, 11, 149, 3, '2026-03-04 08:41:39', '2026-03-04 08:41:39'),
-(130, 11, 150, 4, '2026-03-04 08:42:37', '2026-03-04 08:42:37'),
-(131, 11, 151, 5, '2026-03-04 08:43:22', '2026-03-04 08:43:22'),
-(132, 11, 152, 6, '2026-03-04 08:44:26', '2026-03-04 08:44:26'),
-(133, 11, 153, 7, '2026-03-04 08:45:31', '2026-03-04 08:45:31'),
-(134, 11, 154, 8, '2026-03-04 08:46:32', '2026-03-04 08:46:32'),
-(135, 11, 155, 9, '2026-03-04 08:47:46', '2026-03-04 08:47:46'),
-(136, 11, 156, 10, '2026-03-04 08:48:45', '2026-03-04 08:48:45'),
-(137, 11, 157, 11, '2026-03-04 08:49:24', '2026-03-04 08:49:24'),
-(138, 11, 158, 12, '2026-03-04 08:50:07', '2026-03-04 08:50:07'),
-(139, 11, 159, 13, '2026-03-04 08:51:00', '2026-03-04 08:51:00'),
-(140, 11, 160, 14, '2026-03-04 08:51:54', '2026-03-04 08:51:54'),
-(141, 11, 161, 15, '2026-03-04 08:52:46', '2026-03-04 08:52:46'),
-(142, 11, 162, 16, '2026-03-04 08:53:29', '2026-03-04 08:53:29'),
-(143, 11, 163, 17, '2026-03-04 08:54:15', '2026-03-04 08:54:15'),
-(144, 11, 164, 18, '2026-03-04 08:55:19', '2026-03-04 08:55:19'),
-(145, 11, 165, 19, '2026-03-04 08:57:40', '2026-03-04 08:57:40'),
-(146, 11, 166, 20, '2026-03-04 08:58:27', '2026-03-04 08:58:27'),
 (147, 16, 167, 1, '2026-03-04 12:49:42', '2026-03-04 12:49:42'),
 (148, 16, 168, 2, '2026-03-04 12:50:22', '2026-03-04 12:50:22'),
 (149, 16, 169, 3, '2026-03-04 12:51:10', '2026-03-04 12:51:10'),
@@ -494,10 +487,6 @@ INSERT INTO `exam_questions` (`id`, `examId`, `questionId`, `displayOrder`, `cre
 (244, 8, 264, 22, '2026-03-06 08:16:35', '2026-03-06 08:16:35'),
 (245, 8, 265, 23, '2026-03-06 08:17:08', '2026-03-06 08:17:08'),
 (246, 8, 266, 24, '2026-03-06 08:18:27', '2026-03-06 08:18:27'),
-(247, 11, 267, 21, '2026-03-06 08:20:10', '2026-03-06 08:20:10'),
-(248, 11, 268, 22, '2026-03-06 08:20:41', '2026-03-06 08:20:41'),
-(249, 11, 269, 23, '2026-03-06 08:21:21', '2026-03-06 08:21:21'),
-(250, 11, 270, 24, '2026-03-06 08:21:53', '2026-03-06 08:21:53'),
 (251, 16, 271, 21, '2026-03-06 08:23:09', '2026-03-06 08:23:09'),
 (252, 16, 272, 22, '2026-03-06 08:24:13', '2026-03-06 08:24:13'),
 (253, 16, 273, 23, '2026-03-06 08:24:51', '2026-03-06 08:24:51'),
@@ -509,7 +498,9 @@ INSERT INTO `exam_questions` (`id`, `examId`, `questionId`, `displayOrder`, `cre
 (259, 15, 279, 21, '2026-03-06 08:29:07', '2026-03-06 08:29:07'),
 (260, 15, 280, 22, '2026-03-06 08:29:35', '2026-03-06 08:29:35'),
 (261, 15, 281, 23, '2026-03-06 08:30:23', '2026-03-06 08:30:23'),
-(262, 15, 282, 24, '2026-03-06 08:30:46', '2026-03-06 08:30:46');
+(262, 15, 282, 24, '2026-03-06 08:30:46', '2026-03-06 08:30:46'),
+(265, 12, 284, 25, '2026-03-24 07:22:08', '2026-03-24 07:22:08'),
+(268, 9, 287, 25, '2026-03-27 10:05:45', '2026-03-27 10:05:45');
 
 -- --------------------------------------------------------
 
@@ -550,8 +541,12 @@ INSERT INTO `exam_submissions` (`id`, `userId`, `examId`, `submitTime`, `totalTi
 (22, 5, 9, '2026-03-07 01:16:53', 126, 'Evaluated', '2026-03-07 01:14:47', 28.00, NULL, NULL, NULL, 1, 0, 0, NULL, '2026-03-07 01:14:47', '2026-03-07 01:16:53'),
 (23, 5, 10, '2026-03-09 14:32:24', 149, 'Evaluated', '2026-03-09 14:29:55', 40.00, NULL, NULL, NULL, 1, 0, 0, NULL, '2026-03-09 14:29:55', '2026-03-09 14:32:24'),
 (24, 5, 10, NULL, NULL, 'In Progress', '2026-03-09 14:29:55', NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-09 14:29:55', '2026-03-09 14:29:55'),
-(25, 42, 11, NULL, NULL, 'In Progress', '2026-03-10 06:43:41', NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-10 06:43:41', '2026-03-10 06:43:41'),
-(26, 42, 11, '2026-03-10 06:46:27', 166, 'Evaluated', '2026-03-10 06:43:41', 36.00, NULL, NULL, NULL, 1, 0, 0, NULL, '2026-03-10 06:43:41', '2026-03-10 06:46:27');
+(29, 5, 13, NULL, NULL, 'In Progress', '2026-03-24 06:24:15', NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-24 06:24:15', '2026-03-24 06:24:15'),
+(30, 5, 13, NULL, NULL, 'In Progress', '2026-03-24 06:24:15', NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-24 06:24:15', '2026-03-24 06:24:15'),
+(33, 5, 14, NULL, NULL, 'In Progress', '2026-03-24 07:02:42', NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-24 07:02:42', '2026-03-24 07:02:42'),
+(34, 5, 14, '2026-03-24 07:02:53', 10, 'Evaluated', '2026-03-24 07:02:43', 0.00, 3, 'improve', '2026-03-24 07:04:20', 0, 0, 0, NULL, '2026-03-24 07:02:43', '2026-03-24 07:04:20'),
+(39, 5, 12, NULL, NULL, 'In Progress', '2026-03-24 07:23:29', NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-24 07:23:29', '2026-03-24 07:23:29'),
+(40, 5, 12, '2026-03-24 07:25:36', 127, 'Evaluated', '2026-03-24 07:23:29', 0.00, NULL, NULL, NULL, 0, 0, 0, NULL, '2026-03-24 07:23:29', '2026-03-24 07:25:36');
 
 -- --------------------------------------------------------
 
@@ -614,7 +609,7 @@ CREATE TABLE `proctoring_logs` (
 CREATE TABLE `questions` (
   `id` int(11) NOT NULL,
   `questionText` text NOT NULL,
-  `questionType` enum('Multiple Choice','True/False','Short Answer','Essay','Matching') NOT NULL,
+  `questionType` enum('Multiple Choice','True/False','Short Answer','Essay','Matching','Coding') NOT NULL,
   `marks` decimal(10,2) NOT NULL,
   `difficulty` enum('Easy','Medium','Hard') DEFAULT 'Medium',
   `topic` varchar(100) DEFAULT NULL,
@@ -628,255 +623,262 @@ CREATE TABLE `questions` (
   `imageUrl` varchar(255) DEFAULT NULL,
   `displayOrder` int(11) DEFAULT NULL,
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updatedAt` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `codingQuestionId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `questions`
 --
 
-INSERT INTO `questions` (`id`, `questionText`, `questionType`, `marks`, `difficulty`, `topic`, `courseId`, `optionA`, `optionB`, `optionC`, `optionD`, `correctAnswer`, `explanation`, `imageUrl`, `displayOrder`, `createdAt`, `updatedAt`) VALUES
-(42, 'Which Data Structure follows LIFO?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Queue', 'Stack', 'Array', 'Tree', 'B', NULL, NULL, NULL, '2026-03-01 06:50:34', '2026-03-03 08:53:54'),
-(43, 'Time complexity of Binary Search?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'O(n)', 'O(logn)', 'O(n2)', 'O(1)', 'B', NULL, NULL, NULL, '2026-03-01 06:52:17', '2026-03-03 08:54:03'),
-(44, 'Queue follows which principle?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'LIFO', 'FIFO', 'FILO', 'Random', 'B', NULL, NULL, NULL, '2026-03-01 06:53:44', '2026-03-03 08:54:12'),
-(45, 'Maximum children in binary tree node', 'Multiple Choice', 2.00, 'Medium', '', 4, '1', '3', 'unlimited', '2', 'D', NULL, NULL, NULL, '2026-03-01 06:54:40', '2026-03-03 08:54:22'),
-(46, 'Inorder traversal order?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Root-Left-Right', 'Left-Right-Root', 'Left-Root-Right', 'Right-Left-Root', 'C', NULL, NULL, NULL, '2026-03-01 06:56:30', '2026-03-03 08:54:32'),
-(47, 'Stack overflow occurs when?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Empty', 'Full', 'Sorted', 'Reversed', 'B', NULL, NULL, NULL, '2026-03-01 06:57:26', '2026-03-03 08:54:44'),
-(48, 'Merge sort technique?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Greedy', 'Divede &Conquer', 'Dynamic', 'Backtracking', 'B', NULL, NULL, NULL, '2026-03-01 06:59:02', '2026-03-03 08:54:59'),
-(49, 'AVL tree is?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Heap', 'Graph', 'Self-balancing BST', 'Queue', 'D', NULL, NULL, NULL, '2026-03-01 07:00:35', '2026-03-03 08:55:09'),
-(50, 'BFS uses ?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Stack', 'Queue', 'Tree', 'Array', 'B', NULL, NULL, NULL, '2026-03-01 07:01:40', '2026-03-03 08:55:17'),
-(51, 'DFS uses?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Stack', 'Queue', 'Heap', 'Graph', 'A', NULL, NULL, NULL, '2026-03-01 07:03:57', '2026-03-03 08:55:26'),
-(52, 'Linked List stores data in?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Continuous memory', 'Non-Continuous memory', 'Stack', 'Cache', 'B', NULL, NULL, NULL, '2026-03-01 07:05:23', '2026-03-03 08:55:35'),
-(53, 'Best case Quick sort?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'o(n2)', 'O(nlogn)', 'O(n)', 'O(logn)', 'B', NULL, NULL, NULL, '2026-03-01 07:06:30', '2026-03-03 08:55:51'),
-(54, 'Hashing used in?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Stack', 'Queue', 'Hash Table', 'Tree', 'C', NULL, NULL, NULL, '2026-03-01 07:07:14', '2026-03-03 08:56:03'),
-(55, 'Heap used for?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Searching', 'Heap Sort', 'Printing', 'Memory', 'B', NULL, NULL, NULL, '2026-03-01 07:08:04', '2026-03-03 08:56:17'),
-(56, 'prefix evaluation uses?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Stack', 'Queue', 'Array', 'Graph', 'A', NULL, NULL, NULL, '2026-03-01 07:09:19', '2026-03-03 08:56:26'),
-(57, 'SQL stands for ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Simple Query Language', 'Structure Query Language', 'System Query Language', 'None of the above', 'B', NULL, NULL, NULL, '2026-03-03 08:41:45', '2026-03-03 08:41:45'),
-(58, 'Primary Key is ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Duplicate', 'Unique & not null', 'Optional', 'Foreign', 'B', NULL, NULL, NULL, '2026-03-03 08:42:31', '2026-03-03 08:46:41'),
-(59, '3NF removes ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Partial dependency', 'Transitive Dependency', 'Redundancy', 'Keys', 'B', NULL, NULL, NULL, '2026-03-03 08:43:44', '2026-03-03 08:43:44'),
-(60, 'ACID Ensures ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Security', 'Speed', 'Reliability', 'Storage', 'C', NULL, NULL, NULL, '2026-03-03 08:44:20', '2026-03-03 08:44:20'),
-(61, 'DDL command ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'INSERT', 'SELECT', 'CREATE', 'UPDATE', 'C', NULL, NULL, NULL, '2026-03-03 08:45:05', '2026-03-03 08:45:05'),
-(62, 'Foreign Key References ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'View', 'Index', 'Trigger', 'Primary Kay', 'D', NULL, NULL, NULL, '2026-03-03 08:46:18', '2026-03-03 08:46:18'),
-(63, 'Normalization Reduces ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Speed', 'Redudancy', 'Index', 'Query', 'B', NULL, NULL, NULL, '2026-03-03 08:47:30', '2026-03-03 08:47:30'),
-(64, 'COMMIT does ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Roll bcak', 'Delete', 'Save Transaction', 'Stop', 'C', NULL, NULL, NULL, '2026-03-03 08:48:36', '2026-03-03 08:48:36'),
-(65, 'View is ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Real Table', 'Virtual table', 'Index', 'Key', 'B', NULL, NULL, NULL, '2026-03-03 08:49:21', '2026-03-03 08:49:21'),
-(66, 'Deadlock means ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Crash', 'Infinite waiting', 'Backup', 'Speed', 'B', NULL, NULL, NULL, '2026-03-03 08:50:11', '2026-03-03 08:50:11'),
-(67, 'NAND gate is Known as ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Basic gate', 'Universal gate', 'Exclusive gate', 'Buffer', 'B', NULL, NULL, NULL, '2026-03-03 12:45:51', '2026-03-03 13:19:20'),
-(68, 'Binary number system base is ?', 'Multiple Choice', 2.00, 'Medium', '', 7, '2', '8', '10', '16', 'A', NULL, NULL, NULL, '2026-03-03 12:46:42', '2026-03-03 12:46:56'),
-(69, 'Full adder has how many inputs ?', 'Multiple Choice', 2.00, 'Hard', '', 7, '2', '3', '4', '5', 'B', NULL, NULL, NULL, '2026-03-03 12:47:41', '2026-03-03 13:19:08'),
-(70, 'Flip-flop stores ?', 'Multiple Choice', 2.00, 'Medium', '', 7, '2 bits', '4 bits', '1 bits', '8 bits', 'C', NULL, NULL, NULL, '2026-03-03 12:48:57', '2026-03-03 12:48:57'),
-(71, 'XOR outputs 1 when inputs are ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Same', 'Different', '0', '1', 'B', NULL, NULL, NULL, '2026-03-03 12:49:46', '2026-03-03 13:19:36'),
-(72, 'Decimal 10 in binary ?', 'Multiple Choice', 2.00, 'Hard', '', 7, '1001', '1010', '1110', '1100', 'B', NULL, NULL, NULL, '2026-03-03 12:51:59', '2026-03-03 12:51:59'),
-(73, 'NOR gate is ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Univarsal gate', 'Memory', 'Encoder', 'Decoder', 'A', NULL, NULL, NULL, '2026-03-03 12:53:00', '2026-03-03 13:19:46'),
-(74, 'K-map is used for ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'Storage', 'Simplification', 'Addition', 'Conversion', 'B', NULL, NULL, NULL, '2026-03-03 12:54:02', '2026-03-03 12:55:49'),
-(75, 'AND gate output is 1 when ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'Any input 1', 'All input 1', 'All inputs 0', 'Any input 0', 'B', NULL, NULL, NULL, '2026-03-03 12:55:21', '2026-03-03 12:55:58'),
-(76, 'Truth table shows ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Code', 'Output combinations', 'Memory', 'Storage', 'B', NULL, NULL, NULL, '2026-03-03 12:58:00', '2026-03-03 13:20:01'),
-(77, 'Multiplexer selects ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'One inputs', 'Two inputs', 'All inputs', 'None', 'A', NULL, NULL, NULL, '2026-03-03 12:58:57', '2026-03-03 12:59:10'),
-(78, 'Decoder converts ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Binary to decimal', 'Decimal to binary', 'Analog to digital', 'Digital to analog', 'A', NULL, NULL, NULL, '2026-03-03 13:00:22', '2026-03-03 13:20:12'),
-(79, 'SR flip-flop invalid state ?', 'Multiple Choice', 2.00, 'Medium', '', 7, '00', '01', '10', '11', 'D', NULL, NULL, NULL, '2026-03-03 13:01:57', '2026-03-03 13:01:57'),
-(80, 'BCS Stands for ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Binary Code Decimal', 'Binary Coded Decimal', 'Bit Code Decimal', 'Base Code Decimal', 'B', NULL, NULL, NULL, '2026-03-03 13:10:41', '2026-03-03 13:10:41'),
-(81, 'Not gate output of 1 ?', 'Multiple Choice', 2.00, 'Hard', '', 7, '1', '0', '2', 'Undefined', 'B', NULL, NULL, NULL, '2026-03-03 13:11:37', '2026-03-03 13:11:37'),
-(82, 'Half adder produces ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'Sum & Carry', 'Sum Only', 'Carry Only', 'None', 'A', NULL, NULL, NULL, '2026-03-03 13:12:59', '2026-03-03 13:12:59'),
-(83, 'Encoder converts ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Many input to fewer outputs ', 'few to many', 'Analog to analog ', 'Digital to analog', 'A', NULL, NULL, NULL, '2026-03-03 13:15:17', '2026-03-03 13:20:28'),
-(84, 'Combinational Circuit depends on ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'Past output', 'Current input ', 'Memory ', 'Clock', 'B', NULL, NULL, NULL, '2026-03-03 13:16:06', '2026-03-03 13:16:06'),
-(85, 'Flip-flop triggered by ?', 'Multiple Choice', 2.00, 'Hard', '', 7, 'Voltage', 'Clock pulse', 'Heat', 'Current', 'B', NULL, NULL, NULL, '2026-03-03 13:17:19', '2026-03-03 13:17:19'),
-(86, 'Sequential circuit use ?', 'Multiple Choice', 2.00, 'Hard', '', 7, 'Resistor', 'Capacity', 'Memory', 'Transformer', 'C', NULL, NULL, NULL, '2026-03-03 13:18:48', '2026-03-03 13:18:48'),
-(87, 'SI unit of force ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Joule', 'Watt', 'Newton', 'Pascal', 'C', NULL, NULL, NULL, '2026-03-03 13:23:20', '2026-03-03 13:23:20'),
-(88, 'force is ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Scalar', 'Vector', 'Energy', 'Speed', 'B', NULL, NULL, NULL, '2026-03-03 13:24:42', '2026-03-03 13:24:42'),
-(89, 'Newton\'s Second Law ?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'F = ma', 'F = mv', 'E = mc2', 'W = fd', 'A', NULL, NULL, NULL, '2026-03-03 13:26:06', '2026-03-03 13:26:06'),
-(90, 'Work ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'F/d', 'F * d', 'm*a', 'd/t', 'B', NULL, NULL, NULL, '2026-03-03 13:27:18', '2026-03-03 13:27:18'),
-(91, 'Acceleration due to gravity ?', 'Multiple Choice', 2.00, 'Hard', '', 9, '9.8 m/s2', '8 m/s2', '10 m/s2', '12 m/s2', 'A', NULL, NULL, NULL, '2026-03-03 13:29:51', '2026-03-03 13:29:51'),
-(92, 'Torgue is ?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Linear force', 'Rotational force', 'Energy ', 'Speed', 'B', NULL, NULL, NULL, '2026-03-03 13:31:00', '2026-03-03 13:31:00'),
-(93, 'Unit of stress ?', 'Multiple Choice', 2.00, 'Hard', '', 9, 'Newton', 'N/m2', 'Joule', 'Watt', 'B', NULL, NULL, NULL, '2026-03-03 13:31:59', '2026-03-03 13:31:59'),
-(94, 'Equilibrium means ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Motion', 'Balanced force', 'Speed', 'Friction', 'B', NULL, NULL, NULL, '2026-03-03 13:33:04', '2026-03-03 13:33:04'),
-(95, 'Resultant force is ?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Difference', 'Product', 'Sum of forces', 'Division', 'C', NULL, NULL, NULL, '2026-03-03 13:34:14', '2026-03-03 13:34:14'),
-(96, 'Inertia resists change in ?', 'Multiple Choice', 2.00, 'Hard', '', 9, 'Speed', 'Motion', 'Weight', 'Gravity', 'B', NULL, NULL, NULL, '2026-03-03 13:35:06', '2026-03-03 13:35:06'),
-(97, 'Vector has ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Magnitude only', 'Direction only', 'Magnitude & Direction', 'None', 'C', NULL, NULL, NULL, '2026-03-03 13:36:25', '2026-03-03 13:36:25'),
-(98, 'Static friction acts when ?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Moving', 'Falling', 'At rest', 'Accelerating', 'C', NULL, NULL, NULL, '2026-03-03 13:37:45', '2026-03-03 13:37:45'),
-(99, 'Free body diagram shows ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Energy', 'Forces', 'Speed', 'Mass', 'B', NULL, NULL, NULL, '2026-03-03 13:38:48', '2026-03-03 13:38:48'),
-(100, 'Beam supports?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Load ', 'Speed', 'Time', 'Energy', 'A', NULL, NULL, NULL, '2026-03-03 13:43:00', '2026-03-03 13:43:00'),
-(101, 'Moment formula?', 'Multiple Choice', 2.00, 'Hard', '', 9, ' m × a', 'P × t', ' F × d', 'V × I', 'C', NULL, NULL, NULL, '2026-03-03 13:44:01', '2026-03-03 13:44:01'),
-(102, 'Power unit?', 'Multiple Choice', 2.00, 'Hard', '', 9, 'Watt ', 'Newton', 'Joule', 'Pascal', 'A', NULL, NULL, NULL, '2026-03-03 13:44:43', '2026-03-03 13:44:43'),
-(103, 'Centroid relates to?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Speed', 'Volume', 'Area ', 'Weight', 'C', NULL, NULL, NULL, '2026-03-03 13:45:29', '2026-03-03 13:45:29'),
-(104, 'Shear force acts?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Parallel', 'Random', 'Circular', 'Perpendicular ', 'D', NULL, NULL, NULL, '2026-03-03 13:46:16', '2026-03-03 13:47:55'),
-(105, 'First law of motion is law of?', 'Multiple Choice', 2.00, 'Hard', '', 9, 'Action', 'Reaction', 'Inertia ', 'Motion', 'C', NULL, NULL, NULL, '2026-03-03 13:46:58', '2026-03-03 13:46:58'),
-(106, 'Friction opposes?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Gravity', 'Motion ', 'Speed', 'Force', 'B', NULL, NULL, NULL, '2026-03-03 13:47:36', '2026-03-03 13:47:36'),
-(107, '8086 is?', 'Multiple Choice', 2.00, 'Easy', '', 8, '8-bit', '16-bit', '32-bit', '64-bit', 'B', NULL, NULL, NULL, '2026-03-03 13:52:41', '2026-03-03 13:52:41'),
-(108, 'ALU performs?', 'Multiple Choice', 2.00, 'Medium', '', 8, 'Storage', 'Input', 'Arithmetic & Logic', 'Output', 'C', NULL, NULL, NULL, '2026-03-03 13:54:00', '2026-03-03 13:54:00'),
-(109, 'Program Counter stores?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Data', 'Output', 'Address of next instruction', 'Flag', 'C', NULL, NULL, NULL, '2026-03-03 13:55:08', '2026-03-03 13:55:08'),
-(110, 'RAM is?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Permanent', 'ROM', 'Cache', 'Temporary memory', 'D', NULL, NULL, NULL, '2026-03-03 13:56:44', '2026-03-03 13:56:44'),
-(111, 'ROM stands for?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Read Only Memory', ' Random Only Memory', 'Run Only Memory', 'Rapid Memory', 'A', NULL, NULL, NULL, '2026-03-03 14:01:08', '2026-03-03 14:01:08'),
-(112, 'Stack works on?', 'Multiple Choice', 2.00, 'Medium', '', 8, 'FIFO', 'None', 'Random', 'LIFO', 'D', NULL, NULL, NULL, '2026-03-03 14:02:14', '2026-03-03 14:02:14'),
-(113, 'Flag register stores?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Data', 'Address', 'Code', 'Status flags ', 'D', NULL, NULL, NULL, '2026-03-03 14:03:16', '2026-03-03 14:03:16'),
-(114, 'Interrupt is?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Memory', 'Bus', 'Program', 'Signal to CPU', 'D', NULL, NULL, NULL, '2026-03-03 14:04:15', '2026-03-03 14:04:15'),
-(115, 'Microcontroller includes?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'CPU only', 'CPU + Memory + I/O', 'RAM only', 'ALU only', 'B', NULL, NULL, NULL, '2026-03-03 14:05:48', '2026-03-03 14:05:48'),
-(116, 'Address bus carries?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Data', 'Address ', 'Control', 'Power', 'B', NULL, NULL, NULL, '2026-03-03 14:06:40', '2026-03-03 14:06:40'),
-(117, 'Data bus carries?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Address', 'Control', 'Data ', 'Voltage', 'C', NULL, NULL, NULL, '2026-03-03 14:07:42', '2026-03-03 14:07:42'),
-(118, 'Control bus carries?', 'Multiple Choice', 2.00, 'Medium', '', 8, 'Data', 'Control signals', 'Address', 'Power', 'B', NULL, NULL, NULL, '2026-03-03 14:08:52', '2026-03-03 14:08:52'),
-(119, 'Instruction cycle includes?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Fetch', 'Decode', 'Execute', 'All of these', 'D', NULL, NULL, NULL, '2026-03-03 14:09:52', '2026-03-03 14:09:52'),
-(120, 'Accumulator used for?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Arithmetic operations', 'Output', 'Storage', 'Input', 'A', NULL, NULL, NULL, '2026-03-03 14:10:46', '2026-03-03 14:10:46'),
-(121, '8086 has how many bits data bus?', 'Multiple Choice', 2.00, 'Easy', '', 8, '8', '16 ', '64', '32', 'B', NULL, NULL, NULL, '2026-03-03 14:11:54', '2026-03-03 14:11:54'),
-(122, 'Clock controls?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Speed of processor', 'Memory size', 'Power', 'Heat', 'A', NULL, NULL, NULL, '2026-03-03 14:12:46', '2026-03-03 14:12:46'),
-(123, 'Segment register used for?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Memory segmentation', 'Input', 'Output', 'None', 'A', NULL, NULL, NULL, '2026-03-03 14:13:47', '2026-03-03 14:13:47'),
-(124, 'Stack pointer stores?', 'Multiple Choice', 2.00, 'Medium', '', 8, 'Data', 'Flag', 'Top of stack address', 'Output', 'C', NULL, NULL, NULL, '2026-03-03 14:14:43', '2026-03-03 14:14:43'),
-(125, 'Interrupt can be?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Hardware', 'Software', 'Both ', 'None', 'C', NULL, NULL, NULL, '2026-03-03 14:15:25', '2026-03-03 14:15:25'),
-(126, 'Microprocessor is?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Single chip CPU ', 'Memory', 'Bus', 'Register', 'A', NULL, NULL, NULL, '2026-03-03 14:16:13', '2026-03-03 14:16:13'),
-(127, 'OOP stands for?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Object Organized Programming', 'Only Object Programming', 'Object Oriented Programming', 'Open Object Programming', 'C', NULL, NULL, NULL, '2026-03-04 07:40:32', '2026-03-04 07:40:32'),
-(128, 'Encapsulation means?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'Data sharing', 'Data hiding', 'Data deleting', 'Data copying', 'B', NULL, NULL, NULL, '2026-03-04 07:43:05', '2026-03-04 07:43:05'),
-(129, 'Polymorphism means?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'One form', 'No form', 'Many forms', 'Hidden form', 'C', NULL, NULL, NULL, '2026-03-04 07:45:04', '2026-03-04 07:45:04'),
-(130, 'Inheritance provides?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'Deletion', 'Hiding', 'Code reusability', 'Stopping execution', 'C', NULL, NULL, NULL, '2026-03-04 07:45:50', '2026-03-04 07:45:50'),
-(131, 'Constructor is used to?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'Destroy object', 'Initialize object', 'Hide data', 'Delete class', 'B', NULL, NULL, NULL, '2026-03-04 07:46:55', '2026-03-04 07:46:55'),
-(132, 'Which keyword creates object in Java?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'class', 'object', 'new ', 'create', 'C', NULL, NULL, NULL, '2026-03-04 07:47:36', '2026-03-04 07:47:36'),
-(133, 'Method overloading is?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Runtime polymorphism', 'Compile-time polymorphism', 'Abstraction', 'Inheritance', 'B', NULL, NULL, NULL, '2026-03-04 07:48:27', '2026-03-04 07:48:27'),
-(134, 'Abstraction hides?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Data', 'Implementation details', 'Variables', 'Objects', 'B', NULL, NULL, NULL, '2026-03-04 07:50:18', '2026-03-04 07:50:18'),
-(135, 'Interface supports?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Single inheritance', 'Multiple inheritance', 'No inheritance', 'Hybrid', 'B', NULL, NULL, NULL, '2026-03-04 07:51:30', '2026-03-04 07:51:30'),
-(136, 'super keyword refers to?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Object', 'Child class', 'Parent class', 'Method', 'C', NULL, NULL, NULL, '2026-03-04 07:53:05', '2026-03-04 07:53:05'),
-(137, 'This keyword refers to?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Parent', 'Current object', 'Interface', 'Package', 'B', NULL, NULL, NULL, '2026-03-04 07:54:08', '2026-03-04 07:54:08'),
-(138, 'Class is?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Object', 'Method', 'Blueprint of object ', 'Variable', 'C', NULL, NULL, NULL, '2026-03-04 07:55:04', '2026-03-04 07:55:04'),
-(139, 'Object is?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Variable', 'Instance of class', 'Method', 'Package', 'B', NULL, NULL, NULL, '2026-03-04 07:56:00', '2026-03-04 07:56:00'),
-(140, 'Private access modifier means?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Accessible only within class', 'Public access', 'Protected', 'Global', 'A', NULL, NULL, NULL, '2026-03-04 07:57:29', '2026-03-04 07:57:29'),
-(141, 'Destructor is used to?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Create object', 'Destroy object', 'Hide method', 'Override', 'B', NULL, NULL, NULL, '2026-03-04 07:59:47', '2026-03-04 07:59:47'),
-(142, 'Inheritance types in Java?', 'Multiple Choice', 2.00, 'Hard', '', 3, ' Multiple (class)', 'Multilevel ', 'Circular', 'None', 'B', NULL, NULL, NULL, '2026-03-04 08:01:26', '2026-03-04 08:01:26'),
-(143, 'Encapsulation improves?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'Speed', 'Security ', 'Memory', 'Execution', 'B', NULL, NULL, NULL, '2026-03-04 08:04:49', '2026-03-04 08:04:49'),
-(144, 'Abstract class contains?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Only concrete methods', 'Abstract methods', 'Variables only', 'Main method', 'B', NULL, NULL, NULL, '2026-03-04 08:05:37', '2026-03-04 08:05:37'),
-(145, 'Getter and Setter used for?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Looping', 'Accessing private data', 'Sorting', 'Printing', 'B', NULL, NULL, NULL, '2026-03-04 08:06:24', '2026-03-04 08:06:24'),
-(146, 'Method overriding is?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Compile-time', 'Constructor', 'Interface', 'Runtime polymorphism', 'D', NULL, NULL, NULL, '2026-03-04 08:07:31', '2026-03-04 08:09:06'),
-(147, 'OS acts as?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Compiler', 'Interface between user & hardware', 'Browser', 'Editor', 'B', NULL, NULL, NULL, '2026-03-04 08:39:44', '2026-03-04 08:39:44'),
-(148, 'SJF stands for?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'Simple Job First', 'System Job First', 'Small Job First', 'Shortest Job First', 'D', NULL, NULL, NULL, '2026-03-04 08:40:37', '2026-03-04 08:40:37'),
-(149, 'Deadlock means?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Crash', 'Infinite waiting', 'Speed', 'Halt', 'B', NULL, NULL, NULL, '2026-03-04 08:41:39', '2026-03-04 08:41:39'),
-(150, 'Paging avoids?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'External fragmentation', 'Both internal & external fragmentation partially', 'Memory', 'CPU', 'B', NULL, NULL, NULL, '2026-03-04 08:42:37', '2026-03-04 08:42:37'),
-(151, 'FIFO scheduling is?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'First In First Out', 'Fast In Fast Out', 'File In File Out', 'None', 'A', NULL, NULL, NULL, '2026-03-04 08:43:22', '2026-03-04 08:43:22'),
-(152, 'Semaphore used for?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Scheduling', 'Process synchronization ', 'Memory', 'Storage', 'B', NULL, NULL, NULL, '2026-03-04 08:44:26', '2026-03-04 08:44:26'),
-(153, 'Process is?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Program in disk', 'Thread', 'Program in execution', 'File', 'C', NULL, NULL, NULL, '2026-03-04 08:45:31', '2026-03-04 08:45:31'),
-(154, 'Thread is?', 'Multiple Choice', 2.00, 'Medium', '', 6, 'Heavyweight', 'File', 'CPU', 'Lightweight process', 'D', NULL, NULL, NULL, '2026-03-04 08:46:32', '2026-03-04 08:46:32'),
-(155, 'Context switching means?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Memory delete', 'Shutdown', 'Switching CPU between processe', 'Boot', 'C', NULL, NULL, NULL, '2026-03-04 08:47:46', '2026-03-04 08:47:46'),
-(156, 'Virtual memory uses?', 'Multiple Choice', 2.00, 'Medium', '', 6, ' RAM only', 'Disk as extension of RAM', 'ROM', 'Cache', 'B', NULL, NULL, NULL, '2026-03-04 08:48:45', '2026-03-04 08:48:45'),
-(157, 'Banker\'s algorithm used for?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'Scheduling', 'Memory', 'Deadlock avoidance', 'Storage', 'C', NULL, NULL, NULL, '2026-03-04 08:49:24', '2026-03-04 08:49:24'),
-(158, 'CPU scheduling decides?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Memory', 'Which process runs next', 'File', 'Disk', 'B', NULL, NULL, NULL, '2026-03-04 08:50:07', '2026-03-04 08:50:07'),
-(159, 'Kernel is?', 'Multiple Choice', 2.00, 'Medium', '', 6, 'Application', 'Hardware', ' Core of OS', 'Driver', 'C', NULL, NULL, NULL, '2026-03-04 08:51:00', '2026-03-04 08:51:00'),
-(160, 'Round Robin uses?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'Priority', 'Time quantum', 'FIFO', 'None', 'B', NULL, NULL, NULL, '2026-03-04 08:51:54', '2026-03-04 08:51:54'),
-(161, 'Starvation occurs due to?', 'Multiple Choice', 2.00, 'Medium', '', 6, 'Deadlock', 'Paging', 'Low priority process waiting long', 'Boot', 'C', NULL, NULL, NULL, '2026-03-04 08:52:46', '2026-03-04 08:52:46'),
-(162, 'Interrupt is?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'File', 'Signal to CPU ', 'Memory', 'Cache', 'B', NULL, NULL, NULL, '2026-03-04 08:53:28', '2026-03-04 08:53:28'),
-(163, 'File system manages?', 'Multiple Choice', 2.00, 'Medium', '', 6, 'CPU', 'Files & directories', 'RAM', 'Printer', 'B', NULL, NULL, NULL, '2026-03-04 08:54:15', '2026-03-04 08:54:15'),
-(164, 'Multitasking means?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Single task', 'No task', 'Multiple tasks simultaneously ', 'Manual task', 'C', NULL, NULL, NULL, '2026-03-04 08:55:19', '2026-03-04 08:55:19'),
-(165, 'Swapping transfers process between?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'CPU & Cache', 'RAM & Disk', 'ROM & RAM', 'Disk & Printer', 'B', NULL, NULL, NULL, '2026-03-04 08:57:40', '2026-03-04 08:57:40'),
-(166, 'Deadlock requires?', 'Multiple Choice', 2.00, 'Hard', '', 6, '2 conditions', ' 3 conditions', '4 conditions', '5 conditions', 'C', NULL, NULL, NULL, '2026-03-04 08:58:27', '2026-03-04 08:58:27'),
-(167, 'Father of Scientific Management?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Fayol', 'F.W. Taylor ', 'Drucker', 'Weber', 'B', NULL, NULL, NULL, '2026-03-04 12:49:42', '2026-03-04 12:49:42'),
-(168, 'First function of management?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Organizing', 'Controlling', 'Planning ', 'Staffing', 'C', NULL, NULL, NULL, '2026-03-04 12:50:22', '2026-03-04 12:50:22'),
-(169, 'SWOT stands for?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Strength Weakness Opportunity Threat', 'System Work Operation Tool', 'Strategy Work Output Target', 'None', 'A', NULL, NULL, NULL, '2026-03-04 12:51:10', '2026-03-04 12:51:10'),
-(170, 'Leadership is?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'Controlling', 'Influencing people', 'Accounting', 'Planning', 'B', NULL, NULL, NULL, '2026-03-04 12:51:46', '2026-03-04 12:51:46'),
-(171, 'Delegation means?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'Removing power', 'Stopping work', 'Assigning authority & responsibility', 'Hiring', 'C', NULL, NULL, NULL, '2026-03-04 12:52:45', '2026-03-04 12:52:45'),
-(172, 'C developed by?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'James Gosling', 'Dennis Ritchie', 'Guido', 'Bjarne', 'B', NULL, NULL, NULL, '2026-03-04 12:55:19', '2026-03-04 12:55:19'),
-(173, 'Header file for printf?', 'Multiple Choice', 2.00, 'Medium', '', 2, 'math.h', 'conio.h', 'string.h', ' stdio.h', 'D', NULL, NULL, NULL, '2026-03-04 12:56:17', '2026-03-04 12:56:17'),
-(174, 'main() is?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'Variable', 'Entry point of program', 'Loop', 'Array', 'B', NULL, NULL, NULL, '2026-03-04 12:56:56', '2026-03-04 12:56:56'),
-(175, 'sizeof(int) typically?', 'Multiple Choice', 2.00, 'Medium', '', 2, '1', '2', '4 (system dependent)', '8', 'C', NULL, NULL, NULL, '2026-03-04 12:57:46', '2026-03-04 12:57:46'),
-(176, 'Pointer stores?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'Value', 'Address of variable', 'Data type', 'File', 'B', NULL, NULL, NULL, '2026-03-04 12:58:30', '2026-03-04 12:58:30'),
-(177, 'Stress = ?', 'Multiple Choice', 2.00, 'Medium', '', 10, ' Force/Area', 'Area/Force', ' Force×Area', 'None', 'A', NULL, NULL, NULL, '2026-03-04 12:59:31', '2026-03-04 12:59:31'),
-(178, 'Strain is?', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Force', 'Energy', 'Deformation/Original length', 'Weight', 'C', NULL, NULL, NULL, '2026-03-04 13:00:11', '2026-03-04 13:00:11'),
-(179, 'Youngs modulus formula?', 'Multiple Choice', 2.00, 'Medium', '', 10, 'Stress × Strain', 'Stress / Strain', ' Force × Length', 'None', 'B', NULL, NULL, NULL, '2026-03-04 13:01:08', '2026-03-04 13:01:08'),
-(180, 'Bending moment unit?', 'Multiple Choice', 2.00, 'Easy', '', 10, 'N', ' N/m', 'Nm ', 'Joule', 'C', NULL, NULL, NULL, '2026-03-04 13:01:57', '2026-03-04 13:01:57'),
-(181, 'Which function of management involves setting objectives and determining the course of action?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'Controlling', 'Planning', 'Directing', 'Staffing', 'B', NULL, NULL, NULL, '2026-03-04 13:05:38', '2026-03-04 13:05:38'),
-(182, 'Unity of Command means ?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'One manager controls many workers', 'One department controls all', 'One employee receives orders from one superior', 'Employees work in teams', 'C', NULL, NULL, NULL, '2026-03-04 13:06:28', '2026-03-04 13:06:28'),
-(183, 'Span of Control refers to?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Number of departments', 'Number of subordinates reporting to a manager', 'Level of authority', 'Number of policies', 'B', NULL, NULL, NULL, '2026-03-04 13:07:12', '2026-03-04 13:07:12'),
-(184, 'Which level of management is responsible for strategic decisions?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Top-level management', 'Middle-level management', 'Lower-level management', 'Supervisory level', 'A', NULL, NULL, NULL, '2026-03-04 13:08:05', '2026-03-04 13:08:05'),
-(185, 'Planning is concerned with?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Past performance', 'Present problems', 'Future course of action', 'Employee motivation', 'C', NULL, NULL, NULL, '2026-03-04 13:15:23', '2026-03-04 13:15:23'),
-(186, 'Which is not a function of management?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Planning', 'Sleeping', 'Organizing', 'Controlling', 'B', NULL, NULL, NULL, '2026-03-04 13:16:12', '2026-03-04 13:16:12'),
-(187, 'Unity of Direction means?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'One boss for one employee', 'One plan for one group of activities', 'One department', 'One manager', 'B', NULL, NULL, NULL, '2026-03-04 13:18:09', '2026-03-04 13:18:09'),
-(188, 'Scalar chain refers to?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Chain of command', 'Material chain', 'Production chain', 'Supply chain', 'A', NULL, NULL, NULL, '2026-03-04 13:19:23', '2026-03-04 13:19:23'),
-(189, 'Which level of management focuses on policy making?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'Middle level', 'Top level', 'Lower level', 'Supervisory level', 'B', NULL, NULL, NULL, '2026-03-04 13:20:26', '2026-03-04 13:20:26'),
-(190, 'Delegation means?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Giving responsibility only', 'Giving authority only', 'Assigning authority and responsibility', 'Avoiding work', 'C', NULL, NULL, NULL, '2026-03-04 13:21:20', '2026-03-04 13:21:20'),
-(191, 'Motivation improves?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Conflict', 'Productivity', 'Loss', 'Delay', 'B', NULL, NULL, NULL, '2026-03-04 13:22:24', '2026-03-04 13:22:24'),
-(192, 'Controlling function compares?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Plans with goals', 'Employees with managers', 'Actual performance with standards', 'Cost with price', 'C', NULL, NULL, NULL, '2026-03-04 13:23:20', '2026-03-04 13:23:20'),
-(193, 'Which theory was given by McGregor?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'X and Y Theory', 'Need Hierarchy', 'Scientific Theory', 'Equity Theory', 'A', NULL, NULL, NULL, '2026-03-04 13:24:29', '2026-03-04 13:24:29'),
-(194, 'Span of control refers to:', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Number of subordinates under a manager', 'Number of managers', 'Number of departments', 'Number of policies', 'A', NULL, NULL, NULL, '2026-03-04 13:25:28', '2026-03-04 13:25:28'),
-(195, 'Which is an example of non-financial incentive?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Bonus', 'Salary', 'Promotion', 'Commission', 'C', NULL, NULL, NULL, '2026-03-04 13:26:22', '2026-03-04 13:26:22'),
-(196, 'Which of the following is a valid C variable name?', 'Multiple Choice', 2.00, 'Medium', '', 2, '1number', 'number_1', 'number-1', 'float', 'B', NULL, NULL, NULL, '2026-03-04 13:29:33', '2026-03-04 13:29:33'),
-(197, 'Which data type stores decimal values?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'int', 'char', 'float', 'void', 'C', NULL, NULL, NULL, '2026-03-04 13:30:29', '2026-03-04 13:30:29'),
-(198, 'Which symbol is used for single-line comments?', 'Multiple Choice', 2.00, 'Easy', '', 2, '//', '/* */', '#', '--', 'A', NULL, NULL, NULL, '2026-03-04 13:31:24', '2026-03-04 13:31:24'),
-(199, 'Which function is used to read input?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'printf()', 'scanf()', 'print()', 'input()', 'B', NULL, NULL, NULL, '2026-03-04 13:32:45', '2026-03-04 13:32:45'),
-(200, 'Which operator is used for modulus?', 'Multiple Choice', 2.00, 'Medium', '', 2, '/', '%', '*', '&', 'B', NULL, NULL, NULL, '2026-03-04 13:36:16', '2026-03-04 13:36:16'),
-(201, 'Array index in C starts from:', 'Multiple Choice', 2.00, 'Medium', '', 2, '1', '-1', '0', '2', 'C', NULL, NULL, NULL, '2026-03-04 13:37:22', '2026-03-04 13:37:22'),
-(202, 'Which loop checks condition first?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'do-while', 'for', 'while', 'Both B and C', 'D', NULL, NULL, NULL, '2026-03-04 13:38:27', '2026-03-04 13:38:27'),
-(203, 'Which header file is required for string functions?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'stdio.h', 'string.h', 'math.h', 'conio.h', 'B', NULL, NULL, NULL, '2026-03-04 13:39:47', '2026-03-04 13:39:47'),
-(204, 'What is the output type of printf()?', 'Multiple Choice', 2.00, 'Hard', '', 2, 'int', 'void', 'char', 'float', 'A', NULL, NULL, NULL, '2026-03-04 13:40:53', '2026-03-04 13:40:53'),
-(205, 'Pointer stores:', 'Multiple Choice', 2.00, 'Easy', '', 2, 'Value', 'Address', 'Character', 'Index', 'B', NULL, NULL, NULL, '2026-03-04 13:42:09', '2026-03-04 13:42:09'),
-(206, 'Which keyword is used to define a constant?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'var', 'const', 'define', 'static', 'B', NULL, NULL, NULL, '2026-03-04 13:43:16', '2026-03-04 13:43:16'),
-(207, 'sizeof() is used to:', 'Multiple Choice', 2.00, 'Hard', '', 2, 'Print value', 'Find memory size', 'Count elements', 'Loop', 'B', NULL, NULL, NULL, '2026-03-04 13:45:17', '2026-03-04 13:45:17'),
-(208, 'Break statement is used to:', 'Multiple Choice', 2.00, 'Easy', '', 2, 'Continue loop', 'Exit loop', 'Start loop', 'Pause program', 'B', NULL, NULL, NULL, '2026-03-04 13:47:13', '2026-03-04 13:47:13'),
-(209, 'Function without return value uses', 'Multiple Choice', 2.00, 'Hard', '', 2, 'int', 'float', 'void', 'char', 'C', NULL, NULL, NULL, '2026-03-04 13:48:48', '2026-03-04 13:48:48'),
-(210, 'Which is a logical operator?\n', 'Multiple Choice', 2.00, 'Easy', '', 2, '&&', '%', '=', '++', 'A', NULL, NULL, NULL, '2026-03-04 13:55:28', '2026-03-04 13:55:28'),
-(211, 'Bending moment is maximum at:', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Point of zero shear force', 'Supports only', 'Ends only', 'Midpoint always', 'A', NULL, NULL, NULL, '2026-03-04 14:04:23', '2026-03-04 14:04:23'),
-(212, 'Unit of bending moment is', 'Multiple Choice', 2.00, 'Easy', '', 10, 'N', 'N/m', 'N·m', 'm²', 'C', NULL, NULL, NULL, '2026-03-04 14:05:41', '2026-03-04 14:05:41'),
-(213, 'Unit of shear force is', 'Multiple Choice', 2.00, 'Medium', '', 10, 'N', 'Nm', 'm', 'N/m', 'A', NULL, NULL, NULL, '2026-03-04 14:07:11', '2026-03-04 14:07:11'),
-(214, 'Maximum bending moment occurs where', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Shear force is zero', 'Load is zero', 'Support only', 'End only', 'A', NULL, NULL, NULL, '2026-03-04 14:08:14', '2026-03-04 14:08:14'),
-(215, 'A cantilever beam is fixed at', 'Multiple Choice', 2.00, 'Medium', '', 10, 'Middle', 'Both ends', 'One end', 'Free end', 'C', NULL, NULL, NULL, '2026-03-04 14:09:37', '2026-03-04 14:09:37'),
-(216, 'Truss members carry', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Bending', 'Axial force', 'Shear', 'Torsion', 'B', NULL, NULL, NULL, '2026-03-04 14:12:03', '2026-03-04 14:12:03'),
-(217, 'Degree of static indeterminacy for simply supported beam is', 'Multiple Choice', 2.00, 'Medium', '', 10, '0', '1', '2', '3', 'A', NULL, NULL, NULL, '2026-03-04 14:12:38', '2026-03-04 14:12:38'),
-(218, 'Moment distribution method was developed by', 'Multiple Choice', 2.00, 'Easy', '', 10, 'Hardy Cross', 'Newton', 'Euler', 'Rankine', 'A', NULL, NULL, NULL, '2026-03-04 14:13:34', '2026-03-04 14:13:34'),
-(219, 'Fixed beam has how many end moments?', 'Multiple Choice', 2.00, 'Easy', '', 10, '0', '1', '2', '3', 'C', NULL, NULL, NULL, '2026-03-04 14:14:08', '2026-03-04 14:14:08'),
-(220, 'Shear Force Diagram (SFD) represents', 'Multiple Choice', 2.00, 'Medium', '', 10, 'Load variation', 'Bending variation', 'Shear variation', 'Stress variation', 'C', NULL, NULL, NULL, '2026-03-04 14:16:14', '2026-03-04 14:16:31'),
-(221, 'Bending Moment Diagram (BMD) represents', 'Multiple Choice', 2.00, 'Easy', '', 10, 'Load', 'Moment variation', 'Stress', 'Deflection', 'B', NULL, NULL, NULL, '2026-03-04 14:17:24', '2026-03-04 14:17:24'),
-(222, 'Point of contraflexure is where', 'Multiple Choice', 2.00, 'Medium', '', 10, 'Shear zero', 'Moment zero', 'Reaction zero', 'Load zero', 'B', NULL, NULL, NULL, '2026-03-04 14:19:17', '2026-03-04 14:19:17'),
-(223, 'Youngs Modulus is denoted by', 'Multiple Choice', 2.00, 'Easy', '', 10, 'G', 'K', 'E', 'M', 'C', NULL, NULL, NULL, '2026-03-04 14:20:27', '2026-03-04 14:20:27'),
-(224, 'Unit of Youngs Modulus is', 'Multiple Choice', 2.00, 'Medium', '', 10, 'N', 'N/m²', 'm', 'Nm', 'B', NULL, NULL, NULL, '2026-03-04 14:21:40', '2026-03-04 14:21:40'),
-(225, 'Deflection in beam depends on', 'Multiple Choice', 2.00, 'Easy', '', 10, 'Load', 'Length', 'Material', 'All of the above', 'D', NULL, NULL, NULL, '2026-03-04 14:22:47', '2026-03-04 14:22:47'),
-(226, 'In portal frame, loads are resisted by', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Axial only', 'Bending only', 'Combined forces', 'Shear only', 'C', NULL, NULL, NULL, '2026-03-04 14:23:56', '2026-03-04 14:23:56'),
-(227, 'A stack follows FIFO principle', 'True/False', 2.00, 'Medium', '', 4, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 05:38:31', '2026-03-06 05:38:31'),
-(228, 'Non Linear structure?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Array', 'Stack', 'Queue', 'Tree', 'D', NULL, NULL, NULL, '2026-03-06 05:40:42', '2026-03-06 05:40:42'),
-(229, 'Circular queue avoids?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Sorting', 'Searching', 'Wastage of space', 'Overflow', 'C', NULL, NULL, NULL, '2026-03-06 05:42:02', '2026-03-06 05:42:02'),
-(230, 'Underflow occurs when?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Deleting from empty structure', 'Insert full', 'Sort', 'Search', 'A', NULL, NULL, NULL, '2026-03-06 05:43:20', '2026-03-06 05:43:20'),
-(231, 'Binary tree node has?', 'Multiple Choice', 2.00, 'Medium', '', 4, '1 Child', '3 Child', 'At most 2 children', 'Unlimited', 'C', NULL, NULL, NULL, '2026-03-06 05:44:24', '2026-03-06 05:44:24'),
-(232, 'Height of complete binary tree=?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'log2n', 'n', 'n2', '1', 'A', NULL, NULL, NULL, '2026-03-06 05:45:29', '2026-03-06 05:46:20'),
-(233, 'A stack follows FIFO principle.', 'True/False', 2.00, 'Medium', '', 4, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 05:57:48', '2026-03-06 05:57:48'),
-(234, 'Binary search works only on sorted arrays.', 'True/False', 2.00, 'Hard', '', 4, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 05:58:36', '2026-03-06 05:58:36'),
-(235, 'Define Linked List?', 'Short Answer', 2.00, 'Medium', '', 4, '', '', '', '', 'A linked list is a linear data structure where elements are connected using pointers.each node conta', NULL, NULL, NULL, '2026-03-06 06:01:48', '2026-03-06 06:01:48'),
-(236, 'Difference between stack and queue with example', 'Short Answer', 2.00, 'Medium', '', 4, '', '', '', '', 'A stack follows LIFO principle.\nexample : Stack of plates.\nA queue follows FIFO principle.\nexample :', NULL, NULL, NULL, '2026-03-06 06:04:44', '2026-03-06 06:06:54'),
-(237, 'ER diagram represents?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Code', 'Entities & Relationships', ' Table only', 'Query', 'B', NULL, NULL, NULL, '2026-03-06 07:30:34', '2026-03-06 07:35:14'),
-(238, 'INNER JOIN returns?', 'Multiple Choice', 2.00, 'Medium', '', 5, ' All records', 'Matching records ', 'Left records ', ' Right records', 'B', NULL, NULL, NULL, '2026-03-06 07:32:08', '2026-03-06 07:32:08'),
-(239, 'DELETE removes?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Structure ', ' Rows', 'Database ', 'Schema', 'B', NULL, NULL, NULL, '2026-03-06 07:34:45', '2026-03-06 07:35:27'),
-(240, 'WHERE clause?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Group ', ' Filter records ', 'Join', '  Order', 'B', NULL, NULL, NULL, '2026-03-06 07:37:15', '2026-03-06 07:37:15'),
-(241, 'Aggregate function?', 'Multiple Choice', 2.00, 'Medium', '', 5, ' UPDATE', 'COUNT ', 'DROP  ALTER', 'ALTER', 'B', NULL, NULL, NULL, '2026-03-06 07:38:42', '2026-03-06 07:38:42'),
-(242, 'Schema defines?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Query  Backup', 'Backup', ' Data Structure', 'Structure', 'D', NULL, NULL, NULL, '2026-03-06 07:40:00', '2026-03-06 07:40:00'),
-(243, 'TRUNCATE removes?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'All rows quickly ', 'Single row ', 'Column Key', 'Key', 'A', NULL, NULL, NULL, '2026-03-06 07:41:21', '2026-03-06 07:41:21'),
-(244, 'Transaction ends with?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'CLOSE  COMMIT/ROLLBACK ', ' STOP  ', 'COMMIT/ROLLBACK ', ' EXIT', 'C', NULL, NULL, NULL, '2026-03-06 07:45:44', '2026-03-06 07:45:44'),
-(245, 'RDBMS stores data in?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Files ', ' Tables ', 'Tree', 'Stack ', 'B', NULL, NULL, NULL, '2026-03-06 07:47:18', '2026-03-06 07:47:18'),
-(246, 'Aggregate function?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'UPDATE', 'DROP  ', ' COUNT ', 'ALTER', 'C', NULL, NULL, NULL, '2026-03-06 07:48:50', '2026-03-06 07:48:50'),
-(247, 'A primary key can contain NULL values. ', 'True/False', 2.00, 'Medium', '', 5, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 07:51:36', '2026-03-06 07:51:36'),
-(248, 'Normalization reduces data redundancy.', 'True/False', 2.00, 'Medium', '', 5, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 07:52:07', '2026-03-06 07:52:07'),
-(249, 'What is normalization? \n', 'Short Answer', 2.00, 'Medium', '', 5, '', '', '', '', 'Answer:\nNormalization is the process of organizing data to reduce redundancy and improve integrity.', NULL, NULL, NULL, '2026-03-06 07:53:51', '2026-03-06 07:53:51'),
-(250, 'What is a foreign key? Why is it important?\n', 'Short Answer', 2.00, 'Medium', '', 5, '', '', '', '', 'Answer:\nA foreign key is a field in one table that refers to the primary key in another table.\nIt ma', NULL, NULL, NULL, '2026-03-06 07:54:37', '2026-03-06 07:54:37'),
-(251, 'NAND gate is a universal gate.', 'True/False', 2.00, 'Medium', '', 7, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 07:56:34', '2026-03-06 07:56:34'),
-(252, '\nFlip-flop is a combinational circuit.', 'True/False', 2.00, 'Medium', '', 7, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 07:57:09', '2026-03-06 07:57:09'),
-(253, 'What is a logic gate?\n', 'Short Answer', 2.00, 'Medium', '', 7, '', '', '', '', 'Answer:\nA logic gate is a basic digital circuit that performs a logical operation on one or more bin', NULL, NULL, NULL, '2026-03-06 07:58:30', '2026-03-06 07:58:30'),
-(254, 'Explain the working of a full adder.\n', 'Short Answer', 2.00, 'Medium', '', 7, '', '', '', '', 'Answer:\nA full adder adds three binary inputs (A, B, Carry-in) and produces two outputs: Sum and Car', NULL, NULL, NULL, '2026-03-06 07:59:25', '2026-03-06 07:59:25'),
-(255, 'Force is a push or pull acting on a body.', 'True/False', 2.00, 'Medium', '', 9, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:09:37', '2026-03-06 08:09:37'),
-(256, 'Velocity and speed have the same meaning in mechanics.', 'True/False', 2.00, 'Medium', '', 9, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:10:08', '2026-03-06 08:10:08'),
-(257, ' What is force?\n', 'Short Answer', 2.00, 'Medium', '', 9, '', '', '', '', 'Answer: Force is a push or pull that can change the motion or shape of an object', NULL, NULL, NULL, '2026-03-06 08:10:44', '2026-03-06 08:10:44'),
-(258, ' What is equilibrium?\n', 'Short Answer', 2.00, 'Medium', '', 9, '', '', '', '', 'Answer: Equilibrium is the state where all forces acting on a body are balanced.', NULL, NULL, NULL, '2026-03-06 08:11:18', '2026-03-06 08:11:18'),
-(259, 'Microprocessors cannot perform arithmetic operations.', 'True/False', 2.00, 'Medium', '', 8, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:12:34', '2026-03-06 08:12:34'),
-(260, 'A microprocessor acts as the brain of a computer.', 'True/False', 2.00, 'Medium', '', 8, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:13:00', '2026-03-06 08:13:00'),
-(261, 'What is a microprocessor?\n', 'Short Answer', 2.00, 'Medium', '', 8, '', '', '', '', 'Answer: A microprocessor is an integrated circuit that performs the functions of a CPU.', NULL, NULL, NULL, '2026-03-06 08:14:00', '2026-03-06 08:14:00'),
-(262, 'What is an instruction set?\n', 'Short Answer', 2.00, 'Medium', '', 8, '', '', '', '', 'Answer: An instruction set is a group of commands that a microprocessor can execute.', NULL, NULL, NULL, '2026-03-06 08:14:36', '2026-03-06 08:14:36'),
-(263, 'Inheritance allows a class to acquire properties of another class.\n', 'True/False', 2.00, 'Medium', '', 3, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:16:05', '2026-03-06 08:16:05'),
-(264, 'OOP does not use classes or objects', 'True/False', 2.00, 'Medium', '', 3, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:16:35', '2026-03-06 08:16:35'),
-(265, 'What is a class?\n', 'Short Answer', 2.00, 'Medium', '', 3, '', '', '', '', 'Answer: A class is a blueprint used to create objects.', NULL, NULL, NULL, '2026-03-06 08:17:07', '2026-03-06 08:17:07'),
-(266, 'What is an object?\n', 'Short Answer', 2.00, 'Medium', '', 3, '', '', '', '', 'Answer: An object is an instance of a class.', NULL, NULL, NULL, '2026-03-06 08:18:27', '2026-03-06 08:18:27'),
-(267, 'An operating system manages computer hardware and software resources.', 'True/False', 2.00, 'Medium', '', 6, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:20:10', '2026-03-06 08:20:10'),
-(268, 'Operating systems are only used in mobile phones', 'True/False', 2.00, 'Medium', '', 6, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:20:41', '2026-03-06 08:20:41'),
-(269, 'What is an operating system?\n', 'Short Answer', 2.00, 'Medium', '', 6, '', '', '', '', 'Answer: An operating system is system software that manages hardware and software resources.', NULL, NULL, NULL, '2026-03-06 08:21:21', '2026-03-06 08:21:21'),
-(270, ' Give one example of an operating system.\n', 'Short Answer', 2.00, 'Medium', '', 6, '', '', '', '', 'Answer: Windows, Linux, or macOS.', NULL, NULL, NULL, '2026-03-06 08:21:53', '2026-03-06 08:21:53'),
-(271, 'Planning is one of the basic functions of management.', 'True/False', 2.00, 'Medium', '', 11, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:23:09', '2026-03-06 08:23:09'),
-(272, 'Management is not required in organizations.', 'True/False', 2.00, 'Medium', '', 11, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:24:13', '2026-03-06 08:24:13'),
-(273, ' What is management?\n', 'Short Answer', 2.00, 'Medium', '', 11, '', '', '', '', 'Answer: Management is the process of planning, organizing, leading, and controlling resources.', NULL, NULL, NULL, '2026-03-06 08:24:51', '2026-03-06 08:24:51'),
-(274, ' What is planning in management?\n', 'Short Answer', 2.00, 'Medium', '', 11, '', '', '', '', 'Answer: Planning is deciding goals and the best way to achieve them.', NULL, NULL, NULL, '2026-03-06 08:25:25', '2026-03-06 08:25:25'),
-(275, 'C is a procedural programming language.\n', 'True/False', 2.00, 'Medium', '', 2, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:26:36', '2026-03-06 08:26:36'),
-(276, '\nC programs cannot use loops.\n', 'True/False', 2.00, 'Medium', '', 2, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:26:58', '2026-03-06 08:26:58'),
-(277, 'Question: What is a variable in C?\n', 'Short Answer', 2.00, 'Medium', '', 2, '', '', '', '', 'Answer: A variable is a named memory location used to store data.\n', NULL, NULL, NULL, '2026-03-06 08:27:44', '2026-03-06 08:27:44'),
-(278, 'Question: What is a loop?\n', 'Short Answer', 2.00, 'Medium', '', 2, '', '', '', '', 'Answer: A loop is used to repeat a set of instructions multiple time', NULL, NULL, NULL, '2026-03-06 08:28:06', '2026-03-06 08:28:06'),
-(279, 'Structural analysis studies forces acting on structures.', 'True/False', 2.00, 'Medium', '', 10, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:29:07', '2026-03-06 08:29:07'),
-(280, 'Structural analysis is not used in bridge construction.', 'True/False', 2.00, 'Medium', '', 10, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:29:35', '2026-03-06 08:29:35'),
-(281, ' What is structural analysis?\n', 'Short Answer', 2.00, 'Medium', '', 10, '', '', '', '', 'Answer: Structural analysis is the study of how structures respond to loads and forces.\n', NULL, NULL, NULL, '2026-03-06 08:30:23', '2026-03-06 08:30:23'),
-(282, 'Question: Give one example of a structure.\n', 'Short Answer', 2.00, 'Medium', '', 10, '', '', '', '', 'Answer: Bridge, building, or dam.', NULL, NULL, NULL, '2026-03-06 08:30:46', '2026-03-06 08:30:46');
+INSERT INTO `questions` (`id`, `questionText`, `questionType`, `marks`, `difficulty`, `topic`, `courseId`, `optionA`, `optionB`, `optionC`, `optionD`, `correctAnswer`, `explanation`, `imageUrl`, `displayOrder`, `createdAt`, `updatedAt`, `codingQuestionId`) VALUES
+(42, 'Which Data Structure follows LIFO?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Queue', 'Stack', 'Array', 'Tree', 'B', NULL, NULL, NULL, '2026-03-01 06:50:34', '2026-03-03 08:53:54', NULL),
+(43, 'Time complexity of Binary Search?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'O(n)', 'O(logn)', 'O(n2)', 'O(1)', 'B', NULL, NULL, NULL, '2026-03-01 06:52:17', '2026-03-03 08:54:03', NULL),
+(44, 'Queue follows which principle?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'LIFO', 'FIFO', 'FILO', 'Random', 'B', NULL, NULL, NULL, '2026-03-01 06:53:44', '2026-03-03 08:54:12', NULL),
+(45, 'Maximum children in binary tree node', 'Multiple Choice', 2.00, 'Medium', '', 4, '1', '3', 'unlimited', '2', 'D', NULL, NULL, NULL, '2026-03-01 06:54:40', '2026-03-03 08:54:22', NULL),
+(46, 'Inorder traversal order?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Root-Left-Right', 'Left-Right-Root', 'Left-Root-Right', 'Right-Left-Root', 'C', NULL, NULL, NULL, '2026-03-01 06:56:30', '2026-03-03 08:54:32', NULL),
+(47, 'Stack overflow occurs when?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Empty', 'Full', 'Sorted', 'Reversed', 'B', NULL, NULL, NULL, '2026-03-01 06:57:26', '2026-03-03 08:54:44', NULL),
+(48, 'Merge sort technique?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Greedy', 'Divede &Conquer', 'Dynamic', 'Backtracking', 'B', NULL, NULL, NULL, '2026-03-01 06:59:02', '2026-03-03 08:54:59', NULL),
+(49, 'AVL tree is?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Heap', 'Graph', 'Self-balancing BST', 'Queue', 'D', NULL, NULL, NULL, '2026-03-01 07:00:35', '2026-03-03 08:55:09', NULL),
+(50, 'BFS uses ?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Stack', 'Queue', 'Tree', 'Array', 'B', NULL, NULL, NULL, '2026-03-01 07:01:40', '2026-03-03 08:55:17', NULL),
+(51, 'DFS uses?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Stack', 'Queue', 'Heap', 'Graph', 'A', NULL, NULL, NULL, '2026-03-01 07:03:57', '2026-03-03 08:55:26', NULL),
+(52, 'Linked List stores data in?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Continuous memory', 'Non-Continuous memory', 'Stack', 'Cache', 'B', NULL, NULL, NULL, '2026-03-01 07:05:23', '2026-03-03 08:55:35', NULL),
+(53, 'Best case Quick sort?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'o(n2)', 'O(nlogn)', 'O(n)', 'O(logn)', 'B', NULL, NULL, NULL, '2026-03-01 07:06:30', '2026-03-03 08:55:51', NULL),
+(54, 'Hashing used in?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Stack', 'Queue', 'Hash Table', 'Tree', 'C', NULL, NULL, NULL, '2026-03-01 07:07:14', '2026-03-03 08:56:03', NULL),
+(55, 'Heap used for?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Searching', 'Heap Sort', 'Printing', 'Memory', 'B', NULL, NULL, NULL, '2026-03-01 07:08:04', '2026-03-03 08:56:17', NULL),
+(56, 'prefix evaluation uses?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Stack', 'Queue', 'Array', 'Graph', 'A', NULL, NULL, NULL, '2026-03-01 07:09:19', '2026-03-03 08:56:26', NULL),
+(57, 'SQL stands for ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Simple Query Language', 'Structure Query Language', 'System Query Language', 'None of the above', 'B', NULL, NULL, NULL, '2026-03-03 08:41:45', '2026-03-03 08:41:45', NULL),
+(58, 'Primary Key is ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Duplicate', 'Unique & not null', 'Optional', 'Foreign', 'B', NULL, NULL, NULL, '2026-03-03 08:42:31', '2026-03-03 08:46:41', NULL),
+(59, '3NF removes ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Partial dependency', 'Transitive Dependency', 'Redundancy', 'Keys', 'B', NULL, NULL, NULL, '2026-03-03 08:43:44', '2026-03-03 08:43:44', NULL),
+(60, 'ACID Ensures ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Security', 'Speed', 'Reliability', 'Storage', 'C', NULL, NULL, NULL, '2026-03-03 08:44:20', '2026-03-03 08:44:20', NULL),
+(61, 'DDL command ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'INSERT', 'SELECT', 'CREATE', 'UPDATE', 'C', NULL, NULL, NULL, '2026-03-03 08:45:05', '2026-03-03 08:45:05', NULL),
+(62, 'Foreign Key References ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'View', 'Index', 'Trigger', 'Primary Kay', 'D', NULL, NULL, NULL, '2026-03-03 08:46:18', '2026-03-03 08:46:18', NULL),
+(63, 'Normalization Reduces ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Speed', 'Redudancy', 'Index', 'Query', 'B', NULL, NULL, NULL, '2026-03-03 08:47:30', '2026-03-03 08:47:30', NULL),
+(64, 'COMMIT does ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Roll bcak', 'Delete', 'Save Transaction', 'Stop', 'C', NULL, NULL, NULL, '2026-03-03 08:48:36', '2026-03-03 08:48:36', NULL),
+(65, 'View is ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Real Table', 'Virtual table', 'Index', 'Key', 'B', NULL, NULL, NULL, '2026-03-03 08:49:21', '2026-03-03 08:49:21', NULL),
+(66, 'Deadlock means ?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Crash', 'Infinite waiting', 'Backup', 'Speed', 'B', NULL, NULL, NULL, '2026-03-03 08:50:11', '2026-03-03 08:50:11', NULL),
+(67, 'NAND gate is Known as ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Basic gate', 'Universal gate', 'Exclusive gate', 'Buffer', 'B', NULL, NULL, NULL, '2026-03-03 12:45:51', '2026-03-03 13:19:20', NULL),
+(68, 'Binary number system base is ?', 'Multiple Choice', 2.00, 'Medium', '', 7, '2', '8', '10', '16', 'A', NULL, NULL, NULL, '2026-03-03 12:46:42', '2026-03-03 12:46:56', NULL),
+(69, 'Full adder has how many inputs ?', 'Multiple Choice', 2.00, 'Hard', '', 7, '2', '3', '4', '5', 'B', NULL, NULL, NULL, '2026-03-03 12:47:41', '2026-03-03 13:19:08', NULL),
+(70, 'Flip-flop stores ?', 'Multiple Choice', 2.00, 'Medium', '', 7, '2 bits', '4 bits', '1 bits', '8 bits', 'C', NULL, NULL, NULL, '2026-03-03 12:48:57', '2026-03-03 12:48:57', NULL),
+(71, 'XOR outputs 1 when inputs are ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Same', 'Different', '0', '1', 'B', NULL, NULL, NULL, '2026-03-03 12:49:46', '2026-03-03 13:19:36', NULL),
+(72, 'Decimal 10 in binary ?', 'Multiple Choice', 2.00, 'Hard', '', 7, '1001', '1010', '1110', '1100', 'B', NULL, NULL, NULL, '2026-03-03 12:51:59', '2026-03-03 12:51:59', NULL),
+(73, 'NOR gate is ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Univarsal gate', 'Memory', 'Encoder', 'Decoder', 'A', NULL, NULL, NULL, '2026-03-03 12:53:00', '2026-03-03 13:19:46', NULL),
+(74, 'K-map is used for ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'Storage', 'Simplification', 'Addition', 'Conversion', 'B', NULL, NULL, NULL, '2026-03-03 12:54:02', '2026-03-03 12:55:49', NULL),
+(75, 'AND gate output is 1 when ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'Any input 1', 'All input 1', 'All inputs 0', 'Any input 0', 'B', NULL, NULL, NULL, '2026-03-03 12:55:21', '2026-03-03 12:55:58', NULL),
+(76, 'Truth table shows ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Code', 'Output combinations', 'Memory', 'Storage', 'B', NULL, NULL, NULL, '2026-03-03 12:58:00', '2026-03-03 13:20:01', NULL),
+(77, 'Multiplexer selects ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'One inputs', 'Two inputs', 'All inputs', 'None', 'A', NULL, NULL, NULL, '2026-03-03 12:58:57', '2026-03-03 12:59:10', NULL),
+(78, 'Decoder converts ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Binary to decimal', 'Decimal to binary', 'Analog to digital', 'Digital to analog', 'A', NULL, NULL, NULL, '2026-03-03 13:00:22', '2026-03-03 13:20:12', NULL),
+(79, 'SR flip-flop invalid state ?', 'Multiple Choice', 2.00, 'Medium', '', 7, '00', '01', '10', '11', 'D', NULL, NULL, NULL, '2026-03-03 13:01:57', '2026-03-03 13:01:57', NULL),
+(80, 'BCS Stands for ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Binary Code Decimal', 'Binary Coded Decimal', 'Bit Code Decimal', 'Base Code Decimal', 'B', NULL, NULL, NULL, '2026-03-03 13:10:41', '2026-03-03 13:10:41', NULL),
+(81, 'Not gate output of 1 ?', 'Multiple Choice', 2.00, 'Hard', '', 7, '1', '0', '2', 'Undefined', 'B', NULL, NULL, NULL, '2026-03-03 13:11:37', '2026-03-03 13:11:37', NULL),
+(82, 'Half adder produces ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'Sum & Carry', 'Sum Only', 'Carry Only', 'None', 'A', NULL, NULL, NULL, '2026-03-03 13:12:59', '2026-03-03 13:12:59', NULL),
+(83, 'Encoder converts ?', 'Multiple Choice', 2.00, 'Easy', '', 7, 'Many input to fewer outputs ', 'few to many', 'Analog to analog ', 'Digital to analog', 'A', NULL, NULL, NULL, '2026-03-03 13:15:17', '2026-03-03 13:20:28', NULL),
+(84, 'Combinational Circuit depends on ?', 'Multiple Choice', 2.00, 'Medium', '', 7, 'Past output', 'Current input ', 'Memory ', 'Clock', 'B', NULL, NULL, NULL, '2026-03-03 13:16:06', '2026-03-03 13:16:06', NULL),
+(85, 'Flip-flop triggered by ?', 'Multiple Choice', 2.00, 'Hard', '', 7, 'Voltage', 'Clock pulse', 'Heat', 'Current', 'B', NULL, NULL, NULL, '2026-03-03 13:17:19', '2026-03-03 13:17:19', NULL),
+(86, 'Sequential circuit use ?', 'Multiple Choice', 2.00, 'Hard', '', 7, 'Resistor', 'Capacity', 'Memory', 'Transformer', 'C', NULL, NULL, NULL, '2026-03-03 13:18:48', '2026-03-03 13:18:48', NULL),
+(87, 'SI unit of force ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Joule', 'Watt', 'Newton', 'Pascal', 'C', NULL, NULL, NULL, '2026-03-03 13:23:20', '2026-03-03 13:23:20', NULL),
+(88, 'force is ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Scalar', 'Vector', 'Energy', 'Speed', 'B', NULL, NULL, NULL, '2026-03-03 13:24:42', '2026-03-03 13:24:42', NULL),
+(89, 'Newton\'s Second Law ?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'F = ma', 'F = mv', 'E = mc2', 'W = fd', 'A', NULL, NULL, NULL, '2026-03-03 13:26:06', '2026-03-03 13:26:06', NULL),
+(90, 'Work ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'F/d', 'F * d', 'm*a', 'd/t', 'B', NULL, NULL, NULL, '2026-03-03 13:27:18', '2026-03-03 13:27:18', NULL),
+(91, 'Acceleration due to gravity ?', 'Multiple Choice', 2.00, 'Hard', '', 9, '9.8 m/s2', '8 m/s2', '10 m/s2', '12 m/s2', 'A', NULL, NULL, NULL, '2026-03-03 13:29:51', '2026-03-03 13:29:51', NULL),
+(92, 'Torgue is ?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Linear force', 'Rotational force', 'Energy ', 'Speed', 'B', NULL, NULL, NULL, '2026-03-03 13:31:00', '2026-03-03 13:31:00', NULL),
+(93, 'Unit of stress ?', 'Multiple Choice', 2.00, 'Hard', '', 9, 'Newton', 'N/m2', 'Joule', 'Watt', 'B', NULL, NULL, NULL, '2026-03-03 13:31:59', '2026-03-03 13:31:59', NULL),
+(94, 'Equilibrium means ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Motion', 'Balanced force', 'Speed', 'Friction', 'B', NULL, NULL, NULL, '2026-03-03 13:33:04', '2026-03-03 13:33:04', NULL),
+(95, 'Resultant force is ?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Difference', 'Product', 'Sum of forces', 'Division', 'C', NULL, NULL, NULL, '2026-03-03 13:34:14', '2026-03-03 13:34:14', NULL),
+(96, 'Inertia resists change in ?', 'Multiple Choice', 2.00, 'Hard', '', 9, 'Speed', 'Motion', 'Weight', 'Gravity', 'B', NULL, NULL, NULL, '2026-03-03 13:35:06', '2026-03-03 13:35:06', NULL),
+(97, 'Vector has ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Magnitude only', 'Direction only', 'Magnitude & Direction', 'None', 'C', NULL, NULL, NULL, '2026-03-03 13:36:25', '2026-03-03 13:36:25', NULL),
+(98, 'Static friction acts when ?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Moving', 'Falling', 'At rest', 'Accelerating', 'C', NULL, NULL, NULL, '2026-03-03 13:37:45', '2026-03-03 13:37:45', NULL),
+(99, 'Free body diagram shows ?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Energy', 'Forces', 'Speed', 'Mass', 'B', NULL, NULL, NULL, '2026-03-03 13:38:48', '2026-03-03 13:38:48', NULL),
+(100, 'Beam supports?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Load ', 'Speed', 'Time', 'Energy', 'A', NULL, NULL, NULL, '2026-03-03 13:43:00', '2026-03-03 13:43:00', NULL),
+(101, 'Moment formula?', 'Multiple Choice', 2.00, 'Hard', '', 9, ' m Ã— a', 'P Ã— t', ' F Ã— d', 'V Ã— I', 'C', NULL, NULL, NULL, '2026-03-03 13:44:01', '2026-03-03 13:44:01', NULL),
+(102, 'Power unit?', 'Multiple Choice', 2.00, 'Hard', '', 9, 'Watt ', 'Newton', 'Joule', 'Pascal', 'A', NULL, NULL, NULL, '2026-03-03 13:44:43', '2026-03-03 13:44:43', NULL),
+(103, 'Centroid relates to?', 'Multiple Choice', 2.00, 'Easy', '', 9, 'Speed', 'Volume', 'Area ', 'Weight', 'C', NULL, NULL, NULL, '2026-03-03 13:45:29', '2026-03-03 13:45:29', NULL),
+(104, 'Shear force acts?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Parallel', 'Random', 'Circular', 'Perpendicular ', 'D', NULL, NULL, NULL, '2026-03-03 13:46:16', '2026-03-03 13:47:55', NULL),
+(105, 'First law of motion is law of?', 'Multiple Choice', 2.00, 'Hard', '', 9, 'Action', 'Reaction', 'Inertia ', 'Motion', 'C', NULL, NULL, NULL, '2026-03-03 13:46:58', '2026-03-03 13:46:58', NULL),
+(106, 'Friction opposes?', 'Multiple Choice', 2.00, 'Medium', '', 9, 'Gravity', 'Motion ', 'Speed', 'Force', 'B', NULL, NULL, NULL, '2026-03-03 13:47:36', '2026-03-03 13:47:36', NULL),
+(107, '8086 is?', 'Multiple Choice', 2.00, 'Easy', '', 8, '8-bit', '16-bit', '32-bit', '64-bit', 'B', NULL, NULL, NULL, '2026-03-03 13:52:41', '2026-03-03 13:52:41', NULL),
+(108, 'ALU performs?', 'Multiple Choice', 2.00, 'Medium', '', 8, 'Storage', 'Input', 'Arithmetic & Logic', 'Output', 'C', NULL, NULL, NULL, '2026-03-03 13:54:00', '2026-03-03 13:54:00', NULL),
+(109, 'Program Counter stores?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Data', 'Output', 'Address of next instruction', 'Flag', 'C', NULL, NULL, NULL, '2026-03-03 13:55:08', '2026-03-03 13:55:08', NULL),
+(110, 'RAM is?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Permanent', 'ROM', 'Cache', 'Temporary memory', 'D', NULL, NULL, NULL, '2026-03-03 13:56:44', '2026-03-03 13:56:44', NULL),
+(111, 'ROM stands for?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Read Only Memory', ' Random Only Memory', 'Run Only Memory', 'Rapid Memory', 'A', NULL, NULL, NULL, '2026-03-03 14:01:08', '2026-03-03 14:01:08', NULL),
+(112, 'Stack works on?', 'Multiple Choice', 2.00, 'Medium', '', 8, 'FIFO', 'None', 'Random', 'LIFO', 'D', NULL, NULL, NULL, '2026-03-03 14:02:14', '2026-03-03 14:02:14', NULL),
+(113, 'Flag register stores?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Data', 'Address', 'Code', 'Status flags ', 'D', NULL, NULL, NULL, '2026-03-03 14:03:16', '2026-03-03 14:03:16', NULL),
+(114, 'Interrupt is?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Memory', 'Bus', 'Program', 'Signal to CPU', 'D', NULL, NULL, NULL, '2026-03-03 14:04:15', '2026-03-03 14:04:15', NULL),
+(115, 'Microcontroller includes?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'CPU only', 'CPU + Memory + I/O', 'RAM only', 'ALU only', 'B', NULL, NULL, NULL, '2026-03-03 14:05:48', '2026-03-03 14:05:48', NULL),
+(116, 'Address bus carries?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Data', 'Address ', 'Control', 'Power', 'B', NULL, NULL, NULL, '2026-03-03 14:06:40', '2026-03-03 14:06:40', NULL),
+(117, 'Data bus carries?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Address', 'Control', 'Data ', 'Voltage', 'C', NULL, NULL, NULL, '2026-03-03 14:07:42', '2026-03-03 14:07:42', NULL),
+(118, 'Control bus carries?', 'Multiple Choice', 2.00, 'Medium', '', 8, 'Data', 'Control signals', 'Address', 'Power', 'B', NULL, NULL, NULL, '2026-03-03 14:08:52', '2026-03-03 14:08:52', NULL),
+(119, 'Instruction cycle includes?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Fetch', 'Decode', 'Execute', 'All of these', 'D', NULL, NULL, NULL, '2026-03-03 14:09:52', '2026-03-03 14:09:52', NULL),
+(120, 'Accumulator used for?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Arithmetic operations', 'Output', 'Storage', 'Input', 'A', NULL, NULL, NULL, '2026-03-03 14:10:46', '2026-03-03 14:10:46', NULL),
+(121, '8086 has how many bits data bus?', 'Multiple Choice', 2.00, 'Easy', '', 8, '8', '16 ', '64', '32', 'B', NULL, NULL, NULL, '2026-03-03 14:11:54', '2026-03-03 14:11:54', NULL),
+(122, 'Clock controls?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Speed of processor', 'Memory size', 'Power', 'Heat', 'A', NULL, NULL, NULL, '2026-03-03 14:12:46', '2026-03-03 14:12:46', NULL),
+(123, 'Segment register used for?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Memory segmentation', 'Input', 'Output', 'None', 'A', NULL, NULL, NULL, '2026-03-03 14:13:47', '2026-03-03 14:13:47', NULL),
+(124, 'Stack pointer stores?', 'Multiple Choice', 2.00, 'Medium', '', 8, 'Data', 'Flag', 'Top of stack address', 'Output', 'C', NULL, NULL, NULL, '2026-03-03 14:14:43', '2026-03-03 14:14:43', NULL),
+(125, 'Interrupt can be?', 'Multiple Choice', 2.00, 'Easy', '', 8, 'Hardware', 'Software', 'Both ', 'None', 'C', NULL, NULL, NULL, '2026-03-03 14:15:25', '2026-03-03 14:15:25', NULL),
+(126, 'Microprocessor is?', 'Multiple Choice', 2.00, 'Hard', '', 8, 'Single chip CPU ', 'Memory', 'Bus', 'Register', 'A', NULL, NULL, NULL, '2026-03-03 14:16:13', '2026-03-03 14:16:13', NULL),
+(127, 'OOP stands for?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Object Organized Programming', 'Only Object Programming', 'Object Oriented Programming', 'Open Object Programming', 'C', NULL, NULL, NULL, '2026-03-04 07:40:32', '2026-03-04 07:40:32', NULL),
+(128, 'Encapsulation means?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'Data sharing', 'Data hiding', 'Data deleting', 'Data copying', 'B', NULL, NULL, NULL, '2026-03-04 07:43:05', '2026-03-04 07:43:05', NULL),
+(129, 'Polymorphism means?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'One form', 'No form', 'Many forms', 'Hidden form', 'C', NULL, NULL, NULL, '2026-03-04 07:45:04', '2026-03-04 07:45:04', NULL),
+(130, 'Inheritance provides?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'Deletion', 'Hiding', 'Code reusability', 'Stopping execution', 'C', NULL, NULL, NULL, '2026-03-04 07:45:50', '2026-03-04 07:45:50', NULL),
+(131, 'Constructor is used to?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'Destroy object', 'Initialize object', 'Hide data', 'Delete class', 'B', NULL, NULL, NULL, '2026-03-04 07:46:55', '2026-03-04 07:46:55', NULL),
+(132, 'Which keyword creates object in Java?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'class', 'object', 'new ', 'create', 'C', NULL, NULL, NULL, '2026-03-04 07:47:36', '2026-03-04 07:47:36', NULL),
+(133, 'Method overloading is?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Runtime polymorphism', 'Compile-time polymorphism', 'Abstraction', 'Inheritance', 'B', NULL, NULL, NULL, '2026-03-04 07:48:27', '2026-03-04 07:48:27', NULL),
+(134, 'Abstraction hides?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Data', 'Implementation details', 'Variables', 'Objects', 'B', NULL, NULL, NULL, '2026-03-04 07:50:18', '2026-03-04 07:50:18', NULL),
+(135, 'Interface supports?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Single inheritance', 'Multiple inheritance', 'No inheritance', 'Hybrid', 'B', NULL, NULL, NULL, '2026-03-04 07:51:30', '2026-03-04 07:51:30', NULL),
+(136, 'super keyword refers to?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Object', 'Child class', 'Parent class', 'Method', 'C', NULL, NULL, NULL, '2026-03-04 07:53:05', '2026-03-04 07:53:05', NULL),
+(137, 'This keyword refers to?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Parent', 'Current object', 'Interface', 'Package', 'B', NULL, NULL, NULL, '2026-03-04 07:54:08', '2026-03-04 07:54:08', NULL),
+(138, 'Class is?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Object', 'Method', 'Blueprint of object ', 'Variable', 'C', NULL, NULL, NULL, '2026-03-04 07:55:04', '2026-03-04 07:55:04', NULL),
+(139, 'Object is?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Variable', 'Instance of class', 'Method', 'Package', 'B', NULL, NULL, NULL, '2026-03-04 07:56:00', '2026-03-04 07:56:00', NULL),
+(140, 'Private access modifier means?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Accessible only within class', 'Public access', 'Protected', 'Global', 'A', NULL, NULL, NULL, '2026-03-04 07:57:29', '2026-03-04 07:57:29', NULL),
+(141, 'Destructor is used to?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Create object', 'Destroy object', 'Hide method', 'Override', 'B', NULL, NULL, NULL, '2026-03-04 07:59:47', '2026-03-04 07:59:47', NULL),
+(142, 'Inheritance types in Java?', 'Multiple Choice', 2.00, 'Hard', '', 3, ' Multiple (class)', 'Multilevel ', 'Circular', 'None', 'B', NULL, NULL, NULL, '2026-03-04 08:01:26', '2026-03-04 08:01:26', NULL),
+(143, 'Encapsulation improves?', 'Multiple Choice', 2.00, 'Medium', '', 3, 'Speed', 'Security ', 'Memory', 'Execution', 'B', NULL, NULL, NULL, '2026-03-04 08:04:49', '2026-03-04 08:04:49', NULL),
+(144, 'Abstract class contains?', 'Multiple Choice', 2.00, 'Easy', '', 3, 'Only concrete methods', 'Abstract methods', 'Variables only', 'Main method', 'B', NULL, NULL, NULL, '2026-03-04 08:05:37', '2026-03-04 08:05:37', NULL),
+(145, 'Getter and Setter used for?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Looping', 'Accessing private data', 'Sorting', 'Printing', 'B', NULL, NULL, NULL, '2026-03-04 08:06:24', '2026-03-04 08:06:24', NULL),
+(146, 'Method overriding is?', 'Multiple Choice', 2.00, 'Hard', '', 3, 'Compile-time', 'Constructor', 'Interface', 'Runtime polymorphism', 'D', NULL, NULL, NULL, '2026-03-04 08:07:31', '2026-03-04 08:09:06', NULL),
+(147, 'OS acts as?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Compiler', 'Interface between user & hardware', 'Browser', 'Editor', 'B', NULL, NULL, NULL, '2026-03-04 08:39:44', '2026-03-04 08:39:44', NULL),
+(148, 'SJF stands for?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'Simple Job First', 'System Job First', 'Small Job First', 'Shortest Job First', 'D', NULL, NULL, NULL, '2026-03-04 08:40:37', '2026-03-04 08:40:37', NULL),
+(149, 'Deadlock means?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Crash', 'Infinite waiting', 'Speed', 'Halt', 'B', NULL, NULL, NULL, '2026-03-04 08:41:39', '2026-03-04 08:41:39', NULL),
+(150, 'Paging avoids?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'External fragmentation', 'Both internal & external fragmentation partially', 'Memory', 'CPU', 'B', NULL, NULL, NULL, '2026-03-04 08:42:37', '2026-03-04 08:42:37', NULL),
+(151, 'FIFO scheduling is?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'First In First Out', 'Fast In Fast Out', 'File In File Out', 'None', 'A', NULL, NULL, NULL, '2026-03-04 08:43:22', '2026-03-04 08:43:22', NULL),
+(152, 'Semaphore used for?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Scheduling', 'Process synchronization ', 'Memory', 'Storage', 'B', NULL, NULL, NULL, '2026-03-04 08:44:26', '2026-03-04 08:44:26', NULL),
+(153, 'Process is?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Program in disk', 'Thread', 'Program in execution', 'File', 'C', NULL, NULL, NULL, '2026-03-04 08:45:31', '2026-03-04 08:45:31', NULL),
+(154, 'Thread is?', 'Multiple Choice', 2.00, 'Medium', '', 6, 'Heavyweight', 'File', 'CPU', 'Lightweight process', 'D', NULL, NULL, NULL, '2026-03-04 08:46:32', '2026-03-04 08:46:32', NULL),
+(155, 'Context switching means?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Memory delete', 'Shutdown', 'Switching CPU between processe', 'Boot', 'C', NULL, NULL, NULL, '2026-03-04 08:47:46', '2026-03-04 08:47:46', NULL),
+(156, 'Virtual memory uses?', 'Multiple Choice', 2.00, 'Medium', '', 6, ' RAM only', 'Disk as extension of RAM', 'ROM', 'Cache', 'B', NULL, NULL, NULL, '2026-03-04 08:48:45', '2026-03-04 08:48:45', NULL),
+(157, 'Banker\'s algorithm used for?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'Scheduling', 'Memory', 'Deadlock avoidance', 'Storage', 'C', NULL, NULL, NULL, '2026-03-04 08:49:24', '2026-03-04 08:49:24', NULL),
+(158, 'CPU scheduling decides?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Memory', 'Which process runs next', 'File', 'Disk', 'B', NULL, NULL, NULL, '2026-03-04 08:50:07', '2026-03-04 08:50:07', NULL),
+(159, 'Kernel is?', 'Multiple Choice', 2.00, 'Medium', '', 6, 'Application', 'Hardware', ' Core of OS', 'Driver', 'C', NULL, NULL, NULL, '2026-03-04 08:51:00', '2026-03-04 08:51:00', NULL),
+(160, 'Round Robin uses?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'Priority', 'Time quantum', 'FIFO', 'None', 'B', NULL, NULL, NULL, '2026-03-04 08:51:54', '2026-03-04 08:51:54', NULL),
+(161, 'Starvation occurs due to?', 'Multiple Choice', 2.00, 'Medium', '', 6, 'Deadlock', 'Paging', 'Low priority process waiting long', 'Boot', 'C', NULL, NULL, NULL, '2026-03-04 08:52:46', '2026-03-04 08:52:46', NULL),
+(162, 'Interrupt is?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'File', 'Signal to CPU ', 'Memory', 'Cache', 'B', NULL, NULL, NULL, '2026-03-04 08:53:28', '2026-03-04 08:53:28', NULL),
+(163, 'File system manages?', 'Multiple Choice', 2.00, 'Medium', '', 6, 'CPU', 'Files & directories', 'RAM', 'Printer', 'B', NULL, NULL, NULL, '2026-03-04 08:54:15', '2026-03-04 08:54:15', NULL),
+(164, 'Multitasking means?', 'Multiple Choice', 2.00, 'Easy', '', 6, 'Single task', 'No task', 'Multiple tasks simultaneously ', 'Manual task', 'C', NULL, NULL, NULL, '2026-03-04 08:55:19', '2026-03-04 08:55:19', NULL),
+(165, 'Swapping transfers process between?', 'Multiple Choice', 2.00, 'Hard', '', 6, 'CPU & Cache', 'RAM & Disk', 'ROM & RAM', 'Disk & Printer', 'B', NULL, NULL, NULL, '2026-03-04 08:57:40', '2026-03-04 08:57:40', NULL),
+(166, 'Deadlock requires?', 'Multiple Choice', 2.00, 'Hard', '', 6, '2 conditions', ' 3 conditions', '4 conditions', '5 conditions', 'C', NULL, NULL, NULL, '2026-03-04 08:58:27', '2026-03-04 08:58:27', NULL),
+(167, 'Father of Scientific Management?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Fayol', 'F.W. Taylor ', 'Drucker', 'Weber', 'B', NULL, NULL, NULL, '2026-03-04 12:49:42', '2026-03-04 12:49:42', NULL),
+(168, 'First function of management?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Organizing', 'Controlling', 'Planning ', 'Staffing', 'C', NULL, NULL, NULL, '2026-03-04 12:50:22', '2026-03-04 12:50:22', NULL),
+(169, 'SWOT stands for?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Strength Weakness Opportunity Threat', 'System Work Operation Tool', 'Strategy Work Output Target', 'None', 'A', NULL, NULL, NULL, '2026-03-04 12:51:10', '2026-03-04 12:51:10', NULL),
+(170, 'Leadership is?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'Controlling', 'Influencing people', 'Accounting', 'Planning', 'B', NULL, NULL, NULL, '2026-03-04 12:51:46', '2026-03-04 12:51:46', NULL),
+(171, 'Delegation means?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'Removing power', 'Stopping work', 'Assigning authority & responsibility', 'Hiring', 'C', NULL, NULL, NULL, '2026-03-04 12:52:45', '2026-03-04 12:52:45', NULL),
+(172, 'C developed by?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'James Gosling', 'Dennis Ritchie', 'Guido', 'Bjarne', 'B', NULL, NULL, NULL, '2026-03-04 12:55:19', '2026-03-04 12:55:19', NULL),
+(173, 'Header file for printf?', 'Multiple Choice', 2.00, 'Medium', '', 2, 'math.h', 'conio.h', 'string.h', ' stdio.h', 'D', NULL, NULL, NULL, '2026-03-04 12:56:17', '2026-03-04 12:56:17', NULL),
+(174, 'main() is?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'Variable', 'Entry point of program', 'Loop', 'Array', 'B', NULL, NULL, NULL, '2026-03-04 12:56:56', '2026-03-04 12:56:56', NULL),
+(175, 'sizeof(int) typically?', 'Multiple Choice', 2.00, 'Medium', '', 2, '1', '2', '4 (system dependent)', '8', 'C', NULL, NULL, NULL, '2026-03-04 12:57:46', '2026-03-04 12:57:46', NULL),
+(176, 'Pointer stores?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'Value', 'Address of variable', 'Data type', 'File', 'B', NULL, NULL, NULL, '2026-03-04 12:58:30', '2026-03-04 12:58:30', NULL),
+(177, 'Stress = ?', 'Multiple Choice', 2.00, 'Medium', '', 10, ' Force/Area', 'Area/Force', ' ForceÃ—Area', 'None', 'A', NULL, NULL, NULL, '2026-03-04 12:59:31', '2026-03-04 12:59:31', NULL),
+(178, 'Strain is?', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Force', 'Energy', 'Deformation/Original length', 'Weight', 'C', NULL, NULL, NULL, '2026-03-04 13:00:11', '2026-03-04 13:00:11', NULL),
+(179, 'Youngâ€™s modulus formula?', 'Multiple Choice', 2.00, 'Medium', '', 10, 'Stress Ã— Strain', 'Stress / Strain', ' Force Ã— Length', 'None', 'B', NULL, NULL, NULL, '2026-03-04 13:01:08', '2026-03-04 13:01:08', NULL),
+(180, 'Bending moment unit?', 'Multiple Choice', 2.00, 'Easy', '', 10, 'N', ' N/m', 'Nm ', 'Joule', 'C', NULL, NULL, NULL, '2026-03-04 13:01:57', '2026-03-04 13:01:57', NULL),
+(181, 'Which function of management involves setting objectives and determining the course of action?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'Controlling', 'Planning', 'Directing', 'Staffing', 'B', NULL, NULL, NULL, '2026-03-04 13:05:38', '2026-03-04 13:05:38', NULL),
+(182, 'Unity of Command means ?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'One manager controls many workers', 'One department controls all', 'One employee receives orders from one superior', 'Employees work in teams', 'C', NULL, NULL, NULL, '2026-03-04 13:06:28', '2026-03-04 13:06:28', NULL),
+(183, 'Span of Control refers to?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Number of departments', 'Number of subordinates reporting to a manager', 'Level of authority', 'Number of policies', 'B', NULL, NULL, NULL, '2026-03-04 13:07:12', '2026-03-04 13:07:12', NULL),
+(184, 'Which level of management is responsible for strategic decisions?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Top-level management', 'Middle-level management', 'Lower-level management', 'Supervisory level', 'A', NULL, NULL, NULL, '2026-03-04 13:08:05', '2026-03-04 13:08:05', NULL),
+(185, 'Planning is concerned with?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Past performance', 'Present problems', 'Future course of action', 'Employee motivation', 'C', NULL, NULL, NULL, '2026-03-04 13:15:23', '2026-03-04 13:15:23', NULL),
+(186, 'Which is not a function of management?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Planning', 'Sleeping', 'Organizing', 'Controlling', 'B', NULL, NULL, NULL, '2026-03-04 13:16:12', '2026-03-04 13:16:12', NULL),
+(187, 'Unity of Direction means?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'One boss for one employee', 'One plan for one group of activities', 'One department', 'One manager', 'B', NULL, NULL, NULL, '2026-03-04 13:18:09', '2026-03-04 13:18:09', NULL),
+(188, 'Scalar chain refers to?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Chain of command', 'Material chain', 'Production chain', 'Supply chain', 'A', NULL, NULL, NULL, '2026-03-04 13:19:23', '2026-03-04 13:19:23', NULL),
+(189, 'Which level of management focuses on policy making?', 'Multiple Choice', 2.00, 'Hard', '', 11, 'Middle level', 'Top level', 'Lower level', 'Supervisory level', 'B', NULL, NULL, NULL, '2026-03-04 13:20:26', '2026-03-04 13:20:26', NULL),
+(190, 'Delegation means?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Giving responsibility only', 'Giving authority only', 'Assigning authority and responsibility', 'Avoiding work', 'C', NULL, NULL, NULL, '2026-03-04 13:21:20', '2026-03-04 13:21:20', NULL),
+(191, 'Motivation improves?', 'Multiple Choice', 2.00, 'Medium', '', 11, 'Conflict', 'Productivity', 'Loss', 'Delay', 'B', NULL, NULL, NULL, '2026-03-04 13:22:24', '2026-03-04 13:22:24', NULL),
+(192, 'Controlling function compares?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Plans with goals', 'Employees with managers', 'Actual performance with standards', 'Cost with price', 'C', NULL, NULL, NULL, '2026-03-04 13:23:20', '2026-03-04 13:23:20', NULL),
+(193, 'Which theory was given by McGregor?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'X and Y Theory', 'Need Hierarchy', 'Scientific Theory', 'Equity Theory', 'A', NULL, NULL, NULL, '2026-03-04 13:24:29', '2026-03-04 13:24:29', NULL),
+(194, 'Span of control refers to:', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Number of subordinates under a manager', 'Number of managers', 'Number of departments', 'Number of policies', 'A', NULL, NULL, NULL, '2026-03-04 13:25:28', '2026-03-04 13:25:28', NULL),
+(195, 'Which is an example of non-financial incentive?', 'Multiple Choice', 2.00, 'Easy', '', 11, 'Bonus', 'Salary', 'Promotion', 'Commission', 'C', NULL, NULL, NULL, '2026-03-04 13:26:22', '2026-03-04 13:26:22', NULL),
+(196, 'Which of the following is a valid C variable name?', 'Multiple Choice', 2.00, 'Medium', '', 2, '1number', 'number_1', 'number-1', 'float', 'B', NULL, NULL, NULL, '2026-03-04 13:29:33', '2026-03-04 13:29:33', NULL),
+(197, 'Which data type stores decimal values?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'int', 'char', 'float', 'void', 'C', NULL, NULL, NULL, '2026-03-04 13:30:29', '2026-03-04 13:30:29', NULL),
+(198, 'Which symbol is used for single-line comments?', 'Multiple Choice', 2.00, 'Easy', '', 2, '//', '/* */', '#', '--', 'A', NULL, NULL, NULL, '2026-03-04 13:31:24', '2026-03-04 13:31:24', NULL),
+(199, 'Which function is used to read input?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'printf()', 'scanf()', 'print()', 'input()', 'B', NULL, NULL, NULL, '2026-03-04 13:32:45', '2026-03-04 13:32:45', NULL),
+(200, 'Which operator is used for modulus?', 'Multiple Choice', 2.00, 'Medium', '', 2, '/', '%', '*', '&', 'B', NULL, NULL, NULL, '2026-03-04 13:36:16', '2026-03-04 13:36:16', NULL),
+(201, 'Array index in C starts from:', 'Multiple Choice', 2.00, 'Medium', '', 2, '1', '-1', '0', '2', 'C', NULL, NULL, NULL, '2026-03-04 13:37:22', '2026-03-04 13:37:22', NULL),
+(202, 'Which loop checks condition first?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'do-while', 'for', 'while', 'Both B and C', 'D', NULL, NULL, NULL, '2026-03-04 13:38:27', '2026-03-04 13:38:27', NULL),
+(203, 'Which header file is required for string functions?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'stdio.h', 'string.h', 'math.h', 'conio.h', 'B', NULL, NULL, NULL, '2026-03-04 13:39:47', '2026-03-04 13:39:47', NULL),
+(204, 'What is the output type of printf()?', 'Multiple Choice', 2.00, 'Hard', '', 2, 'int', 'void', 'char', 'float', 'A', NULL, NULL, NULL, '2026-03-04 13:40:53', '2026-03-04 13:40:53', NULL),
+(205, 'Pointer stores:', 'Multiple Choice', 2.00, 'Easy', '', 2, 'Value', 'Address', 'Character', 'Index', 'B', NULL, NULL, NULL, '2026-03-04 13:42:09', '2026-03-04 13:42:09', NULL),
+(206, 'Which keyword is used to define a constant?', 'Multiple Choice', 2.00, 'Easy', '', 2, 'var', 'const', 'define', 'static', 'B', NULL, NULL, NULL, '2026-03-04 13:43:16', '2026-03-04 13:43:16', NULL),
+(207, 'sizeof() is used to:', 'Multiple Choice', 2.00, 'Hard', '', 2, 'Print value', 'Find memory size', 'Count elements', 'Loop', 'B', NULL, NULL, NULL, '2026-03-04 13:45:17', '2026-03-04 13:45:17', NULL),
+(208, 'Break statement is used to:', 'Multiple Choice', 2.00, 'Easy', '', 2, 'Continue loop', 'Exit loop', 'Start loop', 'Pause program', 'B', NULL, NULL, NULL, '2026-03-04 13:47:13', '2026-03-04 13:47:13', NULL),
+(209, 'Function without return value uses', 'Multiple Choice', 2.00, 'Hard', '', 2, 'int', 'float', 'void', 'char', 'C', NULL, NULL, NULL, '2026-03-04 13:48:48', '2026-03-04 13:48:48', NULL),
+(210, 'Which is a logical operator?\n', 'Multiple Choice', 2.00, 'Easy', '', 2, '&&', '%', '=', '++', 'A', NULL, NULL, NULL, '2026-03-04 13:55:28', '2026-03-04 13:55:28', NULL),
+(211, 'Bending moment is maximum at:', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Point of zero shear force', 'Supports only', 'Ends only', 'Midpoint always', 'A', NULL, NULL, NULL, '2026-03-04 14:04:23', '2026-03-04 14:04:23', NULL),
+(212, 'Unit of bending moment is', 'Multiple Choice', 2.00, 'Easy', '', 10, 'N', 'N/m', 'NÂ·m', 'mÂ²', 'C', NULL, NULL, NULL, '2026-03-04 14:05:41', '2026-03-04 14:05:41', NULL),
+(213, 'Unit of shear force is', 'Multiple Choice', 2.00, 'Medium', '', 10, 'N', 'Nm', 'm', 'N/m', 'A', NULL, NULL, NULL, '2026-03-04 14:07:11', '2026-03-04 14:07:11', NULL),
+(214, 'Maximum bending moment occurs where', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Shear force is zero', 'Load is zero', 'Support only', 'End only', 'A', NULL, NULL, NULL, '2026-03-04 14:08:14', '2026-03-04 14:08:14', NULL),
+(215, 'A cantilever beam is fixed at', 'Multiple Choice', 2.00, 'Medium', '', 10, 'Middle', 'Both ends', 'One end', 'Free end', 'C', NULL, NULL, NULL, '2026-03-04 14:09:37', '2026-03-04 14:09:37', NULL),
+(216, 'Truss members carry', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Bending', 'Axial force', 'Shear', 'Torsion', 'B', NULL, NULL, NULL, '2026-03-04 14:12:03', '2026-03-04 14:12:03', NULL),
+(217, 'Degree of static indeterminacy for simply supported beam is', 'Multiple Choice', 2.00, 'Medium', '', 10, '0', '1', '2', '3', 'A', NULL, NULL, NULL, '2026-03-04 14:12:38', '2026-03-04 14:12:38', NULL),
+(218, 'Moment distribution method was developed by', 'Multiple Choice', 2.00, 'Easy', '', 10, 'Hardy Cross', 'Newton', 'Euler', 'Rankine', 'A', NULL, NULL, NULL, '2026-03-04 14:13:34', '2026-03-04 14:13:34', NULL),
+(219, 'Fixed beam has how many end moments?', 'Multiple Choice', 2.00, 'Easy', '', 10, '0', '1', '2', '3', 'C', NULL, NULL, NULL, '2026-03-04 14:14:08', '2026-03-04 14:14:08', NULL),
+(220, 'Shear Force Diagram (SFD) represents', 'Multiple Choice', 2.00, 'Medium', '', 10, 'Load variation', 'Bending variation', 'Shear variation', 'Stress variation', 'C', NULL, NULL, NULL, '2026-03-04 14:16:14', '2026-03-04 14:16:31', NULL),
+(221, 'Bending Moment Diagram (BMD) represents', 'Multiple Choice', 2.00, 'Easy', '', 10, 'Load', 'Moment variation', 'Stress', 'Deflection', 'B', NULL, NULL, NULL, '2026-03-04 14:17:24', '2026-03-04 14:17:24', NULL),
+(222, 'Point of contraflexure is where', 'Multiple Choice', 2.00, 'Medium', '', 10, 'Shear zero', 'Moment zero', 'Reaction zero', 'Load zero', 'B', NULL, NULL, NULL, '2026-03-04 14:19:17', '2026-03-04 14:19:17', NULL),
+(223, 'Youngâ€™s Modulus is denoted by', 'Multiple Choice', 2.00, 'Easy', '', 10, 'G', 'K', 'E', 'M', 'C', NULL, NULL, NULL, '2026-03-04 14:20:27', '2026-03-04 14:20:27', NULL),
+(224, 'Unit of Youngâ€™s Modulus is', 'Multiple Choice', 2.00, 'Medium', '', 10, 'N', 'N/mÂ²', 'm', 'Nm', 'B', NULL, NULL, NULL, '2026-03-04 14:21:40', '2026-03-04 14:21:40', NULL),
+(225, 'Deflection in beam depends on', 'Multiple Choice', 2.00, 'Easy', '', 10, 'Load', 'Length', 'Material', 'All of the above', 'D', NULL, NULL, NULL, '2026-03-04 14:22:47', '2026-03-04 14:22:47', NULL),
+(226, 'In portal frame, loads are resisted by', 'Multiple Choice', 2.00, 'Hard', '', 10, 'Axial only', 'Bending only', 'Combined forces', 'Shear only', 'C', NULL, NULL, NULL, '2026-03-04 14:23:56', '2026-03-04 14:23:56', NULL),
+(227, 'A stack follows FIFO principle', 'True/False', 2.00, 'Medium', '', 4, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 05:38:31', '2026-03-06 05:38:31', NULL),
+(228, 'Non Linear structure?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Array', 'Stack', 'Queue', 'Tree', 'D', NULL, NULL, NULL, '2026-03-06 05:40:42', '2026-03-06 05:40:42', NULL),
+(229, 'Circular queue avoids?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Sorting', 'Searching', 'Wastage of space', 'Overflow', 'C', NULL, NULL, NULL, '2026-03-06 05:42:02', '2026-03-06 05:42:02', NULL),
+(230, 'Underflow occurs when?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'Deleting from empty structure', 'Insert full', 'Sort', 'Search', 'A', NULL, NULL, NULL, '2026-03-06 05:43:20', '2026-03-06 05:43:20', NULL),
+(231, 'Binary tree node has?', 'Multiple Choice', 2.00, 'Medium', '', 4, '1 Child', '3 Child', 'At most 2 children', 'Unlimited', 'C', NULL, NULL, NULL, '2026-03-06 05:44:24', '2026-03-06 05:44:24', NULL),
+(232, 'Height of complete binary tree=?', 'Multiple Choice', 2.00, 'Medium', '', 4, 'log2n', 'n', 'n2', '1', 'A', NULL, NULL, NULL, '2026-03-06 05:45:29', '2026-03-06 05:46:20', NULL),
+(233, 'A stack follows FIFO principle.', 'True/False', 2.00, 'Medium', '', 4, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 05:57:48', '2026-03-06 05:57:48', NULL),
+(234, 'Binary search works only on sorted arrays.', 'True/False', 2.00, 'Hard', '', 4, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 05:58:36', '2026-03-06 05:58:36', NULL),
+(235, 'Define Linked List?', 'Short Answer', 2.00, 'Medium', '', 4, '', '', '', '', 'A linked list is a linear data structure where elements are connected using pointers.each node conta', NULL, NULL, NULL, '2026-03-06 06:01:48', '2026-03-06 06:01:48', NULL),
+(236, 'Difference between stack and queue with example', 'Short Answer', 2.00, 'Medium', '', 4, '', '', '', '', 'A stack follows LIFO principle.\nexample : Stack of plates.\nA queue follows FIFO principle.\nexample :', NULL, NULL, NULL, '2026-03-06 06:04:44', '2026-03-06 06:06:54', NULL),
+(237, 'ER diagram represents?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Code', 'Entities & Relationships', ' Table only', 'Query', 'B', NULL, NULL, NULL, '2026-03-06 07:30:34', '2026-03-06 07:35:14', NULL),
+(238, 'INNER JOIN returns?', 'Multiple Choice', 2.00, 'Medium', '', 5, ' All records', 'Matching records ', 'Left records ', ' Right records', 'B', NULL, NULL, NULL, '2026-03-06 07:32:08', '2026-03-06 07:32:08', NULL),
+(239, 'DELETE removes?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Structure ', ' Rows', 'Database ', 'Schema', 'B', NULL, NULL, NULL, '2026-03-06 07:34:45', '2026-03-06 07:35:27', NULL),
+(240, 'WHERE clause?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Group ', ' Filter records ', 'Join', '  Order', 'B', NULL, NULL, NULL, '2026-03-06 07:37:15', '2026-03-06 07:37:15', NULL),
+(241, 'Aggregate function?', 'Multiple Choice', 2.00, 'Medium', '', 5, ' UPDATE', 'COUNT ', 'DROP  ALTER', 'ALTER', 'B', NULL, NULL, NULL, '2026-03-06 07:38:42', '2026-03-06 07:38:42', NULL),
+(242, 'Schema defines?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Query  Backup', 'Backup', ' Data Structure', 'Structure', 'D', NULL, NULL, NULL, '2026-03-06 07:40:00', '2026-03-06 07:40:00', NULL),
+(243, 'TRUNCATE removes?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'All rows quickly ', 'Single row ', 'Column Key', 'Key', 'A', NULL, NULL, NULL, '2026-03-06 07:41:21', '2026-03-06 07:41:21', NULL),
+(244, 'Transaction ends with?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'CLOSE  COMMIT/ROLLBACK ', ' STOP  ', 'COMMIT/ROLLBACK ', ' EXIT', 'C', NULL, NULL, NULL, '2026-03-06 07:45:44', '2026-03-06 07:45:44', NULL),
+(245, 'RDBMS stores data in?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'Files ', ' Tables ', 'Tree', 'Stack ', 'B', NULL, NULL, NULL, '2026-03-06 07:47:18', '2026-03-06 07:47:18', NULL),
+(246, 'Aggregate function?', 'Multiple Choice', 2.00, 'Medium', '', 5, 'UPDATE', 'DROP  ', ' COUNT ', 'ALTER', 'C', NULL, NULL, NULL, '2026-03-06 07:48:50', '2026-03-06 07:48:50', NULL),
+(247, 'A primary key can contain NULL values. ', 'True/False', 2.00, 'Medium', '', 5, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 07:51:36', '2026-03-06 07:51:36', NULL),
+(248, 'Normalization reduces data redundancy.', 'True/False', 2.00, 'Medium', '', 5, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 07:52:07', '2026-03-06 07:52:07', NULL),
+(249, 'What is normalization? \n', 'Short Answer', 2.00, 'Medium', '', 5, '', '', '', '', 'Answer:\nNormalization is the process of organizing data to reduce redundancy and improve integrity.', NULL, NULL, NULL, '2026-03-06 07:53:51', '2026-03-06 07:53:51', NULL),
+(250, 'What is a foreign key? Why is it important?\n', 'Short Answer', 2.00, 'Medium', '', 5, '', '', '', '', 'Answer:\nA foreign key is a field in one table that refers to the primary key in another table.\nIt ma', NULL, NULL, NULL, '2026-03-06 07:54:37', '2026-03-06 07:54:37', NULL),
+(251, 'NAND gate is a universal gate.', 'True/False', 2.00, 'Medium', '', 7, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 07:56:34', '2026-03-06 07:56:34', NULL),
+(252, '\nFlip-flop is a combinational circuit.', 'True/False', 2.00, 'Medium', '', 7, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 07:57:09', '2026-03-06 07:57:09', NULL),
+(253, 'What is a logic gate?\n', 'Short Answer', 2.00, 'Medium', '', 7, '', '', '', '', 'Answer:\nA logic gate is a basic digital circuit that performs a logical operation on one or more bin', NULL, NULL, NULL, '2026-03-06 07:58:30', '2026-03-06 07:58:30', NULL),
+(254, 'Explain the working of a full adder.\n', 'Short Answer', 2.00, 'Medium', '', 7, '', '', '', '', 'Answer:\nA full adder adds three binary inputs (A, B, Carry-in) and produces two outputs: Sum and Car', NULL, NULL, NULL, '2026-03-06 07:59:25', '2026-03-06 07:59:25', NULL),
+(255, 'Force is a push or pull acting on a body.', 'True/False', 2.00, 'Medium', '', 9, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:09:37', '2026-03-06 08:09:37', NULL),
+(256, 'Velocity and speed have the same meaning in mechanics.', 'True/False', 2.00, 'Medium', '', 9, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:10:08', '2026-03-06 08:10:08', NULL),
+(257, ' What is force?\n', 'Short Answer', 2.00, 'Medium', '', 9, '', '', '', '', 'Answer: Force is a push or pull that can change the motion or shape of an object', NULL, NULL, NULL, '2026-03-06 08:10:44', '2026-03-06 08:10:44', NULL),
+(258, ' What is equilibrium?\n', 'Short Answer', 2.00, 'Medium', '', 9, '', '', '', '', 'Answer: Equilibrium is the state where all forces acting on a body are balanced.', NULL, NULL, NULL, '2026-03-06 08:11:18', '2026-03-06 08:11:18', NULL),
+(259, 'Microprocessors cannot perform arithmetic operations.', 'True/False', 2.00, 'Medium', '', 8, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:12:34', '2026-03-06 08:12:34', NULL),
+(260, 'A microprocessor acts as the brain of a computer.', 'True/False', 2.00, 'Medium', '', 8, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:13:00', '2026-03-06 08:13:00', NULL),
+(261, 'What is a microprocessor?\n', 'Short Answer', 2.00, 'Medium', '', 8, '', '', '', '', 'Answer: A microprocessor is an integrated circuit that performs the functions of a CPU.', NULL, NULL, NULL, '2026-03-06 08:14:00', '2026-03-06 08:14:00', NULL),
+(262, 'What is an instruction set?\n', 'Short Answer', 2.00, 'Medium', '', 8, '', '', '', '', 'Answer: An instruction set is a group of commands that a microprocessor can execute.', NULL, NULL, NULL, '2026-03-06 08:14:36', '2026-03-06 08:14:36', NULL),
+(263, 'Inheritance allows a class to acquire properties of another class.\n', 'True/False', 2.00, 'Medium', '', 3, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:16:05', '2026-03-06 08:16:05', NULL),
+(264, 'OOP does not use classes or objects', 'True/False', 2.00, 'Medium', '', 3, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:16:35', '2026-03-06 08:16:35', NULL),
+(265, 'What is a class?\n', 'Short Answer', 2.00, 'Medium', '', 3, '', '', '', '', 'Answer: A class is a blueprint used to create objects.', NULL, NULL, NULL, '2026-03-06 08:17:07', '2026-03-06 08:17:07', NULL),
+(266, 'What is an object?\n', 'Short Answer', 2.00, 'Medium', '', 3, '', '', '', '', 'Answer: An object is an instance of a class.', NULL, NULL, NULL, '2026-03-06 08:18:27', '2026-03-06 08:18:27', NULL),
+(267, 'An operating system manages computer hardware and software resources.', 'True/False', 2.00, 'Medium', '', 6, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:20:10', '2026-03-06 08:20:10', NULL),
+(268, 'Operating systems are only used in mobile phones', 'True/False', 2.00, 'Medium', '', 6, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:20:41', '2026-03-06 08:20:41', NULL),
+(269, 'What is an operating system?\n', 'Short Answer', 2.00, 'Medium', '', 6, '', '', '', '', 'Answer: An operating system is system software that manages hardware and software resources.', NULL, NULL, NULL, '2026-03-06 08:21:21', '2026-03-06 08:21:21', NULL),
+(270, ' Give one example of an operating system.\n', 'Short Answer', 2.00, 'Medium', '', 6, '', '', '', '', 'Answer: Windows, Linux, or macOS.', NULL, NULL, NULL, '2026-03-06 08:21:53', '2026-03-06 08:21:53', NULL),
+(271, 'Planning is one of the basic functions of management.', 'True/False', 2.00, 'Medium', '', 11, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:23:09', '2026-03-06 08:23:09', NULL),
+(272, 'Management is not required in organizations.', 'True/False', 2.00, 'Medium', '', 11, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:24:13', '2026-03-06 08:24:13', NULL),
+(273, ' What is management?\n', 'Short Answer', 2.00, 'Medium', '', 11, '', '', '', '', 'Answer: Management is the process of planning, organizing, leading, and controlling resources.', NULL, NULL, NULL, '2026-03-06 08:24:51', '2026-03-06 08:24:51', NULL),
+(274, ' What is planning in management?\n', 'Short Answer', 2.00, 'Medium', '', 11, '', '', '', '', 'Answer: Planning is deciding goals and the best way to achieve them.', NULL, NULL, NULL, '2026-03-06 08:25:25', '2026-03-06 08:25:25', NULL),
+(275, 'C is a procedural programming language.\n', 'True/False', 2.00, 'Medium', '', 2, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:26:36', '2026-03-06 08:26:36', NULL),
+(276, '\nC programs cannot use loops.\n', 'True/False', 2.00, 'Medium', '', 2, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:26:58', '2026-03-06 08:26:58', NULL),
+(277, 'Question: What is a variable in C?\n', 'Short Answer', 2.00, 'Medium', '', 2, '', '', '', '', 'Answer: A variable is a named memory location used to store data.\n', NULL, NULL, NULL, '2026-03-06 08:27:44', '2026-03-06 08:27:44', NULL),
+(278, 'Question: What is a loop?\n', 'Short Answer', 2.00, 'Medium', '', 2, '', '', '', '', 'Answer: A loop is used to repeat a set of instructions multiple time', NULL, NULL, NULL, '2026-03-06 08:28:06', '2026-03-06 08:28:06', NULL),
+(279, 'Structural analysis studies forces acting on structures.', 'True/False', 2.00, 'Medium', '', 10, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-06 08:29:07', '2026-03-06 08:29:07', NULL),
+(280, 'Structural analysis is not used in bridge construction.', 'True/False', 2.00, 'Medium', '', 10, '', '', '', '', 'B', NULL, NULL, NULL, '2026-03-06 08:29:35', '2026-03-06 08:29:35', NULL),
+(281, ' What is structural analysis?\n', 'Short Answer', 2.00, 'Medium', '', 10, '', '', '', '', 'Answer: Structural analysis is the study of how structures respond to loads and forces.\n', NULL, NULL, NULL, '2026-03-06 08:30:23', '2026-03-06 08:30:23', NULL),
+(282, 'Question: Give one example of a structure.\n', 'Short Answer', 2.00, 'Medium', '', 10, '', '', '', '', 'Answer: Bridge, building, or dam.', NULL, NULL, NULL, '2026-03-06 08:30:46', '2026-03-06 08:30:46', NULL),
+(283, 'Write a Tower of hanoi', 'Coding', 5.00, 'Hard', NULL, 2, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '2026-03-24 06:53:56', '2026-03-24 07:17:14', NULL),
+(284, 'write a program', 'Coding', 1.00, 'Medium', NULL, 4, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '2026-03-24 07:22:08', '2026-03-24 07:22:08', NULL),
+(285, 'hi', 'True/False', 1.00, 'Medium', '', 10, '', '', '', '', 'A', NULL, NULL, NULL, '2026-03-24 07:34:35', '2026-03-24 07:34:35', NULL),
+(286, 'write a program', 'Coding', 1.00, 'Medium', NULL, 4, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '2026-03-24 07:42:31', '2026-03-24 07:42:31', NULL);
+INSERT INTO `questions` (`id`, `questionText`, `questionType`, `marks`, `difficulty`, `topic`, `courseId`, `optionA`, `optionB`, `optionC`, `optionD`, `correctAnswer`, `explanation`, `imageUrl`, `displayOrder`, `createdAt`, `updatedAt`, `codingQuestionId`) VALUES
+(287, 'write hello world prgm', 'Coding', 12.00, 'Medium', NULL, 4, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL, '2026-03-27 10:05:45', '2026-03-27 10:05:45', 4);
 
 -- --------------------------------------------------------
 
@@ -1082,29 +1084,8 @@ INSERT INTO `student_answers` (`id`, `submissionId`, `questionId`, `studentAnswe
 (151, 23, 246, 'C', 1, 2.00, '2026-03-09 14:31:48', '2026-03-09 14:31:48', 0, '2026-03-09 14:31:48', '2026-03-09 14:32:24'),
 (152, 23, 247, 'B', 1, 2.00, '2026-03-09 14:31:55', '2026-03-09 14:31:58', 0, '2026-03-09 14:31:55', '2026-03-09 14:32:24'),
 (153, 23, 250, 'it is unique key', 0, 0.00, '2026-03-09 14:32:11', '2026-03-09 14:32:19', 0, '2026-03-09 14:32:11', '2026-03-09 14:32:24'),
-(154, 26, 147, 'B', 1, 2.00, '2026-03-10 06:43:47', '2026-03-10 06:43:47', 0, '2026-03-10 06:43:47', '2026-03-10 06:46:27'),
-(155, 26, 148, 'D', 1, 2.00, '2026-03-10 06:44:00', '2026-03-10 06:44:00', 0, '2026-03-10 06:44:00', '2026-03-10 06:46:27'),
-(156, 26, 149, 'B', 1, 2.00, '2026-03-10 06:44:09', '2026-03-10 06:44:09', 0, '2026-03-10 06:44:09', '2026-03-10 06:46:27'),
-(157, 26, 150, 'B', 1, 2.00, '2026-03-10 06:44:18', '2026-03-10 06:44:18', 0, '2026-03-10 06:44:18', '2026-03-10 06:46:27'),
-(158, 26, 151, 'A', 1, 2.00, '2026-03-10 06:44:24', '2026-03-10 06:44:24', 0, '2026-03-10 06:44:24', '2026-03-10 06:46:27'),
-(159, 26, 152, 'B', 1, 2.00, '2026-03-10 06:44:32', '2026-03-10 06:44:32', 0, '2026-03-10 06:44:32', '2026-03-10 06:46:27'),
-(160, 26, 153, 'C', 1, 2.00, '2026-03-10 06:44:37', '2026-03-10 06:44:37', 0, '2026-03-10 06:44:37', '2026-03-10 06:46:27'),
-(161, 26, 154, 'D', 1, 2.00, '2026-03-10 06:44:46', '2026-03-10 06:44:46', 0, '2026-03-10 06:44:46', '2026-03-10 06:46:27'),
-(162, 26, 155, 'C', 1, 2.00, '2026-03-10 06:44:52', '2026-03-10 06:44:52', 0, '2026-03-10 06:44:52', '2026-03-10 06:46:27'),
-(163, 26, 156, 'B', 1, 2.00, '2026-03-10 06:44:59', '2026-03-10 06:44:59', 0, '2026-03-10 06:44:59', '2026-03-10 06:46:27'),
-(164, 26, 157, 'C', 1, 2.00, '2026-03-10 06:45:04', '2026-03-10 06:45:04', 0, '2026-03-10 06:45:04', '2026-03-10 06:46:27'),
-(165, 26, 158, 'B', 1, 2.00, '2026-03-10 06:45:09', '2026-03-10 06:45:09', 0, '2026-03-10 06:45:09', '2026-03-10 06:46:27'),
-(166, 26, 159, 'C', 1, 2.00, '2026-03-10 06:45:18', '2026-03-10 06:45:18', 0, '2026-03-10 06:45:18', '2026-03-10 06:46:27'),
-(167, 26, 160, 'B', 1, 2.00, '2026-03-10 06:45:26', '2026-03-10 06:45:26', 0, '2026-03-10 06:45:26', '2026-03-10 06:46:27'),
-(168, 26, 161, 'C', 1, 2.00, '2026-03-10 06:45:31', '2026-03-10 06:45:31', 0, '2026-03-10 06:45:31', '2026-03-10 06:46:27'),
-(169, 26, 162, 'B', 1, 2.00, '2026-03-10 06:45:39', '2026-03-10 06:45:39', 0, '2026-03-10 06:45:39', '2026-03-10 06:46:27'),
-(170, 26, 163, 'B', 1, 2.00, '2026-03-10 06:45:44', '2026-03-10 06:45:44', 0, '2026-03-10 06:45:44', '2026-03-10 06:46:27'),
-(171, 26, 164, 'C', 1, 2.00, '2026-03-10 06:45:48', '2026-03-10 06:45:48', 0, '2026-03-10 06:45:48', '2026-03-10 06:46:27'),
-(172, 26, 165, 'C', 0, 0.00, '2026-03-10 06:45:51', '2026-03-10 06:45:51', 0, '2026-03-10 06:45:51', '2026-03-10 06:46:27'),
-(173, 26, 166, 'B', 0, 0.00, '2026-03-10 06:45:59', '2026-03-10 06:45:59', 0, '2026-03-10 06:45:59', '2026-03-10 06:46:27'),
-(174, 26, 267, 'B', 0, 0.00, '2026-03-10 06:46:05', '2026-03-10 06:46:05', 0, '2026-03-10 06:46:05', '2026-03-10 06:46:27'),
-(175, 26, 268, 'A', 0, 0.00, '2026-03-10 06:46:08', '2026-03-10 06:46:08', 0, '2026-03-10 06:46:08', '2026-03-10 06:46:27'),
-(176, 26, 270, 'Linux', 0, 0.00, '2026-03-10 06:46:20', '2026-03-10 06:46:21', 0, '2026-03-10 06:46:20', '2026-03-10 06:46:27');
+(177, 40, 284, 'print(\"3\")\n\n', 0, 0.00, '2026-03-24 07:23:44', '2026-03-24 07:25:16', 0, '2026-03-24 07:23:44', '2026-03-24 07:25:36'),
+(180, 39, 284, '#include <stdio.h>\n\nint main() {\n    // Write your solution here\n    print(\"hello world\");\n    return 0;\n}\n', NULL, NULL, '2026-03-27 05:49:46', '2026-03-27 05:51:58', 0, '2026-03-27 05:49:46', '2026-03-27 05:51:58');
 
 -- --------------------------------------------------------
 
@@ -1140,6 +1121,16 @@ CREATE TABLE `test_cases` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `test_cases`
+--
+
+INSERT INTO `test_cases` (`id`, `codingQuestionId`, `input`, `expectedOutput`, `isVisible`, `orderIndex`, `createdAt`, `updatedAt`) VALUES
+(1, 1, '3', 'Disk 1 moved from A to C\nDisk 2 moved from A to B\nDisk 1 moved from C to B\nDisk 3 moved from A to C\nDisk 1 moved from B to A\nDisk 2 moved from B to C\nDisk 1 moved from A to C', 1, 0, '2026-03-24 06:53:56', '2026-03-24 06:53:56'),
+(2, 2, '12', '12', 1, 0, '2026-03-24 07:22:08', '2026-03-24 07:22:08'),
+(3, 3, 'Hello World', 'Hello World', 1, 0, '2026-03-24 07:42:31', '2026-03-24 07:42:31'),
+(4, 4, 'hello world', 'hello world', 1, 0, '2026-03-27 10:05:45', '2026-03-27 10:05:45');
 
 -- --------------------------------------------------------
 
@@ -1182,11 +1173,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstName`, `lastName`, `email`, `password`, `phone`, `isActive`, `lastLogin`, `createdAt`, `updatedAt`) VALUES
-(1, 'Super', 'Admin', 'superadmin@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-ADMIN', 1, '2026-03-18 09:27:46', '2026-02-16 05:27:19', '2026-03-18 09:27:46'),
-(2, 'John', 'Admin', 'admin@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-0001', 1, '2026-03-04 08:03:33', '2026-02-16 05:27:19', '2026-03-04 08:03:33'),
-(3, 'Jane', 'Examiner', 'examiner@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-0002', 1, '2026-03-10 06:46:45', '2026-02-16 05:27:19', '2026-03-10 06:46:45'),
+(1, 'Super', 'Admin', 'superadmin@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-ADMIN', 1, '2026-03-27 05:45:48', '2026-02-16 05:27:19', '2026-03-27 05:45:48'),
+(2, 'John', 'Admin', 'admin@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-0001', 1, '2026-03-24 07:51:27', '2026-02-16 05:27:19', '2026-03-24 07:51:27'),
+(3, 'Jane', 'Examiner', 'examiner@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-0002', 1, '2026-03-27 10:03:41', '2026-02-16 05:27:19', '2026-03-27 10:03:41'),
 (4, 'Alice', 'Proctor', 'proctor@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-0003', 1, NULL, '2026-02-16 05:27:19', '2026-02-16 05:27:19'),
-(5, 'Bob', 'Student', 'student1@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-0004', 1, '2026-03-10 06:47:34', '2026-02-16 05:27:19', '2026-03-10 06:47:34'),
+(5, 'Bob', 'Student', 'student1@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-0004', 1, '2026-03-27 10:05:56', '2026-02-16 05:27:19', '2026-03-27 10:05:56'),
 (6, 'Carol', 'Student', 'student2@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-0005', 1, NULL, '2026-02-16 05:27:19', '2026-02-16 05:27:19'),
 (7, 'David', 'Student', 'student3@gmail.com', '$2a$10$Gv3XaCbjpPvcfD./tIPNCukL2ZyGQGgo3S3P8.0E3qfpFKs3lh2q.', '+1-800-0006', 1, NULL, '2026-02-16 05:27:19', '2026-02-16 05:27:19'),
 (8, 'Vaishnavi', 'M', 'vaishu@gmail.com', '$2a$10$/NA9NZlX8Trb762VLzS4au7xRzwUll78M2Tj9nflvrsWtrshKNdLe', '7975819768', 1, NULL, '2026-02-16 05:37:49', '2026-02-16 05:37:49'),
@@ -1391,7 +1382,8 @@ ALTER TABLE `questions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_questionType` (`questionType`),
   ADD KEY `idx_difficulty` (`difficulty`),
-  ADD KEY `fk_questions_courseId` (`courseId`);
+  ADD KEY `fk_questions_courseId` (`courseId`),
+  ADD KEY `fk_questions_coding_question` (`codingQuestionId`);
 
 --
 -- Indexes for table `roles`
@@ -1472,7 +1464,7 @@ ALTER TABLE `classes`
 -- AUTO_INCREMENT for table `coding_questions`
 --
 ALTER TABLE `coding_questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `coding_submissions`
@@ -1502,19 +1494,19 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `exams`
 --
 ALTER TABLE `exams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `exam_questions`
 --
 ALTER TABLE `exam_questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=263;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=269;
 
 --
 -- AUTO_INCREMENT for table `exam_submissions`
 --
 ALTER TABLE `exam_submissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `lecturers`
@@ -1532,7 +1524,7 @@ ALTER TABLE `proctoring_logs`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=283;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=288;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1550,7 +1542,7 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT for table `student_answers`
 --
 ALTER TABLE `student_answers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
 
 --
 -- AUTO_INCREMENT for table `student_exam_enrollments`
@@ -1562,7 +1554,7 @@ ALTER TABLE `student_exam_enrollments`
 -- AUTO_INCREMENT for table `test_cases`
 --
 ALTER TABLE `test_cases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `test_results`
@@ -1574,7 +1566,7 @@ ALTER TABLE `test_results`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `user_roles`
@@ -1659,6 +1651,7 @@ ALTER TABLE `proctoring_logs`
 -- Constraints for table `questions`
 --
 ALTER TABLE `questions`
+  ADD CONSTRAINT `fk_questions_coding_question` FOREIGN KEY (`codingQuestionId`) REFERENCES `coding_questions` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_questions_courseId` FOREIGN KEY (`courseId`) REFERENCES `courses` (`id`) ON DELETE SET NULL;
 
 --
