@@ -1,4 +1,4 @@
-const { CodingQuestion, CodingSubmission, Exam, User } = require('../models');
+const { CodingQuestion, CodingSubmission, Exam, User, TestCase } = require('../models');
 const CompilerService = require('../services/CompilerService');
 const QueueManager = require('../services/QueueManager');
 const TestCaseValidator = require('../services/TestCaseValidator');
@@ -38,13 +38,33 @@ const getAllCodingQuestions = async (req, res) => {
 // Get coding question by ID
 const getCodingQuestionById = async (req, res) => {
   try {
+    const staffRoles = ['Admin', 'Super Admin', 'Examiner'];
+    const role = (req.user?.role || '').trim();
+    const isStaff = staffRoles.some((r) => r.toLowerCase() === role.toLowerCase());
+
     const question = await CodingQuestion.findByPk(req.params.id);
 
     if (!question) {
       return res.status(404).json({ message: 'Coding question not found' });
     }
 
-    res.json({ question });
+    const tcWhere = { codingQuestionId: question.id };
+    if (!isStaff) {
+      tcWhere.isVisible = true;
+    }
+
+    const testCaseRows = await TestCase.findAll({
+      where: tcWhere,
+      order: [
+        ['orderIndex', 'ASC'],
+        ['id', 'ASC'],
+      ],
+    });
+
+    const payload = question.get({ plain: true });
+    payload.testCases = testCaseRows.map((t) => t.get({ plain: true }));
+
+    res.json({ question: payload });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching coding question', error: error.message });
   }

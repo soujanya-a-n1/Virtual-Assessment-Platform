@@ -181,7 +181,7 @@ const ExamPage = () => {
       setSaving(true);
       const examData = {
         ...formData,
-        totalQuestions: questions.length,
+        totalQuestions: questions?.length || 0,
         startTime: formData.startTime || null,
         endTime: formData.endTime || null,
       };
@@ -232,7 +232,7 @@ const ExamPage = () => {
     }
     setQuestionForm(prev => ({
       ...prev,
-      testCases: [...prev.testCases, { ...newTestCase, orderIndex: prev.testCases.length }]
+      testCases: [...(prev.testCases || []), { ...newTestCase, orderIndex: (prev.testCases || []).length }]
     }));
     setNewTestCase({ input: '', expectedOutput: '', isVisible: true });
   };
@@ -240,7 +240,7 @@ const ExamPage = () => {
   const handleRemoveTestCase = (index) => {
     setQuestionForm(prev => ({
       ...prev,
-      testCases: prev.testCases.filter((_, i) => i !== index)
+      testCases: (prev.testCases || []).filter((_, i) => i !== index)
     }));
   };
 
@@ -260,7 +260,7 @@ const ExamPage = () => {
       return;
     }
 
-    if (questionForm.questionType === 'Coding' && questionForm.testCases.length === 0) {
+    if (questionForm.questionType === 'Coding' && (!questionForm.testCases || questionForm.testCases.length === 0)) {
       alert('Please add at least one test case for coding questions');
       return;
     }
@@ -282,13 +282,28 @@ const ExamPage = () => {
         };
 
         if (editingQuestion) {
-          await api.put(`/coding-questions/${editingQuestion.codingQuestionId}`, codingQuestionData);
-          await api.put(`/questions/${editingQuestion.id}`, {
-            questionText: questionForm.questionText,
-            marks: questionForm.marks,
-            difficulty: questionForm.difficulty,
-            courseId: questionForm.courseId,
-          });
+          const linkedCodingId =
+            editingQuestion.codingQuestionId ?? editingQuestion.coding_question_id;
+
+          if (linkedCodingId) {
+            await api.put(`/coding-questions/${linkedCodingId}`, codingQuestionData);
+            await api.put(`/questions/${editingQuestion.id}`, {
+              questionText: questionForm.questionText,
+              marks: questionForm.marks,
+              difficulty: questionForm.difficulty,
+              courseId: questionForm.courseId,
+            });
+          } else {
+            const response = await api.post('/coding-questions', codingQuestionData);
+            const newCoding = response.data.codingQuestion;
+            await api.put(`/questions/${editingQuestion.id}`, {
+              questionText: questionForm.questionText,
+              marks: questionForm.marks,
+              difficulty: questionForm.difficulty,
+              courseId: questionForm.courseId,
+              codingQuestionId: newCoding.id,
+            });
+          }
           alert('Coding question updated successfully!');
         } else {
           const response = await api.post('/coding-questions', codingQuestionData);
@@ -378,11 +393,17 @@ const ExamPage = () => {
       
       // Set editing question
       setEditingQuestion(fullQuestion);
-      
-      // Create form values object with full data
+
+      const rawQt = fullQuestion.questionType;
+      const normalizedQuestionType =
+        rawQt === 'Coding' ||
+        (typeof rawQt === 'string' && rawQt.trim().toLowerCase() === 'coding')
+          ? 'Coding'
+          : rawQt || 'Multiple Choice';
+
       const formValues = {
         questionText: fullQuestion.questionText || '',
-        questionType: fullQuestion.questionType || 'Multiple Choice',
+        questionType: normalizedQuestionType,
         marks: fullQuestion.marks || 1,
         difficulty: fullQuestion.difficulty || 'Medium',
         topic: fullQuestion.topic || '',
@@ -392,16 +413,51 @@ const ExamPage = () => {
         optionC: fullQuestion.optionC || '',
         optionD: fullQuestion.optionD || '',
         correctAnswer: fullQuestion.correctAnswer || '',
-        language: fullQuestion.language || 'python',
-        timeLimit: fullQuestion.timeLimit || 5,
-        memoryLimit: fullQuestion.memoryLimit || 256,
-        starterCode: fullQuestion.starterCode || '',
-        testCases: fullQuestion.testCases || [],
+        language: 'python',
+        timeLimit: 5,
+        memoryLimit: 256,
+        starterCode: '',
+        testCases: [],
       };
-      
+
+      if (normalizedQuestionType === 'Coding') {
+        const cqId = fullQuestion.codingQuestionId ?? fullQuestion.coding_question_id;
+        if (cqId) {
+          try {
+            const cqRes = await api.get(`/coding-questions/${cqId}`);
+            const cq = cqRes.data.question;
+            formValues.language = cq.language || 'python';
+            formValues.timeLimit = cq.timeLimit ?? 5;
+            formValues.memoryLimit = cq.memoryLimit ?? 256;
+            formValues.starterCode = cq.starterCode || '';
+            formValues.questionText =
+              fullQuestion.questionText || cq.description || cq.title || '';
+            const rawTcs =
+              cq.testCases || cq.test_cases || (Array.isArray(cq.TestCases) ? cq.TestCases : []);
+            formValues.testCases = rawTcs.map((tc, i) => ({
+              input: tc.input ?? '',
+              expectedOutput: tc.expectedOutput ?? tc.expected_output ?? '',
+              isVisible:
+                tc.isVisible !== undefined
+                  ? tc.isVisible
+                  : tc.is_visible !== undefined
+                    ? tc.is_visible
+                    : true,
+              orderIndex:
+                tc.orderIndex != null
+                  ? tc.orderIndex
+                  : tc.order_index != null
+                    ? tc.order_index
+                    : i,
+            }));
+          } catch (cqErr) {
+            console.error('Error loading coding question:', cqErr);
+          }
+        }
+      }
+
       console.log('Form values being set:', formValues);
-      
-      // Set form values and open modal
+
       setQuestionForm(formValues);
       setShowQuestionModal(true);
     } catch (error) {
@@ -446,6 +502,7 @@ const ExamPage = () => {
   };
 
   const calculateTotalMarks = () => {
+    if (!questions || !Array.isArray(questions)) return 0;
     return questions.reduce((sum, q) => {
       const marks = parseFloat(q.marks);
       return sum + (isNaN(marks) ? 0 : marks);
@@ -508,7 +565,7 @@ const ExamPage = () => {
             className={`tab-btn ${activeTab === 'questions' ? 'active' : ''}`}
             onClick={() => setActiveTab('questions')}
           >
-            <FiList /> Questions ({questions.length})
+            <FiList /> Questions ({questions?.length || 0})
           </button>
         )}
       </div>
@@ -760,7 +817,7 @@ const ExamPage = () => {
               <div className="stat-card">
                 <FiList className="stat-icon" />
                 <div>
-                  <h3>{questions.length}</h3>
+                  <h3>{questions?.length || 0}</h3>
                   <p>Total Questions</p>
                 </div>
               </div>
@@ -788,7 +845,7 @@ const ExamPage = () => {
             </div>
           </div>
 
-          {questions.length === 0 ? (
+          {!questions || questions.length === 0 ? (
             <div className="no-questions">
               <FiFileText className="no-questions-icon" />
               <h3>No Questions Added</h3>
@@ -1240,7 +1297,7 @@ const ExamPage = () => {
                   <div className="test-cases-section">
                     <h4>Test Cases</h4>
                     
-                    {questionForm.testCases.length > 0 && (
+                    {questionForm.testCases && questionForm.testCases.length > 0 && (
                       <div className="test-cases-list">
                         {questionForm.testCases.map((tc, index) => (
                           <div key={index} className="test-case-item">
@@ -1341,7 +1398,7 @@ const ExamPage = () => {
       {/* Add Existing Questions Modal */}
       {showAddQuestionModal && (
         <AddQuestionsModal
-          questions={allQuestions.filter(q => !questions.find(eq => eq.id === q.id))}
+          questions={(allQuestions || []).filter(q => !(questions || []).find(eq => eq.id === q.id))}
           onAdd={handleAddExistingQuestions}
           onClose={() => setShowAddQuestionModal(false)}
         />
@@ -1357,7 +1414,7 @@ const AddQuestionsModal = ({ questions, onAdd, onClose }) => {
   const [filterDifficulty, setFilterDifficulty] = useState('');
   const [filterType, setFilterType] = useState('');
 
-  const filteredQuestions = questions.filter(q => {
+  const filteredQuestions = (questions || []).filter(q => {
     const matchesSearch = q.questionText.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesDifficulty = !filterDifficulty || q.difficulty === filterDifficulty;
     const matchesType = !filterType || q.questionType === filterType;
