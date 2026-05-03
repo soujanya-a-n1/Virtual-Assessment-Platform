@@ -138,9 +138,43 @@ const updateCodingQuestion = async (req, res) => {
       return res.status(404).json({ message: 'Coding question not found' });
     }
 
-    await question.update(req.body);
-    res.json({ message: 'Coding question updated successfully', question });
+    const { testCases, ...questionData } = req.body;
+
+    await question.update(questionData);
+
+    // Replace test cases if provided
+    if (testCases && Array.isArray(testCases)) {
+      // Delete existing test cases
+      await TestCase.destroy({ where: { codingQuestionId: question.id } });
+
+      // Insert new ones
+      if (testCases.length > 0) {
+        await Promise.all(
+          testCases.map((tc, index) =>
+            TestCase.create({
+              codingQuestionId: question.id,
+              input: tc.input,
+              expectedOutput: tc.expectedOutput,
+              isVisible: tc.isVisible !== undefined ? tc.isVisible : true,
+              orderIndex: tc.orderIndex !== undefined ? tc.orderIndex : index,
+            })
+          )
+        );
+      }
+    }
+
+    // Return updated question with test cases
+    const updatedTestCases = await TestCase.findAll({
+      where: { codingQuestionId: question.id },
+      order: [['orderIndex', 'ASC']],
+    });
+
+    res.json({
+      message: 'Coding question updated successfully',
+      question: { ...question.get({ plain: true }), testCases: updatedTestCases },
+    });
   } catch (error) {
+    console.error('Error updating coding question:', error);
     res.status(500).json({ message: 'Error updating coding question', error: error.message });
   }
 };

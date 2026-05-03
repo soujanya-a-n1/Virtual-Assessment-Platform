@@ -1,22 +1,14 @@
-const { User, Role } = require('../models');
-
 const authorize = (...allowedRoles) => {
-  return async (req, res, next) => {
+  return (req, res, next) => {
     try {
-      const user = await User.findByPk(req.user.id, {
-        include: [{
-          model: Role,
-          through: { attributes: [] },
-        }],
-      });
-
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+      if (!req.user) {
+        return res.status(401).json({ message: 'Not authenticated' });
       }
 
-      const userRoles = user.Roles?.map(r => r.name) || [];
-      
-      const hasRole = allowedRoles.some(role => userRoles.includes(role));
+      // Use role from JWT token (set during login as req.user.role)
+      const userRole = req.user.role || '';
+      const hasRole = allowedRoles.includes(userRole);
+
       if (!hasRole) {
         return res.status(403).json({ message: 'Insufficient permissions' });
       }
