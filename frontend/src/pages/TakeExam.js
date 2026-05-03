@@ -17,22 +17,14 @@ import './TakeExam.css';
 
 const LANGUAGE_LABELS = {
   python: 'Python 3',
-  javascript: 'JavaScript',
-  nodejs: 'Node.js',
   java: 'Java',
-  cpp: 'C++',
   c: 'C',
-  csharp: 'C#',
 };
 
 const STARTER_CODE = {
   python: '# Write your solution here\n\n',
-  javascript: '// Write your solution here\n\n',
-  nodejs: '// Write your solution here\n\n',
   java: 'public class Solution {\n    public static void main(String[] args) {\n        // Write your solution here\n    }\n}\n',
-  cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    return 0;\n}\n',
   c: '#include <stdio.h>\n\nint main() {\n    // Write your solution here\n    return 0;\n}\n',
-  csharp: 'using System;\n\nclass Solution {\n    static void Main() {\n        // Write your solution here\n    }\n}\n',
 };
 
 const TakeExam = () => {
@@ -156,23 +148,16 @@ const TakeExam = () => {
     // Piston language name + wildcard version (*) — Piston picks latest automatically
     const PISTON_LANG = {
       python: 'python',
-      javascript: 'javascript',
-      nodejs: 'javascript',
       java: 'java',
-      cpp: 'c++',
       c: 'c',
-      csharp: 'csharp',
     };
 
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5002/api';
-      const token = localStorage.getItem('token');
-      
-      const res = await fetch(`${apiUrl}/code/execute`, {
+      const res = await fetch('http://localhost:5000/api/execute', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
           language: PISTON_LANG[lang] || 'python',
