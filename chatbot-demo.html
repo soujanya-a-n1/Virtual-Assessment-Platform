@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Demo - Virtual Assessment Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .demo-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .info-box {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .info-box h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .info-box p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .feature h4 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .feature p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .role-selector {
+            margin-bottom: 30px;
+        }
+
+        .role-selector label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .role-selector select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #2d3748;
+            background: white;
+            cursor: pointer;
+        }
+
+        .role-selector select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .instruction {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🤖 Chatbot Assistant <span class="badge">LOCAL DATA</span></h1>
+        <p class="subtitle">Intelligent help for Virtual Assessment Platform - No Database Required!</p>
+
+        <div class="info-box">
+            <h3>✨ How It Works</h3>
+            <p>This chatbot uses <strong>local browser storage (localStorage)</strong> to save your chat history. All responses are generated from a built-in knowledge base - no backend or database connection needed!</p>
+            <p><strong>Your data stays in your browser</strong> and is never sent to any server.</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h4>Instant Responses</h4>
+                <p>Get answers immediately without waiting</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h4>Privacy First</h4>
+                <p>All data stored locally in your browser</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h4>Role-Based</h4>
+                <p>Customized help for your user role</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💾</div>
+                <h4>Persistent History</h4>
+                <p>Chat history saved automatically</p>
+            </div>
+        </div>
+
+        <div class="role-selector">
+            <label for="userRole">Select Your Role:</label>
+            <select id="userRole">
+                <option value="Student">Student</option>
+                <option value="Examiner">Examiner</option>
+                <option value="Proctor">Proctor</option>
+                <option value="Admin">Admin</option>
+                <option value="Super Admin">Super Admin</option>
+            </select>
+        </div>
+
+        <button class="cta-button" onclick="openApp()">
+            🚀 Open Platform & Try Chatbot
+        </button>
+
+        <div class="instruction">
+            <strong>📍 Instructions:</strong> After logging in, look for the purple chat button in the bottom-right corner. Click it to start chatting!
+        </div>
+
+        <div class="info-box" style="margin-top: 30px;">
+            <h3>💡 Try These Questions:</h3>
+            <p><strong>Students:</strong> "How do I take an exam?" • "Where can I see my results?"</p>
+            <p><strong>Examiners:</strong> "How do I create an exam?" • "How can I upload questions?"</p>
+            <p><strong>Admins:</strong> "How do I manage users?" • "How can I view reports?"</p>
+            <p><strong>Everyone:</strong> "Hello" • "Help" • "How do I reset my password?"</p>
+        </div>
+    </div>
+
+    <script>
+        function openApp() {
+            const role = document.getElementById('userRole').value;
+            alert(`Great! You selected: ${role}\n\nThe chatbot will provide ${role}-specific help.\n\nAfter logging in, click the purple chat button in the bottom-right corner to start chatting!`);
+            
+            // In a real scenario, this would redirect to your app
+            // window.location.href = 'http://localhost:3000';
+            
+            // For demo purposes, show localStorage info
+            console.log('Chatbot uses localStorage for data storage');
+            console.log('Selected Role:', role);
+        }
+
+        // Demo: Show localStorage usage
+        console.log('%c🤖 Chatbot Demo - Local Storage Mode', 'color: #667eea; font-size: 20px; font-weight: bold;');
+        console.log('%cChat history is stored in: localStorage.getItem("chatbot_history")', 'color: #4a5568; font-size: 14px;');
+        console.log('%cNo database or backend required!', 'color: #48bb78; font-size: 14px; font-weight: bold;');
+    </script>
+</body>
+</html>

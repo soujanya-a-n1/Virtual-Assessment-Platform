@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import Chatbot from './components/Chatbot';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
@@ -175,6 +176,7 @@ const AppContent = () => {
               <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
           </main>
+          {isAuthenticated && <Chatbot />}
         </div>
       </div>
     </Router>

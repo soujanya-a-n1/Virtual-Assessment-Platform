@@ -17,6 +17,12 @@ services:
       - PISTON_RUN_TIMEOUT=10000
       - PISTON_COMPILE_TIMEOUT=10000
     restart: unless-stopped
+    networks:
+      - default
 
 volumes:
   piston-packages:
+
+networks:
+  default:
+    driver: bridge

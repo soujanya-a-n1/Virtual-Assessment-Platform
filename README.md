@@ -67,6 +67,7 @@ A comprehensive full-stack online examination and assessment platform with proct
 ## 🎯 Quick Start
 
 See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed installation instructions.
+See [CHATBOT_LOCAL_SETUP.md](CHATBOT_LOCAL_SETUP.md) for chatbot with local storage (no database needed!).
 
 ### Quick Setup (5 minutes)
 
@@ -124,6 +125,16 @@ Password: Admin@123456
 - Pass/fail statistics
 - Detailed visualizations with Recharts
 - Role-specific dashboards
+
+### 🤖 AI Chatbot Assistant (NEW!)
+- **Local Storage Mode** - Works without database! 🎉
+- Role-based intelligent assistance
+- Natural language Q&A
+- Quick topic suggestions
+- Persistent chat history (localStorage)
+- Real-time responses
+- Available for all user roles
+- Privacy-friendly (data stays in browser)
 
 ### 👥 User Management
 - 5 predefined roles (Super Admin, Admin, Examiner, Proctor, Student)

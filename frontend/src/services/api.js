@@ -127,4 +127,13 @@ export const classAPI = {
   deleteClass: (id) => api.delete(`/classes/${id}`),
 };
 
+// Chatbot APIs
+export const chatbotAPI = {
+  getChatHistory: (limit = 50) => api.get(`/chatbot/history?limit=${limit}`),
+  sendMessage: (message, sessionId = null) => 
+    api.post('/chatbot/message', { message, sessionId }),
+  getSuggestions: () => api.get('/chatbot/suggestions'),
+  clearChatHistory: () => api.delete('/chatbot/history'),
+};
+
 export default api;
