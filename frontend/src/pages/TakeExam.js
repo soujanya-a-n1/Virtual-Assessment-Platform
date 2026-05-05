@@ -153,11 +153,14 @@ const TakeExam = () => {
     };
 
     try {
-      const res = await fetch('http://localhost:5000/api/execute', {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5002/api';
+      const token = localStorage.getItem('token');
+      
+      const res = await fetch(`${apiUrl}/code/execute`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           language: PISTON_LANG[lang] || 'python',

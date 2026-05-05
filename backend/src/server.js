@@ -22,6 +22,7 @@ const studentRoutes = require('./routes/studentRoutes');
 const examAssignmentRoutes = require('./routes/examAssignmentRoutes');
 const codingQuestionRoutes = require('./routes/codingQuestionRoutes');
 const codeExecutionRoutes = require('./routes/codeExecutionRoutes');
+const chatbotRoutes = require('./routes/chatbotRoutes');
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api', examAssignmentRoutes);
 app.use('/api/coding-questions', codingQuestionRoutes);
 app.use('/api/code', codeExecutionRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -65,8 +67,9 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log('Database connection established.');
 
-    await sequelize.sync({ alter: false });
-    console.log('Database models synchronized.');
+    // Skip sync - tables already exist
+    // await sequelize.sync({ alter: false });
+    console.log('Database models ready.');
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
