@@ -153,10 +153,9 @@ const TakeExam = () => {
     };
 
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5002/api';
       const token = localStorage.getItem('token');
       
-      const res = await fetch(`${apiUrl}/code/execute`, {
+      const res = await fetch('http://localhost:5000/api/code/execute', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -181,21 +180,19 @@ const TakeExam = () => {
 
       const data = await res.json();
 
-      // Piston returns { compile, run } — compile may be absent for interpreted langs
-      const compileErr = data.compile?.stderr || data.compile?.output || '';
-      const runStdout = data.run?.stdout || '';
-      const runStderr = data.run?.stderr || '';
-      const runOutput = data.run?.output || '';
+      const run = data.run || {};
+      const compile = data.compile || {};
+      const compileErr = compile.stderr || compile.output || '';
+      const output = run.output || run.stdout || run.stderr || '';
 
-      if (compileErr) {
+      if (compileErr && !output) {
         setRunOutput(prev => ({ ...prev, [questionId]: `Compile Error:\n${compileErr}` }));
-      } else if (runStdout || runStderr || runOutput) {
-        setRunOutput(prev => ({
-          ...prev,
-          [questionId]: runStdout || runOutput || `stderr:\n${runStderr}`,
-        }));
+      } else if (output) {
+        setRunOutput(prev => ({ ...prev, [questionId]: output }));
+      } else if (run.code === 0) {
+        setRunOutput(prev => ({ ...prev, [questionId]: '(program ran with no output)' }));
       } else {
-        setRunOutput(prev => ({ ...prev, [questionId]: '(no output)' }));
+        setRunOutput(prev => ({ ...prev, [questionId]: compileErr || `Exit code: ${run.code}` }));
       }
     } catch (err) {
       setRunOutput(prev => ({
